@@ -9,14 +9,13 @@ import DatePicker from "react-multi-date-picker";
 import { router } from "expo-router";
 
 export default function book() {
-  const [people, setPeople] = useState(1);
-  const [checkIn, setCheckIn] = useState(new Date());
-  const [nights, setNights] = useState(1);
-  const [checkOut, setcheckOut] = useState(
-    new Date(checkIn.valueOf() + 86400 * 1000)
-  );
-
   const DAY = 1000 * 86400;
+  const [people, setPeople] = useState(1);
+  const [checkIn, setCheckIn] = useState(
+    new Date(new Date().setHours(0, 0, 0, 0))
+  );
+  const [nights, setNights] = useState(1);
+  const [checkOut, setcheckOut] = useState(new Date(checkIn.valueOf() + DAY));
 
   const onChange = (
     event: DateTimePickerEvent,
