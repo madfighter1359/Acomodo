@@ -29,3 +29,19 @@ values
 
 --reservation table: 
 --guest table
+create table Guests (
+    GuestID int primary key auto_increment,
+    Name varchar(64),
+    DoB date,
+    DocNumber varchar(32)
+);
+
+create table Reservations (
+    ReservationID int primary key auto_increment,
+    GuestID int not null,
+    CheckIn date,
+    CheckOut date,
+    Guests int,
+    Price int, -- in pennies
+    foreign key (GuestID) references Guests (GuestID)
+);
