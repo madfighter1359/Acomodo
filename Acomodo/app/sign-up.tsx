@@ -113,7 +113,7 @@ export default function SignUp() {
               </TouchableOpacity>
             </View>
 
-            <Link href="/sign-in-new" replace={false}>
+            <Link href="/sign-in" replace={false}>
               <Text style={styles.formFooter}>
                 Already have an account?{" "}
                 <Text style={{ textDecorationLine: "underline" }}>Sign in</Text>
