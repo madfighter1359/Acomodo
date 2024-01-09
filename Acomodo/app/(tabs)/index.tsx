@@ -18,14 +18,22 @@ export default function Index() {
 
   const [loaded, setLoaded] = React.useState(false);
 
-  const [data, setData] = React.useState("");
+  const [data, setData] = React.useState("Loading...");
 
   const getData = async () => {
     try {
-      const response = await axios.get(
-        "https://madfighter1359.github.io/alerts/data.json"
-      );
-      return response.data;
+      const url = "https://api.jsonbin.io/v3/b/659d88a8266cfc3fde74cc41";
+      const headers = {
+        "X-Master-Key":
+          "$2a$10$bKGnyfpkW0yIN3/US.mr1O5di5EhgxF6J2T7L/mVCkVs10aCP1e2y",
+      };
+      const resp = await axios.get(url, { headers: headers });
+
+      // const timestamp = new Date().getTime();
+      // const response = await axios.get(
+      //   `https://madfighter1359.github.io/alerts/data.json?timestamp=${timestamp}`
+      // );
+      return resp.data.record;
     } catch (e) {
       console.log(e);
       return {
