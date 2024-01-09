@@ -10,7 +10,9 @@ import {
 import React from "react";
 import { Link } from "expo-router";
 import { useSession } from "../../ctx";
+import { StatusBar, setStatusBarStyle } from "expo-status-bar";
 import axios from "axios";
+import { useFocusEffect } from "expo-router";
 
 export default function Index() {
   const { session, signOut } = useSession();
@@ -60,6 +62,8 @@ export default function Index() {
     updateData();
     setLoaded(true);
   }, []);
+
+  useFocusEffect(() => setStatusBarStyle("dark"));
 
   return (
     <SafeAreaView style={styles.container}>
