@@ -20,7 +20,7 @@ export default function Index() {
 
   const [loaded, setLoaded] = React.useState(false);
 
-  const [data, setData] = React.useState("Loading...");
+  const [data, setData] = React.useState("...");
 
   const getData = async () => {
     try {
@@ -49,18 +49,26 @@ export default function Index() {
     setTimeout(() => {
       setRefreshing(false);
     }, 1000);
+    setLoaded(false);
     updateData();
   }, []);
 
   const updateData = () => {
     getData().then((data) => {
       setData(data.body);
+      if (!loaded) setLoaded(true);
     });
   };
 
+  // const updateData = new Promise(() => {
+  //   getData().then((data) => {
+  //     setData(data.body);
+  //     // if (!loaded) setLoaded(true);
+  //   });
+  // })
+
   React.useEffect(() => {
     updateData();
-    setLoaded(true);
   }, []);
 
   useFocusEffect(() => setStatusBarStyle("dark"));
