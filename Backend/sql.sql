@@ -45,3 +45,115 @@ create table Reservations (
     Price int, -- in pennies
     foreign key (GuestID) references Guests (GuestID)
 );
+
+create table PiperaRooms (
+    roomNr int primary key,
+    roomType varchar(16) check (
+        roomType in ("Studio", "Apartment", "ApartmentPlus")
+    )
+)
+create table DristorRooms (
+    roomNr int primary key,
+    roomType varchar(16) check (
+        roomType in ("Double", "Twin", "Triple", "Family")
+    ),
+)
+-- RESERVATION-> roomNr, location, guestid, 
+create table Reservations (
+    ReservationID int primary key auto_increment,
+    GuestID int not null,
+    RoomNr int, --check? fkey?
+    Loaction varchar(12) check (Location in ("")),
+    CheckIn date,
+    CheckOut date,
+    Guests int,
+    Price int, -- in pennies
+    foreign key (GuestID) references Guests (GuestID)
+);
+
+select
+    room_number
+from
+    reservation
+where
+    check_in_date not between "2024-01-21" and "2024-01-22"
+    and check_out_date not between "2024-01-21" and "2024-01-22";
+
+select
+    dristor_rooms.room_number
+from
+    dristor_rooms,
+    reservation
+where
+    not dristor_rooms.room_number = any (
+        select
+            room_number
+        from
+            reservation
+    );
+
+select
+    dristor_rooms.room_number
+from
+    dristor_rooms,
+    reservation
+where
+    not dristor_rooms.room_number = any (
+        select
+            room_number
+        from
+            reservation
+        where
+            (? < check_out_date)
+            and (check_in_date < ?)
+    );
+
+select
+    room_number
+from
+    reservation
+where
+    (? < check_out_date)
+    and (check_in_date < ?);
+
+--working
+SELECT
+    room_number
+FROM
+    dristor_rooms
+WHERE
+    NOT room_number = ANY (
+        SELECT
+            room_number
+        FROM
+            reservation
+        WHERE
+            (? < check_out_date)
+            AND (check_in_date < ?)
+    );
+
+SELECT
+    dristor_rooms.room_number
+FROM
+    dristor_rooms,
+    room_type
+WHERE
+    dristor_rooms.type_id = room_type.type_id
+    AND capacity >= ?;
+
+SELECT
+    price
+FROM
+    room_type
+WHERE
+    capacity >= ?
+    AND type_id = ANY (
+        SELECT
+            type_id
+        FROM
+            ?
+    )
+ORDER BY
+    price
+LIMIT
+    1;
