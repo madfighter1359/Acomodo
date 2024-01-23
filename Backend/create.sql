@@ -34,8 +34,8 @@ INSERT INTO
     room_type
 VALUES
     ("RES", "Studio", 2, 300),
-    ("DPR", "ApartmentPlus", 4, 450),
-    ("APT", "Apartment", 4, 600),
+    ("DPR", "ApartmentPlus", 4, 600),
+    ("APT", "Apartment", 4, 450),
     ("DBL", "Double", 2, 180),
     ("TWN", "Twin", 2, 200),
     ("TRP", "Triple", 3, 250),
@@ -75,12 +75,59 @@ VALUES
     (57, "DBL"),
     (36, "FMR"),
     (46, "FMR"),
-    (56, "FMR");
+    (56, "FMR"),
+    (12, "TWN"),
+    (14, "TWN"),
+    (25, "TWN"),
+    (27, "TWN"),
+    (35, "TWN"),
+    (37, "TWN"),
+    (45, "TWN"),
+    (47, "TWN"),
+    (55, "TWN"),
+    (32, "TRP"),
+    (42, "TRP"),
+    (52, "TRP");
 
 INSERT INTO
     pipera_rooms
 VALUES
-    (8, "APT");
+    (8, "APT"),
+    (24, "APT"),
+    (29, "APT"),
+    (31, "APT"),
+    (35, "APT"),
+    (39, "APT"),
+    (43, "APT"),
+    (45, "APT"),
+    (50, "APT"),
+    (51, "APT"),
+    (52, "APT"),
+    (53, "APT"),
+    (55, "APT"),
+    (4, "RES"),
+    (5, "RES"),
+    (9, "RES"),
+    (10, "RES"),
+    (11, "RES"),
+    (12, "RES"),
+    (13, "RES"),
+    (16, "RES"),
+    (17, "RES"),
+    (18, "RES"),
+    (19, "RES"),
+    (20, "RES"),
+    (21, "RES"),
+    (23, "RES"),
+    (25, "RES"),
+    (28, "RES"),
+    (38, "RES"),
+    (41, "RES"),
+    (42, "RES"),
+    (46, "RES"),
+    (56, "RES"),
+    (22, "DPR"),
+    (36, "DPR");
 
 CREATE TABLE guest (
     guest_id int primary key auto_increment,
