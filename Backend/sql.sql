@@ -157,3 +157,28 @@ ORDER BY
     price
 LIMIT
     1;
+
+SELECT
+    count(room_type.type_id),
+    room_type.type_id,
+    price,
+    type_name
+FROM
+    dristor_rooms,
+    room_type
+WHERE
+    (
+        NOT room_number = ANY (
+            SELECT
+                room_number
+            FROM
+                reservation
+            WHERE
+                ("2024-01-26" < check_out_date)
+                AND (check_in_date < "2024-01-29")
+        )
+    )
+    AND dristor_rooms.type_id = room_type.type_id
+    AND capacity >= 2
+GROUP BY
+    room_type.type_id;
