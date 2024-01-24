@@ -15,9 +15,11 @@ import FontAwesome from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
 
 export default function LocationSelect() {
+  // Get search terms passed to screen
   const form = useGlobalSearchParams();
   console.log(form);
 
+  // Empty state to store each result
   const [items, setItems] = useState<
     {
       img: string;
@@ -29,6 +31,7 @@ export default function LocationSelect() {
     }[]
   >([]);
 
+  // Runs on load, makes the search and sets state with results
   useEffect(() => {
     SearchForRoom({
       checkIn: Number(form.checkInDate),
@@ -38,7 +41,7 @@ export default function LocationSelect() {
       let results = [];
       for (const key in data) {
         results.push({
-          img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80",
+          img: data[key].image,
           name: data[key].locationName,
           rooms: data[key].available,
           location: data[key].area,
@@ -50,6 +53,7 @@ export default function LocationSelect() {
     });
   }, []);
 
+  // Passes the location selection to the next screen
   const handleSelect = (id: string) => {
     const params = {
       locationId: id,

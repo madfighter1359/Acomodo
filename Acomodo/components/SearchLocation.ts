@@ -4,12 +4,14 @@ interface Props {
   checkIn: number;
   checkOut: number;
   people: number;
+  locId: string;
 }
 
-export default async function SearchForRoom({
+export default async function SearchLocation({
   checkIn,
   checkOut,
   people,
+  locId,
 }: Props) {
   // Change dates to MySQL format
   const checkInFormatted = new Date(checkIn).toISOString().split("T")[0];
@@ -18,12 +20,13 @@ export default async function SearchForRoom({
   // Attempt to retrieve results for query from database by calling API
   try {
     const response = await axios.get(
-      "http://192.168.0.18/backend/reservationQuery.php",
+      "http://192.168.0.18/backend/locationQuery.php",
       {
         params: {
           checkInDate: checkInFormatted,
           checkOutDate: checkOutFormatted,
           numberOfPeople: people,
+          locationId: locId,
         },
       }
     );
