@@ -1,27 +1,43 @@
 SET
     FOREIGN_KEY_CHECKS = 0;
 
-DROP TABLE IF EXISTS location,
-room_type,
-dristor_rooms,
-pipera_rooms,
-guest,
-reservation;
+-- DROP TABLE IF EXISTS location,
+-- room_type,
+-- dri_rooms,
+-- pip_rooms,
+-- guest,
+-- reservation;
+DROP DATABASE IF EXISTS acomodo;
 
 SET
     FOREIGN_KEY_CHECKS = 1;
 
+CREATE DATABASE acomodo;
+
+USE acomodo;
+
 CREATE TABLE location (
     location_id varchar(3) primary key,
     location_name varchar(64) not null,
-    area varchar(32)
+    area varchar(32),
+    image varchar(256)
 );
 
 INSERT INTO
     location
 VALUES
-    ("PIP", "Acomodoro Apartments Next-Door", "Pipera"),
-    ("DRI", "Acomodoro Residence", "Dristor");
+    (
+        "PIP",
+        "Acomodoro Apartments Next-Door",
+        "Pipera",
+        "https://www.acomodo.ro/wp-content/uploads/2020/01/1-39-2048x1365.jpg.webp"
+    ),
+    (
+        "DRI",
+        "Acomodoro Residence",
+        "Dristor",
+        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472121158.jpg?k=eace370a0f64e0b4050eb7bfbeee2ba119d23c495b51ebe73328e71b40091dc3&o=&hp=1"
+    );
 
 CREATE TABLE room_type (
     type_id varchar(3) primary key,
@@ -34,27 +50,27 @@ INSERT INTO
     room_type
 VALUES
     ("RES", "Studio", 2, 300),
-    ("DPR", "ApartmentPlus", 4, 600),
+    ("DPR", "Apartment Plus", 4, 600),
     ("APT", "Apartment", 4, 450),
     ("DBL", "Double", 2, 180),
     ("TWN", "Twin", 2, 200),
     ("TRP", "Triple", 3, 250),
     ("FMR", "Family", 4, 300);
 
-CREATE TABLE dristor_rooms (
+CREATE TABLE dri_rooms (
     room_number int primary key,
     type_id varchar(3),
     foreign key (type_id) references room_type (type_id) on update cascade on delete cascade
 );
 
-CREATE TABLE pipera_rooms (
+CREATE TABLE pip_rooms (
     room_number int primary key,
     type_id varchar(3),
     foreign key (type_id) references room_type (type_id) on update cascade on delete cascade
 );
 
 INSERT INTO
-    dristor_rooms
+    dri_rooms
 VALUES
     (11, "DBL"),
     (13, "DBL"),
@@ -90,7 +106,7 @@ VALUES
     (52, "TRP");
 
 INSERT INTO
-    pipera_rooms
+    pip_rooms
 VALUES
     (8, "APT"),
     (24, "APT"),
@@ -166,3 +182,16 @@ INSERT INTO
     )
 values
     (13, 1, "DRI", "2024-01-23", "2024-01-28", 2, 600);
+
+INSERT INTO
+    reservation (
+        room_number,
+        guest_id,
+        location_id,
+        check_in_date,
+        check_out_date,
+        number_guests,
+        price
+    )
+values
+    (13, 1, "DRI", "2024-02-01", "2024-02-06", 2, 600);
