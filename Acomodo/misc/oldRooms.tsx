@@ -130,51 +130,40 @@ export default function RoomSelect() {
                       <Text style={styles.cardPriceCurrency}>RON</Text>
                     </Text>
 
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        // backgroundColor: "purple",
-                        width: "100%",
-                        justifyContent: "space-between",
+                    <TouchableOpacity
+                      onPress={() => {
+                        // handle onPress
                       }}
                     >
-                      <TouchableOpacity
-                        onPress={() => {
-                          // handle onPress
-                        }}
-                      >
-                        <View style={styles.btn}>
-                          <Text style={styles.btnText}>Book now</Text>
-                        </View>
-                      </TouchableOpacity>
-                      <View
-                        style={{
-                          justifyContent: "flex-end",
-                          // backgroundColor: "red",
-                          flexDirection: "row",
-                          alignItems: "flex-end",
-                          alignSelf: "flex-end",
-                          display: "flex",
-                        }}
-                      >
-                        <Text
-                          style={[
-                            styles.cardAvailabilityText,
-                            {
-                              fontSize: 17,
-                              fontWeight: "700",
-                              color: "#173153",
-                              paddingBottom: 0,
-                            },
-                          ]}
-                        >
-                          {available}
-                        </Text>
-                        <Text style={styles.cardAvailabilityText}>
-                          available
-                        </Text>
+                      <View style={styles.btn}>
+                        <Text style={styles.btnText}>Book now</Text>
                       </View>
-                    </View>
+                    </TouchableOpacity>
+                  </View>
+                  <View
+                    style={{
+                      justifyContent: "flex-end",
+                      // backgroundColor: "red",
+                      flexDirection: "row",
+                      alignItems: "flex-end",
+                      alignSelf: "flex-end",
+                      display: "flex",
+                    }}
+                  >
+                    <Text
+                      style={[
+                        styles.cardAvailabilityText,
+                        {
+                          fontSize: 17,
+                          fontWeight: "700",
+                          color: "#173153",
+                          paddingBottom: 1,
+                        },
+                      ]}
+                    >
+                      {available}
+                    </Text>
+                    <Text style={styles.cardAvailabilityText}>available</Text>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -268,9 +257,9 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#5f697d",
     fontSize: 12,
-    paddingLeft: 2,
-    paddingBottom: 1,
-    // paddingRight: 2,
+    paddingLeft: 1,
+    paddingBottom: 2,
+    paddingRight: 2,
   },
   /** Button */
   btn: {
