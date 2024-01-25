@@ -9,7 +9,22 @@ export default function Layout() {
     <SessionProvider>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="sign-up" />
+        <Stack.Screen
+          name="(booking)/location-select"
+          options={{ title: "Select location", headerBackTitleVisible: false }}
+        />
+        <Stack.Screen
+          name="(booking)/room-select"
+          options={{ title: "Select room", headerBackTitleVisible: false }}
+        />
+        <Stack.Screen
+          name="sign-up"
+          options={{ title: "Sign Up", headerBackTitleVisible: false }}
+        />
+        <Stack.Screen
+          name="sign-in"
+          options={{ title: "Sign In", headerBackTitleVisible: false }}
+        />
       </Stack>
       <StatusBar style="dark" />
     </SessionProvider>
