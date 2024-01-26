@@ -12,7 +12,7 @@ function makeSearch($hotelName) {
     global $conn, $checkIn, $checkOut, $nrGuests;
 
     //Create and execute statement for hotel passed
-    $stmt = $conn->prepare("SELECT count(room_type.type_id) as count, room_type.type_id as type_id, price, type_name, capacity FROM " . $hotelName . "_rooms, room_type WHERE 
+    $stmt = $conn->prepare("SELECT count(room_type.type_id) as count, room_type.type_id as type_id, price, type_name, capacity, image FROM " . $hotelName . "_rooms, room_type WHERE 
     (NOT room_number = ANY 
     (SELECT room_number FROM reservation WHERE (? < check_out_date) AND (check_in_date < ?)))
     AND " . $hotelName . "_rooms.type_id = room_type.type_id
@@ -52,6 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $response->{$row["type_id"]}->price = $row["price"];
         $response->{$row["type_id"]}->typeName = $row["type_name"];
         $response->{$row["type_id"]}->capacity = $row["capacity"];
+        $response->{$row["type_id"]}->image = $row["image"];
     }
 
 

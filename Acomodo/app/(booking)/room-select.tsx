@@ -8,8 +8,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useGlobalSearchParams } from "expo-router";
-import RoomsView from "../../components/RoomsView";
+import { router, useGlobalSearchParams } from "expo-router";
 import SearchLocation from "../../components/SearchLocation";
 import FontAwesome from "react-native-vector-icons/FontAwesome6";
 
@@ -27,8 +26,21 @@ export default function RoomSelect() {
       checkOut: number;
       price: number;
       available: number;
+      typeId: string;
     }[]
   >([]);
+
+  const handleBook = (id: string) => {
+    const params = {
+      locationId: form.locationId,
+      roomType: id,
+      numberOfPeople: form.numberOfPeople,
+      checkInDate: form.checkInDate,
+      checkOutDate: form.checkOutDate,
+      numberOfNights: form.numberOfNights,
+    };
+    router.push({ pathname: "/confirm-booking", params: params });
+  };
 
   useEffect(() => {
     SearchLocation({
@@ -41,13 +53,14 @@ export default function RoomSelect() {
       for (const key in data) {
         console.log(data[key]);
         results.push({
-          img: "https://images.unsplash.com/photo-1518684079-3c830dcef090?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80",
+          img: data[key].image,
           type: data[key].typeName,
           capacity: data[key].capacity,
           checkIn: +form.checkInDate,
           checkOut: +form.checkOutDate,
           price: data[key].price * Number(form.numberOfNights),
           available: data[key].available,
+          typeId: key,
         });
       }
       results.sort((a, b) => a.price - b.price);
@@ -62,7 +75,16 @@ export default function RoomSelect() {
 
         {items.map(
           (
-            { img, type, capacity, checkIn, checkOut, price, available },
+            {
+              img,
+              type,
+              capacity,
+              checkIn,
+              checkOut,
+              price,
+              available,
+              typeId,
+            },
             index
           ) => {
             return (
@@ -140,7 +162,7 @@ export default function RoomSelect() {
                     >
                       <TouchableOpacity
                         onPress={() => {
-                          // handle onPress
+                          handleBook(typeId);
                         }}
                       >
                         <View style={styles.btn}>

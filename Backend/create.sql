@@ -43,19 +43,62 @@ CREATE TABLE room_type (
     type_id varchar(3) primary key,
     type_name varchar(32),
     capacity int,
-    price int
+    price int,
+    image varchar(256)
 );
 
 INSERT INTO
     room_type
 VALUES
-    ("RES", "Studio", 2, 300),
-    ("DPR", "Apartment Plus", 4, 600),
-    ("APT", "Apartment", 4, 450),
-    ("DBL", "Double", 2, 180),
-    ("TWN", "Twin", 2, 200),
-    ("TRP", "Triple", 3, 250),
-    ("FMR", "Family", 4, 300);
+    (
+        "RES",
+        "Studio",
+        2,
+        300,
+        "https://d3hj7i5wny7p5d.cloudfront.net/upload/rooms/13054-m.jpg"
+    ),
+    (
+        "DPR",
+        "Apartment Plus",
+        4,
+        600,
+        "https://d3hj7i5wny7p5d.cloudfront.net/upload/rooms/13055-m.jpg"
+    ),
+    (
+        "APT",
+        "Apartment",
+        4,
+        450,
+        "https://d3hj7i5wny7p5d.cloudfront.net/upload/rooms/13056-m.jpg"
+    ),
+    (
+        "DBL",
+        "Double",
+        2,
+        180,
+        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472120586.jpg?k=20e9b73c3de67dff69d7f3380baeae130944b60928f1a1a312ac5d2844a514e9&o=&hp=1"
+    ),
+    (
+        "TWN",
+        "Twin",
+        2,
+        200,
+        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472111196.jpg?k=7e53ca85446dae77747e837d80e023c51e33fd2ae11fea37e32ebd5046a3fd65&o=&hp=1"
+    ),
+    (
+        "TRP",
+        "Triple",
+        3,
+        250,
+        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472103342.jpg?k=9bd7dcdcf58ce0695c217a540bd06d7cb4673b8606ad5d893f9482a54c806252&o=&hp=1"
+    ),
+    (
+        "FMR",
+        "Family",
+        4,
+        300,
+        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472120654.jpg?k=66b1b02d44c53e73c11219ca1f994291968249fb2785d26a4647138a4670e778&o=&hp=1"
+    );
 
 CREATE TABLE dri_rooms (
     room_number int primary key,

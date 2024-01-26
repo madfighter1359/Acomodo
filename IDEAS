@@ -1,0 +1,3 @@
+Check whether using global params is right or if local would be more efficient (we are sending data from each screen to the next, but some data is the same. Look at appending? Or having the checkin and out and nr people in global and then the room code and location id local?)
+
+Params seem to get sent to every following screen so careful with how navigation and linking is structured. why is the page before being re rendered with every nav
