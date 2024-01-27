@@ -16,7 +16,7 @@ function makeSearch($hotelName) {
     (NOT room_number = ANY 
     (SELECT room_number FROM reservation WHERE (? < check_out_date) AND (check_in_date < ?)))
     AND " . $hotelName . "_rooms.type_id = room_type.type_id
-    AND capacity >= ?");
+    AND capacity >= ?;");
     $stmt -> bind_param("ssi", $checkIn, $checkOut, $nrGuests);
     $stmt->execute();
     $result = $stmt->get_result();

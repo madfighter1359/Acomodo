@@ -9,14 +9,14 @@ import {
   Image,
 } from "react-native";
 import { useEffect, useState } from "react";
-import { useGlobalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import SearchForRoom from "../../components/SearchForRoom";
 import FontAwesome from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
 
 export default function LocationSelect() {
   // Get search terms passed to screen
-  const form = useGlobalSearchParams();
+  const form = useLocalSearchParams();
   console.log(form);
 
   // Empty state to store each result

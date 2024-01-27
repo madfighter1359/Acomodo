@@ -20,7 +20,8 @@ export default async function SearchLocation({
   // Attempt to retrieve results for query from database by calling API
   try {
     const response = await axios.get(
-      "http://192.168.0.18/backend/locationQuery.php",
+      // "http://192.168.0.18/backend/locationQuery.php",
+      "http://82.25.148.82:81/Backend/locationQuery.php",
       {
         params: {
           checkInDate: checkInFormatted,
@@ -30,7 +31,7 @@ export default async function SearchLocation({
         },
       }
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (e) {
     console.log(e);

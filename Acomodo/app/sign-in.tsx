@@ -22,7 +22,7 @@ export default function SignIn() {
       console.log("Signing in");
 
       signIn(form.email, form.password);
-      router.replace("/");
+      router.back();
     } else {
       alert("Please input an email and password!");
     }

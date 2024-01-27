@@ -1,3 +1,7 @@
-Check whether using global params is right or if local would be more efficient (we are sending data from each screen to the next, but some data is the same. Look at appending? Or having the checkin and out and nr people in global and then the room code and location id local?)
+Check whether using global params is right or if local would be more efficient (we are sending data from each screen to the next, but some data is the same. Look at appending? Or having the checkin and out and nr people in global and then the room code and location id local?) -- local seems to be working
 
 Params seem to get sent to every following screen so careful with how navigation and linking is structured. why is the page before being re rendered with every nav
+
+For raspberry pi: everything is case sensitive (e.g Backend not backend, and had to convert location id to lower case since DRI_rooms != dri_rooms. not quite sure why this is the case but oh well)
+
+Maybe implement a global context (or just for the .ts files that make requests) with a settings switch which switches from local to public mode

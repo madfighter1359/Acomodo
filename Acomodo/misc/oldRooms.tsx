@@ -8,14 +8,14 @@ import {
   SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useGlobalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import RoomsView from "../../components/RoomsView";
 import SearchLocation from "../../components/SearchLocation";
 import FontAwesome from "react-native-vector-icons/FontAwesome6";
 
 // Need to get available room types
 export default function RoomSelect() {
-  const form = useGlobalSearchParams();
+  const form = useLocalSearchParams();
   console.log(form);
 
   const [items, setItems] = useState<

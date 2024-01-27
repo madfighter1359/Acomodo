@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { Link, useGlobalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import { useSession } from "../../ctx";
 
 export default function ConfirmBooking() {
-  const form = useGlobalSearchParams();
+  const form = useLocalSearchParams();
   const { session } = useSession();
   console.log(form);
   return (

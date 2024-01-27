@@ -28,7 +28,7 @@ export default function SignUp() {
 
         signUp(form.email, form.password, form.fullname);
 
-        router.replace("/");
+        router.back();
       } else {
         alert("Passwords must match!");
       }
