@@ -5,7 +5,7 @@ header("Content-Type: application/json");
 
 
 ini_set('display_errors', 1);
-
+mysqli_report(MYSQLI_REPORT_OFF);
 
 function makeSearch($hotelName) {
     // Get global variables
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
     foreach ($result as $row) {
         // Create empty object for the current room type
-        $response->{$row["type_id"]} = new stdClass();
+        $response->{strtolower($row["type_id"])} = new stdClass();
 
         // Store attributes of current room type in response object
         $response->{$row["type_id"]}->available = $row["count"];

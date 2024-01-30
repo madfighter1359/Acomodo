@@ -35,10 +35,27 @@ function makeSearch($hotelName) {
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
     //Retrieve search params
+    if (!isset($_GET["checkInDate"],$_GET["checkOutDate"],$_GET["numberOfPeople"])) {
+        http_response_code(400);
+        die(json_encode(["message"=>"Bad parameters"]));
+    }
+
     $checkIn = $_GET["checkInDate"];
     $checkOut = $_GET["checkOutDate"];
     $nrGuests = $_GET["numberOfPeople"];
     
+    if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $checkIn) || !preg_match("/^\d{4}-\d{2}-\d{2}$/", $checkOut)) {
+        http_response_code(400);
+        die(json_encode(["message"=>"Invalid dates"]));
+    }
+
+    $minDate = new DateTime();
+    $maxDate = (new DateTime())->modify('+1 year');
+
+    if (DateTime::createFromFormat('Y-m-d', $checkIn) < $minDate || DateTime::createFromFormat('Y-m-d', $checkOut) > $maxDate || DateTime::createFromFormat('Y-m-d', $checkOut) <= DateTime::createFromFormat('Y-m-d', $checkIn)) {
+        http_response_code(400);
+        die(json_encode(["message"=>"Invalid dates"]));
+    }
 
     //Connect to DB
     require("acomodoConnect.php");
@@ -59,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $response->{$row["location_id"]}->image = $row["image"];
 
         // Use the search function with the current location and the passed params
-        $search = makeSearch($row["location_id"]);
+        $search = makeSearch(strtolower($row["location_id"]));
 
         // Add results to response object
         $response->{$row["location_id"]}->available = $search[0];
@@ -70,5 +87,9 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     //Return the response object in JSON format
     echo json_encode($response);
 
+}
+else {
+    http_response_code(405);
+    die(json_encode(["message"=>"Bad method"]));
 }
 
