@@ -43,18 +43,29 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     $checkIn = $_GET["checkInDate"];
     $checkOut = $_GET["checkOutDate"];
     $nrGuests = $_GET["numberOfPeople"];
-    
-    if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $checkIn) || !preg_match("/^\d{4}-\d{2}-\d{2}$/", $checkOut)) {
+
+
+    $minDate = new DateTime('today');
+    $maxDate = (new DateTime('today'))->modify('+1 year');
+
+
+    try {
+        $inFormatted = new DateTime($checkIn);
+        $outFormatted = new DateTime($checkOut);
+    }
+    catch (Exception $e) {
         http_response_code(400);
         die(json_encode(["message"=>"Invalid dates"]));
     }
 
-    $minDate = new DateTime();
-    $maxDate = (new DateTime())->modify('+1 year');
-
-    if (DateTime::createFromFormat('Y-m-d', $checkIn) < $minDate || DateTime::createFromFormat('Y-m-d', $checkOut) > $maxDate || DateTime::createFromFormat('Y-m-d', $checkOut) <= DateTime::createFromFormat('Y-m-d', $checkIn)) {
+    if (!$inFormatted || !$outFormatted || $inFormatted < $minDate || $outFormatted > $maxDate) {
         http_response_code(400);
         die(json_encode(["message"=>"Invalid dates"]));
+    }
+
+    if (!ctype_digit($nrGuests) || $nrGuests < 1 || $nrGuests > 4) {
+        http_response_code(400);
+        die(json_encode(["message"=>"Invalid guest count"]));
     }
 
     //Connect to DB
@@ -68,8 +79,19 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     $stmt = "SELECT * FROM location";
     $result = $conn->query($stmt);
 
+    if (!$result) {
+        http_response_code(500);
+        die();
+    }
+
     // Iterate through each location
     foreach ($result as $row) {
+        try {
+
+        }
+        catch (Exception $e) {
+            
+        }
         $response->{$row["location_id"]} = new stdClass();
         $response->{$row["location_id"]}->locationName = $row["location_name"];
         $response->{$row["location_id"]}->area = $row["area"];
