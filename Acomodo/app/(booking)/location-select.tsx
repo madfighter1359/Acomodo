@@ -54,13 +54,14 @@ export default function LocationSelect() {
   }, []);
 
   // Passes the location selection to the next screen
-  const handleSelect = (id: string) => {
+  const handleSelect = (id: string, name: string) => {
     const params = {
       locationId: id,
       numberOfPeople: form.numberOfPeople,
       checkInDate: form.checkInDate,
       checkOutDate: form.checkOutDate,
       numberOfNights: form.numberOfNights,
+      locationName: name,
     };
     router.push({ pathname: "/room-select", params: params });
   };
@@ -91,7 +92,9 @@ export default function LocationSelect() {
                   index === 0 && { borderTopWidth: 0 },
                 ]}
               >
-                <TouchableOpacity onPress={() => handleSelect(locationId)}>
+                <TouchableOpacity
+                  onPress={() => handleSelect(locationId, name)}
+                >
                   <View style={{}}>
                     <Image
                       alt=""

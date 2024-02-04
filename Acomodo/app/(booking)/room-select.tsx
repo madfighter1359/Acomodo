@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import SearchLocation from "../../components/SearchLocation";
 import FontAwesome from "react-native-vector-icons/FontAwesome6";
+import { functionTypeParam } from "@babel/types";
 
 // Need to get available room types
 export default function RoomSelect() {
@@ -30,7 +31,12 @@ export default function RoomSelect() {
     }[]
   >([]);
 
-  const handleBook = (id: string) => {
+  const handleBook = (
+    id: string,
+    name: string,
+    image: string,
+    price: number
+  ) => {
     const params = {
       locationId: form.locationId,
       roomType: id,
@@ -38,6 +44,10 @@ export default function RoomSelect() {
       checkInDate: form.checkInDate,
       checkOutDate: form.checkOutDate,
       numberOfNights: form.numberOfNights,
+      locationName: form.locationName,
+      typeName: name,
+      roomImage: image,
+      totalPrice: price,
     };
     router.push({ pathname: "/confirm-booking", params: params });
   };
@@ -161,7 +171,7 @@ export default function RoomSelect() {
                     >
                       <TouchableOpacity
                         onPress={() => {
-                          handleBook(typeId);
+                          handleBook(typeId, type, img, price);
                         }}
                       >
                         <View style={styles.btn}>

@@ -18,6 +18,17 @@ export default function Layout() {
           options={{ title: "Select room", headerBackTitleVisible: false }}
         />
         <Stack.Screen
+          name="(booking)/payment"
+          options={{
+            title: "Select payment method",
+            headerBackTitleVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="(booking)/confirm-booking"
+          options={{ title: "Review details", headerBackTitleVisible: false }}
+        />
+        <Stack.Screen
           name="sign-up"
           options={{ title: "Sign Up", headerBackTitleVisible: false }}
         />
