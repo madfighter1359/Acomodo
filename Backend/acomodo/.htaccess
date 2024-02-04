@@ -1,6 +1,6 @@
 RewriteEngine On
-RewriteBase /acommodo/
+RewriteBase /backend/acomodo/
 RewriteRule ^index\\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /acomodo/index.php [L]
+RewriteRule . /backend/acomodo/index.php [L]

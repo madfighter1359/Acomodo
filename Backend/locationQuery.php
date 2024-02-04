@@ -32,6 +32,11 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     $checkOut = $_GET["checkOutDate"];
     $nrGuests = $_GET["numberOfPeople"];
     $locationId = $_GET["locationId"];
+
+    if (!in_array(strtolower($locationId), ["pip", "dri"]) ) {
+        http_response_code(400);
+        die();
+    }
     
 
     //Connect to DB

@@ -182,3 +182,54 @@ WHERE
     AND capacity >= 2
 GROUP BY
     room_type.type_id;
+
+SELECT
+    room_number,
+    price
+FROM
+    dri_rooms,
+    room_type
+WHERE
+    (
+        NOT room_number = ANY (
+            SELECT
+                room_number
+            FROM
+                reservation
+            WHERE
+                ("2024-04-24" < check_out_date)
+                AND (check_in_date < "2024-04-29")
+        )
+    )
+    AND dri_rooms.type_id = room_type.type_id
+    AND dri_rooms.type_id = "DBL"
+    AND capacity >= 3
+ORDER BY
+    room_number ASC
+LIMIT
+    1;
+
+SELECT
+    room_number,
+    price
+FROM
+    dri_rooms,
+    room_type
+WHERE
+    (
+        NOT room_number = ANY (
+            SELECT
+                room_number
+            FROM
+                reservation
+            WHERE
+                ("2024-05-24" < check_out_date)
+                AND (check_in_date < "2024-05-29")
+        )
+    )
+    AND dri_rooms.type_id = room_type.type_id
+    AND capacity >= 3
+ORDER BY
+    room_number ASC
+LIMIT
+    1;
