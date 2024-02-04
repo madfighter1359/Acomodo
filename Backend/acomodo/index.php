@@ -10,7 +10,6 @@ $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 //     exit();
 // }
 
-
 switch ($uri) {
     case '/backend/acomodo/search':
         require PROJECT_ROOT_PATH . "/Controller/Api/SearchController.php";
@@ -27,7 +26,6 @@ switch ($uri) {
         exit();
 
 }
-
 
 // require PROJECT_ROOT_PATH . "/Controller/Api/SearchController.php";
 // $objFeedController = new SearchController();

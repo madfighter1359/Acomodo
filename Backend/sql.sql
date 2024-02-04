@@ -202,7 +202,7 @@ WHERE
         )
     )
     AND dri_rooms.type_id = room_type.type_id
-    AND dri_rooms.type_id = "DBL"
+    AND room_type.type_id = "TRP"
     AND capacity >= 3
 ORDER BY
     room_number ASC
@@ -223,8 +223,8 @@ WHERE
             FROM
                 reservation
             WHERE
-                ("2024-05-24" < check_out_date)
-                AND (check_in_date < "2024-05-29")
+                ("2024-04-24" < check_out_date)
+                AND (check_in_date < "2024-04-29")
         )
     )
     AND dri_rooms.type_id = room_type.type_id

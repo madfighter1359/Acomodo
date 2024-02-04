@@ -5,6 +5,7 @@ import { Link } from "expo-router";
 import { useSession } from "../../ctx";
 import Button from "../../components/Button";
 import { router } from "expo-router";
+import { auth } from "../../firebase-config";
 
 export default function Profile() {
   const { session, signOut, signIn } = useSession();
@@ -30,6 +31,17 @@ export default function Profile() {
             type="secondary"
           >
             Sign Out
+          </Button>
+          <Button
+            onPress={() => {
+              auth.currentUser
+                ?.getIdToken(true)
+                .then((token) => console.log(token));
+            }}
+            size="medium"
+            type="secondary"
+          >
+            Token
           </Button>
         </>
       ) : (

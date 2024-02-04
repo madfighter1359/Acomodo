@@ -1,23 +1,37 @@
 <?php
-class BookingController extends BaseController {
-    public function bookAction() {
+class BookingController extends BaseController
+{
+    public function bookAction()
+    {
         if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-            die();   
-        }
-        if (!isset($_POST["checkInDate"], $_POST["checkOutDate"], $_POST["numberOfPeople"],$_POST["price"],$_POST["guestId"],$_POST["locationId"],$_POST["roomType"])) {
-            die();
-        }
-        $validator = new Validation();
-        if (!($validator->isDate($_POST["checkInDate"]) && $validator->isDate($_POST["checkOutDate"]) /* */)) {
             die();
         }
 
+        $validator = new Validation();
+
+        $userId = $validator->authenticateToken(explode(" ", $_SERVER['HTTP_AUTHORIZATION'])[1]);
+
+        if (!$userId) {
+            die("Invalid jwt");
+        }
+
+        echo $userId;
+
+        $guestModel = new GuestModel();
+        $guestId = $guestModel->getGuestId($userId);
+
+        if (!isset($_POST["checkInDate"], $_POST["checkOutDate"], $_POST["numberOfPeople"], $_POST["price"], $_POST["locationId"], $_POST["roomType"])) {
+            die("");
+        }
+
+        if (!($validator->isDate($_POST["checkInDate"]) && $validator->isDate($_POST["checkOutDate"]) /* */)) {
+            die();
+        }
 
         $checkIn = $_POST["checkInDate"];
         $checkOut = $_POST["checkOutDate"];
         $nrGuests = $_POST["numberOfPeople"];
         $price = $_POST["price"];
-        $guestId = $_POST["guestId"];
         $locId = $_POST["locationId"];
         $roomType = $_POST["roomType"];
 
@@ -41,6 +55,6 @@ class BookingController extends BaseController {
             $response->details->nights = $nights;
             echo json_encode($response);
         }
-        
+
     }
 }

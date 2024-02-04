@@ -192,7 +192,9 @@ CREATE TABLE guest (
     guest_id int primary key auto_increment,
     guest_name varchar(64),
     date_of_birth date,
-    document_number varchar(32)
+    document_number varchar(32),
+    firebase_uid varchar(128),
+    unique (firebase_uid)
 );
 
 INSERT INTO
