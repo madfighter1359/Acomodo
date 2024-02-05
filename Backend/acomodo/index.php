@@ -21,6 +21,11 @@ switch ($uri) {
         $objFeedController = new BookingController();
         $objFeedController->bookAction();
         break;
+    case '/backend/acomodo/signup':
+        require PROJECT_ROOT_PATH . "/Controller/Api/GuestController.php";
+        $objFeedController = new GuestController();
+        $objFeedController->newGuest();
+        break;
     default:
         http_response_code(404);
         exit();

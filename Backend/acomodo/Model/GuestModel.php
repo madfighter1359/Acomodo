@@ -15,8 +15,11 @@ class GuestModel extends Database
     }
     public function createGuest($uid, $name, $doB, $docNr)
     {
-        $this->insert("INSERT INTO guest (guest_name, date_of_birth, document_number, firebase_uid)
+        $created = $this->insert("INSERT INTO guest (guest_name, date_of_birth, document_number, firebase_uid)
         VALUES (?, ?, ?, ?);", [$name, $doB, $docNr, $uid], "ssss");
+
+        // insert function returns different datatype based on result - fix..
+        var_dump($created);
 
     }
 }
