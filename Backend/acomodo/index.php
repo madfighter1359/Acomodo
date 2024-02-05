@@ -1,6 +1,10 @@
 <?php
-require __DIR__ . "/inc/bootstrap.php";
+header("Access-Control-Allow-Headers: Authorization, *");
 header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
+// header("Access-Control-Allow-Headers: *");
+require __DIR__ . "/inc/bootstrap.php";
+
 mysqli_report(MYSQLI_REPORT_OFF);
 ini_set('display_errors', 1);
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

@@ -6,6 +6,7 @@ import { useSession } from "../../ctx";
 import Button from "../../components/Button";
 import { router } from "expo-router";
 import { auth } from "../../firebase-config";
+import NewGuest from "../../components/NewGuest";
 
 export default function Profile() {
   const { session, signOut, signIn } = useSession();
@@ -42,6 +43,22 @@ export default function Profile() {
             type="secondary"
           >
             Token
+          </Button>
+          <Button
+            onPress={() => {
+              auth.currentUser?.getIdToken(true).then((token) =>
+                NewGuest({
+                  token: token,
+                  guestName: "Testy Amith",
+                  guestDoB: 1646179200000,
+                  guestDocNr: "120923",
+                })
+              );
+            }}
+            size="medium"
+            type="secondary"
+          >
+            Register
           </Button>
         </>
       ) : (

@@ -9,7 +9,6 @@ class GuestController extends BaseController
         }
 
         $validator = new Validation();
-
         try {
             $userId = $validator->authenticateToken(explode(" ", $_SERVER['HTTP_AUTHORIZATION'])[1]);
         } catch (Throwable $e) {
@@ -36,6 +35,17 @@ class GuestController extends BaseController
         $guestModel = new GuestModel();
 
         $inserted = $guestModel->createGuest($userId, $guestName, $guestDoB, $guestDocNr);
+
+        if ($inserted) {
+            $response = new stdClass();
+            $response->status = "Success";
+            $response->guestId = $inserted;
+            $response->details = new stdClass();
+            $response->details->guestName = $guestName;
+            $response->details->guestDoB = $guestDoB;
+            $response->details->guestDocNr = $guestDocNr;
+            $this->sendOutput(json_encode($response));
+        }
 
     }
 }
