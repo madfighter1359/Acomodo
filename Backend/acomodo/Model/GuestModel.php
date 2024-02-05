@@ -18,8 +18,12 @@ class GuestModel extends Database
         $created = $this->insert("INSERT INTO guest (guest_name, date_of_birth, document_number, firebase_uid)
         VALUES (?, ?, ?, ?);", [$name, $doB, $docNr, $uid], "ssss");
 
-        // insert function returns different datatype based on result - fix..
-        var_dump($created);
+        if ($created[0] === 1) {
+            $id = $created[1];
+            return $id;
+        } else {
+            die("Error creating");
+        }
 
     }
 }

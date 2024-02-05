@@ -26,11 +26,14 @@ class Database
         }
         return false;
     }
-    public function insert($query = "", $params = [], $param_types = "") {
+
+    // Returns an array with format [$insertedRows, $insertedId / $errorNr depending on outcome]
+    public function insert($query = "", $params = [], $param_types = "")
+    {
         try {
             $stmt = $this->executeStatement($query, $params, $param_types);
             if ($stmt->errno) {
-                return $stmt->error;
+                return [0, $stmt->errno];
             }
             $rows = $stmt->affected_rows;
             $id = $stmt->insert_id;
@@ -39,7 +42,7 @@ class Database
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-        return false;
+        return [0, null];
     }
     private function executeStatement($query = "", $params = [], $param_types = "")
     {

@@ -19,6 +19,8 @@ class Validation
         $publicKeys = json_decode(file_get_contents("https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com"));
 
         $decoded = "";
+
+        JWT::$leeway = 60; // $leeway in seconds
         foreach ($publicKeys as $key) {
             try {
                 $decoded = JWT::decode($jwt, new Key($key, 'RS256'));
@@ -28,21 +30,14 @@ class Validation
             }
         }
 
-        // function validateToken($token)
-        // {
-        //     $valid = $token['exp'] > time() &&
-        //     $token['iat'] < time() && $token['aud'] == "acomodoro-29361" &&
-        //     $token['iss'] == "https://securetoken.google.com/acomodoro-29361" &&
-        //     $token['sub'] && $token['auth_time'] < time();
-        //     return $valid;
-        // }
-
         function validateToken($token)
         {
-            $valid = $token->exp > time() &&
-            $token->iat < time() && $token->aud == "acomodoro-29361" &&
+            $time = time();
+            $leeway = 60;
+            $valid = $token->exp > (time() - $leeway) &&
+            $token->iat < (time() + $leeway) && $token->aud == "acomodoro-29361" &&
             $token->iss == "https://securetoken.google.com/acomodoro-29361" &&
-            $token->sub && $token->auth_time < time();
+            $token->sub && $token->auth_time < (time() - $leeway);
             return $valid;
         }
 
