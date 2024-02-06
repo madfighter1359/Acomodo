@@ -13,10 +13,10 @@ import { useSession } from "../ctx";
 
 export default function SignUp() {
   const [form, setForm] = useState({
-    fullname: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    fullname: "Test",
+    email: "t@g.com",
+    password: "aqwsderf",
+    confirmPassword: "aqwsderf",
   });
 
   const { signUp } = useSession();

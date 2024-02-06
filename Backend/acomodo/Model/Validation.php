@@ -37,7 +37,7 @@ class Validation
             $valid = $token->exp > (time() - $leeway) &&
             $token->iat < (time() + $leeway) && $token->aud == "acomodoro-29361" &&
             $token->iss == "https://securetoken.google.com/acomodoro-29361" &&
-            $token->sub && $token->auth_time < (time() - $leeway);
+            $token->sub && $token->auth_time < (time() + $leeway);
             return $valid;
         }
 

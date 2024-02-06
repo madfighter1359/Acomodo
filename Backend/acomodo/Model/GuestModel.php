@@ -22,6 +22,7 @@ class GuestModel extends Database
             $id = $created[1];
             return $id;
         } else {
+            http_response_code(500);
             die("Error creating");
         }
 

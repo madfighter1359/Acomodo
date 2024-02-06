@@ -11,6 +11,7 @@ class Database
                 throw new Exception("Could not connect to database.");
             }
         } catch (Exception $e) {
+            http_response_code(500);
             throw new Exception($e->getMessage());
         }
     }

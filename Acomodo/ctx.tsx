@@ -6,10 +6,12 @@ import {
   onAuthStateChanged,
   updateProfile,
   User,
+  deleteUser,
 } from "firebase/auth";
+import NewGuest from "./components/NewGuest";
 
 interface AuthContextProps {
-  signUp: (email: string, password: string, displayName?: string) => void;
+  signUp: (email: string, password: string, displayName: string) => void;
   signIn: (email: string, password: string) => void;
   signOut: () => void;
   session?: User | null;
@@ -48,13 +50,26 @@ export function SessionProvider(props: React.PropsWithChildren) {
   return (
     <AuthContext.Provider
       value={{
-        signUp: (email: string, password: string, displayName?: string) => {
+        signUp: (email: string, password: string, displayName: string) => {
           createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
               const user = userCredential.user;
               if (displayName) {
                 updateProfile(user, { displayName: displayName });
               }
+              user?.getIdToken(true).then((token) =>
+                NewGuest({
+                  token: token,
+                  guestName: displayName,
+                  guestDoB: 1646179200000,
+                  guestDocNr: "120923",
+                }).then((code) => {
+                  console.log(code);
+                  if (code!=200) {
+                  deleteUser(user);
+                }})
+              );
+
               setSession(user);
             })
             .catch((e) => {

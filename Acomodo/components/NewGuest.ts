@@ -32,10 +32,11 @@ export default async function NewGuest({
       },
     });
     console.log(response.data);
-    return response.data;
+    return response.status;
   } catch (e) {
     if (axios.isAxiosError(e)) {
       console.log(e.response?.data);
+      return e.response?.status;
     }
     console.log(e);
   }
