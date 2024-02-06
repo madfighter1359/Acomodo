@@ -19,7 +19,7 @@ export default async function SearchForRoom({
   try {
     const response = await axios.get(
       // "http://192.168.0.18/backend/reservationQuery.php",
-      "http://82.25.148.82:81/Backend/reservationQuery.php",
+      "http://82.25.148.82:81/backend/acomodo/search",
       {
         params: {
           checkInDate: checkInFormatted,

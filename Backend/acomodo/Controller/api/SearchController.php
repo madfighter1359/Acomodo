@@ -57,6 +57,9 @@ class SearchController extends BaseController
             $minDate = new DateTime('today');
             $maxDate = (new DateTime('today'))->modify('+1 year');
 
+            $inFormatted = Validation::toDate($checkIn);
+            $outFormatted = Validation::toDate($checkOut);
+
             if ($inFormatted === false || $outFormatted === false) {
                 http_response_code(400);
                 die(json_encode(["message" => "Invalid dates"]));

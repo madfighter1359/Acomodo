@@ -21,7 +21,7 @@ export default async function SearchLocation({
   try {
     const response = await axios.get(
       // "http://192.168.0.18/backend/locationQuery.php",
-      "http://82.25.148.82:81/Backend/locationQuery.php",
+      "http://82.25.148.82:81/backend/acomodo/search/details",
       {
         params: {
           checkInDate: checkInFormatted,
