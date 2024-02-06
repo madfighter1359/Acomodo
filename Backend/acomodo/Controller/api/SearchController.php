@@ -57,15 +57,20 @@ class SearchController extends BaseController
             $minDate = new DateTime('today');
             $maxDate = (new DateTime('today'))->modify('+1 year');
 
-            try {
-                $inFormatted = new DateTime($checkIn);
-                $outFormatted = new DateTime($checkOut);
-            } catch (Exception $e) {
+            if ($inFormatted === false || $outFormatted === false) {
                 http_response_code(400);
                 die(json_encode(["message" => "Invalid dates"]));
             }
 
-            if (!$inFormatted || !$outFormatted || $inFormatted < $minDate || $outFormatted > $maxDate) {
+            $minDate = new DateTime('today');
+            $maxDate = (new DateTime('today'))->modify('+1 year');
+
+            if (Validation::validDates($inFormatted, $outFormatted, $minDate, $maxDate) === false) {
+                http_response_code(400);
+                die(json_encode(["message" => "Invalid dates"]));
+            }
+
+            if (Validation::daysBetween($checkIn, $checkOut) > 15) {
                 http_response_code(400);
                 die(json_encode(["message" => "Invalid dates"]));
             }
@@ -115,6 +120,11 @@ class SearchController extends BaseController
     {
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
+            if (!isset($_GET["checkInDate"], $_GET["checkOutDate"], $_GET["numberOfPeople"], $_GET["locationId"])) {
+                http_response_code(400);
+                die(json_encode(["message" => "Bad parameters"]));
+            }
+
             //Retrieve search params
             $checkIn = $_GET["checkInDate"];
             $checkOut = $_GET["checkOutDate"];
@@ -124,6 +134,27 @@ class SearchController extends BaseController
             if (!in_array(strtolower($locationId), ["pip", "dri"])) {
                 http_response_code(400);
                 die();
+            }
+
+            $inFormatted = Validation::toDate($checkIn);
+            $outFormatted = Validation::toDate($checkOut);
+
+            if ($inFormatted === false || $outFormatted === false) {
+                http_response_code(400);
+                die(json_encode(["message" => "Invalid dates"]));
+            }
+
+            $minDate = new DateTime('today');
+            $maxDate = (new DateTime('today'))->modify('+1 year');
+
+            if (Validation::validDates($inFormatted, $outFormatted, $minDate, $maxDate) === false) {
+                http_response_code(400);
+                die(json_encode(["message" => "Invalid dates"]));
+            }
+
+            if (Validation::daysBetween($checkIn, $checkOut) > 15) {
+                http_response_code(400);
+                die(json_encode(["message" => "Invalid dates"]));
             }
 
             //Create empty response object
