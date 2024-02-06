@@ -16,6 +16,15 @@ class SearchModel extends Database
         return $this->select("SELECT * FROM location");
     }
 
+    public function searchLocationDetailed($checkIn, $checkOut, $nrGuests, $hotelName)
+    {
+        return $this->select("SELECT count(room_type.type_id) as count, room_type.type_id as type_id, price, type_name, capacity, image FROM {$hotelName}_rooms, room_type WHERE
+        (NOT room_number = ANY
+        (SELECT room_number FROM reservation WHERE (? < check_out_date) AND (check_in_date < ?)))
+        AND {$hotelName}_rooms.type_id = room_type.type_id
+        AND capacity >= ? GROUP BY room_type.type_id;", [$checkIn, $checkOut, $nrGuests], "ssi");
+    }
+
     public function getCheapestAndCount($rooms)
     {
         $min = PHP_INT_MAX;

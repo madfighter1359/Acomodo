@@ -110,4 +110,45 @@ class SearchController extends BaseController
         }
 
     }
+
+    public function specificSearch()
+    {
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+
+            //Retrieve search params
+            $checkIn = $_GET["checkInDate"];
+            $checkOut = $_GET["checkOutDate"];
+            $nrGuests = $_GET["numberOfPeople"];
+            $locationId = $_GET["locationId"];
+
+            if (!in_array(strtolower($locationId), ["pip", "dri"])) {
+                http_response_code(400);
+                die();
+            }
+
+            //Create empty response object
+            $response = new stdClass();
+
+            $searchModel = new SearchModel();
+
+            // Make the search with the passed location id
+            $result = $searchModel->searchLocationDetailed($checkIn, $checkOut, $nrGuests, $locationId);
+
+            foreach ($result as $row) {
+                // Create empty object for the current room type
+                $response->{$row["type_id"]} = new stdClass();
+
+                // Store attributes of current room type in response object
+                $response->{$row["type_id"]}->available = $row["count"];
+                $response->{$row["type_id"]}->price = $row["price"];
+                $response->{$row["type_id"]}->typeName = $row["type_name"];
+                $response->{$row["type_id"]}->capacity = $row["capacity"];
+                $response->{$row["type_id"]}->image = $row["image"];
+            }
+
+            //Return the response object in JSON format
+            echo json_encode($response);
+
+        }
+    }
 }

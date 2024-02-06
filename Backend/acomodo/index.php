@@ -20,6 +20,12 @@ switch ($uri) {
         $objFeedController = new SearchController();
         $objFeedController->searchAction();
         break;
+    //Could do /search/dri (loc id) instead of using param to make sleeker
+    case '/backend/acomodo/search/details':
+        require PROJECT_ROOT_PATH . "/Controller/Api/SearchController.php";
+        $objFeedController = new SearchController();
+        $objFeedController->specificSearch();
+        break;
     case '/backend/acomodo/book':
         require PROJECT_ROOT_PATH . "/Controller/Api/BookingController.php";
         $objFeedController = new BookingController();
