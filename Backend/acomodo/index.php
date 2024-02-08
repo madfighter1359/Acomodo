@@ -16,23 +16,23 @@ $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 switch ($uri) {
     case '/backend/acomodo/search':
-        require PROJECT_ROOT_PATH . "/Controller/Api/SearchController.php";
+        require PROJECT_ROOT_PATH . "/Controller/api/SearchController.php";
         $objFeedController = new SearchController();
         $objFeedController->searchAction();
         break;
     //Could do /search/dri (loc id) instead of using param to make sleeker
     case '/backend/acomodo/search/details':
-        require PROJECT_ROOT_PATH . "/Controller/Api/SearchController.php";
+        require PROJECT_ROOT_PATH . "/Controller/api/SearchController.php";
         $objFeedController = new SearchController();
         $objFeedController->specificSearch();
         break;
     case '/backend/acomodo/book':
-        require PROJECT_ROOT_PATH . "/Controller/Api/BookingController.php";
+        require PROJECT_ROOT_PATH . "/Controller/api/BookingController.php";
         $objFeedController = new BookingController();
         $objFeedController->bookAction();
         break;
     case '/backend/acomodo/signup':
-        require PROJECT_ROOT_PATH . "/Controller/Api/GuestController.php";
+        require PROJECT_ROOT_PATH . "/Controller/api/GuestController.php";
         $objFeedController = new GuestController();
         $objFeedController->newGuest();
         break;
