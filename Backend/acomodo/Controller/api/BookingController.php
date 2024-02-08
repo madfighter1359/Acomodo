@@ -26,7 +26,7 @@ class BookingController extends BaseController
             die("");
         }
 
-        if (!($validator->isDate($_POST["checkInDate"]) && $validator->isDate($_POST["checkOutDate"]) /* */)) {
+        if (!(Validation::toDate($_POST["checkInDate"]) && Validation::toDate($_POST["checkOutDate"]) /* */)) {
             die();
         }
 
@@ -37,10 +37,10 @@ class BookingController extends BaseController
         $locId = $_POST["locationId"];
         $roomType = $_POST["roomType"];
 
-        $nights = $validator->daysBetween($checkIn, $checkOut);
+        $nights = Validation::daysBetween($checkIn, $checkOut);
 
         $bookingModel = new BookingModel();
-        $reservation = $bookingModel->makeReservation($checkIn, $checkOut, $guestId, $nrGuests, $price, $locId, $roomType, $nights);
+        [$reservation, $roomNr] = $bookingModel->makeReservation($checkIn, $checkOut, $guestId, $nrGuests, $price, $locId, $roomType, $nights);
 
         if ($reservation !== false) {
             $response = new stdClass();
@@ -55,6 +55,7 @@ class BookingController extends BaseController
             $response->details->locId = $locId;
             $response->details->roomType = $roomType;
             $response->details->nights = $nights;
+            $response->details->roomNr = $roomNr;
             echo json_encode($response);
         }
 

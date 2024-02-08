@@ -18,7 +18,7 @@ class BookingModel extends Database
             ) VALUES (?, ?, ?, ?, ?, ?, ?);", [$roomNr, $guestId, strtoupper($locId), $checkIn, $checkOut, $nrGuests, $price], "iisssii");
             if ($booked[0] == 1) {
                 $resId = $booked[1];
-                return $resId;
+                return [$resId, $roomNr];
             } else {
                 die("Reservation failed");
             }
