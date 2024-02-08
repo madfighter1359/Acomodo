@@ -54,6 +54,9 @@ class SearchController extends BaseController
             $checkOut = $_GET["checkOutDate"];
             $nrGuests = $_GET["numberOfPeople"];
 
+            $inFormatted = Validation::toDate($checkIn);
+            $outFormatted = Validation::toDate($checkOut);
+
             $minDate = new DateTime('today');
             $maxDate = (new DateTime('today'))->modify('+1 year');
 
@@ -124,8 +127,7 @@ class SearchController extends BaseController
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
             if (!isset($_GET["checkInDate"], $_GET["checkOutDate"], $_GET["numberOfPeople"], $_GET["locationId"])) {
-                http_response_code(400);
-                die(json_encode(["message" => "Bad parameters"]));
+                customError("param");
             }
 
             //Retrieve search params
@@ -135,8 +137,7 @@ class SearchController extends BaseController
             $locationId = $_GET["locationId"];
 
             if (!in_array(strtolower($locationId), ["pip", "dri"])) {
-                http_response_code(400);
-                die();
+                customError("param");
             }
 
             $inFormatted = Validation::toDate($checkIn);

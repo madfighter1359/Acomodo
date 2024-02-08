@@ -4,15 +4,17 @@ class BookingController extends BaseController
     public function bookAction()
     {
         if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-            die();
+            customError("method");
         }
 
-        $validator = new Validation();
+        if (!isset(explode(" ", $_SERVER['HTTP_AUTHORIZATION'])[1])) {
+            customError("jwt");
+        }
 
-        $userId = $validator->authenticateToken(explode(" ", $_SERVER['HTTP_AUTHORIZATION'])[1]);
+        $userId = Validation::authenticateToken(explode(" ", $_SERVER['HTTP_AUTHORIZATION'])[1]);
 
         if (!$userId) {
-            die("Invalid jwt");
+            customError("jwt");
         }
 
         echo $userId;
