@@ -15,7 +15,6 @@ class BookingController extends BaseController
             die("Invalid jwt");
         }
 
-        echo $userId;
 
         $guestModel = new GuestModel();
         $guestId = $guestModel->getGuestId($userId);
@@ -24,7 +23,7 @@ class BookingController extends BaseController
             die("");
         }
 
-        if (!($validator->isDate($_POST["checkInDate"]) && $validator->isDate($_POST["checkOutDate"]) /* */)) {
+        if (!($validator->toDate($_POST["checkInDate"]) && $validator->toDate($_POST["checkOutDate"]) /* */)) {
             die();
         }
 
@@ -38,7 +37,7 @@ class BookingController extends BaseController
         $nights = $validator->daysBetween($checkIn, $checkOut);
 
         $bookingModel = new BookingModel();
-        $reservation = $bookingModel->makeReservation($checkIn, $checkOut, $guestId, $nrGuests, $price, $locId, $roomType, $nights);
+        [$reservation, $roomNr] = $bookingModel->makeReservation($checkIn, $checkOut, $guestId, $nrGuests, $price, strtolower($locId), $roomType, $nights);
 
         if ($reservation !== false) {
             $response = new stdClass();
@@ -53,6 +52,7 @@ class BookingController extends BaseController
             $response->details->locId = $locId;
             $response->details->roomType = $roomType;
             $response->details->nights = $nights;
+            $response->details->roomNr = $roomNr;
             echo json_encode($response);
         }
 

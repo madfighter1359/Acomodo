@@ -5,7 +5,7 @@ class SearchController extends BaseController
      * "/user/list" Endpoint - Get list of users
      */
     public function searchAction()
-    {l
+    {
         // $strErrorDesc = '';
         // $requestMethod = $_SERVER["REQUEST_METHOD"];
         // if (strtoupper($requestMethod) == 'GET') {
