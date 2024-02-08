@@ -13,14 +13,24 @@ class Validation
         }
     }
 
-    public static function validDates($in, $out, $min, $max)
+    public static function validDates($in, $out, $min, $max, $nights)
     {
-        return $in >= $min && $out <= $max && $in < $out;
+        $inFormatted = Validation::toDate($in);
+        $outFormatted = Validation::toDate($out);
+        if ($inFormatted === false || $outFormatted === false) {
+            return false;
+        }
+        return $inFormatted >= $min && $outFormatted <= $max && $inFormatted < $outFormatted && Validation::daysBetween($in, $out) < 15;
     }
 
     public static function daysBetween($d1, $d2)
     {
         return (new DateTime($d1))->diff(new DateTime($d2))->days;
+    }
+
+    public static function isNumberBetween($nr, $min, $max)
+    {
+        return ctype_digit($nr) && $min <= $nr && $nr <= $max;
     }
 
     public static function authenticateToken($jwt)

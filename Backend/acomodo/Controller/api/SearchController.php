@@ -6,84 +6,26 @@ class SearchController extends BaseController
      */
     public function searchAction()
     {
-        // $strErrorDesc = '';
-        // $requestMethod = $_SERVER["REQUEST_METHOD"];
-        // if (strtoupper($requestMethod) == 'GET') {
-        //     try {
-        //         $searchModel = new SearchModel();
-        //         if (!isset($_GET["checkInDate"], $_GET["checkOutDate"], $_GET["numberOfPeople"])) {
-        //             $strErrorDesc = 'Bad params';
-        //             http_response_code(400);
-        //         } else {
-        //             $checkIn = $_GET["checkInDate"];
-        //             $checkOut = $_GET["checkOutDate"];
-        //             $nrGuests = $_GET["numberOfPeople"];
-        //             $arrResults = $searchModel->SearchAllLocations($checkIn, $checkOut, $nrGuests);
-        //             $responseData = json_encode($arrResults);
-        //         }
-
-        //     } catch (Error $e) {
-        //         $strErrorDesc = $e->getMessage() . 'Something went wrong! Please contact support.';
-        //         $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
-        //     }
-        // } else {
-        //     $strErrorDesc = 'Method not supported';
-        //     $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
-        // }
-        // // send output
-        // if (!$strErrorDesc) {
-        //     $this->sendOutput(
-        //         $responseData,
-        //         array('Content-Type: application/json', 'HTTP/1.1 200 OK')
-        //     );
-        // } else {
-        //     $this->sendOutput(json_encode(array('error' => $strErrorDesc)),
-        //         array('Content-Type: application/json', $strErrorHeader)
-        //     );
-        // }
-
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
             //Retrieve search params
             if (!isset($_GET["checkInDate"], $_GET["checkOutDate"], $_GET["numberOfPeople"])) {
-                http_response_code(400);
-                die(json_encode(["message" => "Bad parameters"]));
+                customError("param");
             }
 
             $checkIn = $_GET["checkInDate"];
             $checkOut = $_GET["checkOutDate"];
             $nrGuests = $_GET["numberOfPeople"];
 
-            $inFormatted = Validation::toDate($checkIn);
-            $outFormatted = Validation::toDate($checkOut);
-
             $minDate = new DateTime('today');
             $maxDate = (new DateTime('today'))->modify('+1 year');
 
-            $inFormatted = Validation::toDate($checkIn);
-            $outFormatted = Validation::toDate($checkOut);
-
-            if ($inFormatted === false || $outFormatted === false) {
-                http_response_code(400);
-                die(json_encode(["message" => "Invalid dates"]));
+            if (!Validation::validDates($checkIn, $checkOut, $minDate, $maxDate, 15)) {
+                customError("date");
             }
 
-            $minDate = new DateTime('today');
-            $maxDate = (new DateTime('today'))->modify('+1 year');
-
-            if (Validation::validDates($inFormatted, $outFormatted, $minDate, $maxDate) === false) {
-                http_response_code(400);
-                die(json_encode(["message" => "Invalid dates"]));
-            }
-
-            if (Validation::daysBetween($checkIn, $checkOut) > 15) {
-                http_response_code(400);
-                die(json_encode(["message" => "Invalid dates"]));
-            }
-
-            if (!ctype_digit($nrGuests) || $nrGuests < 1 || $nrGuests > 4) {
-                http_response_code(400);
-                die(json_encode(["message" => "Invalid guest count"]));
+            if (!Validation::isNumberBetween($nrGuests, 1, 4)) {
+                customError("guest");
             }
 
             //Create empty response object
@@ -140,25 +82,15 @@ class SearchController extends BaseController
                 customError("param");
             }
 
-            $inFormatted = Validation::toDate($checkIn);
-            $outFormatted = Validation::toDate($checkOut);
-
-            if ($inFormatted === false || $outFormatted === false) {
-                http_response_code(400);
-                die(json_encode(["message" => "Invalid dates"]));
-            }
-
             $minDate = new DateTime('today');
             $maxDate = (new DateTime('today'))->modify('+1 year');
 
-            if (Validation::validDates($inFormatted, $outFormatted, $minDate, $maxDate) === false) {
-                http_response_code(400);
-                die(json_encode(["message" => "Invalid dates"]));
+            if (!Validation::validDates($checkIn, $checkOut, $minDate, $maxDate, 15)) {
+                customError("date");
             }
 
-            if (Validation::daysBetween($checkIn, $checkOut) > 15) {
-                http_response_code(400);
-                die(json_encode(["message" => "Invalid dates"]));
+            if (!Validation::isNumberBetween($nrGuests, 1, 4)) {
+                customError("guest");
             }
 
             //Create empty response object

@@ -17,17 +17,13 @@ class BookingController extends BaseController
             customError("jwt");
         }
 
-        echo $userId;
-
         $guestModel = new GuestModel();
-        $guestId = $guestModel->getGuestId($userId);
-
-        if (!isset($_POST["checkInDate"], $_POST["checkOutDate"], $_POST["numberOfPeople"], $_POST["price"], $_POST["locationId"], $_POST["roomType"])) {
-            die("");
+        if (!$guestId = $guestModel->getGuestId($userId)) {
+            customError("jwt");
         }
 
-        if (!(Validation::toDate($_POST["checkInDate"]) && Validation::toDate($_POST["checkOutDate"]) /* */)) {
-            die();
+        if (!isset($_POST["checkInDate"], $_POST["checkOutDate"], $_POST["numberOfPeople"], $_POST["price"], $_POST["locationId"], $_POST["roomType"])) {
+            customError("param");
         }
 
         $checkIn = $_POST["checkInDate"];
@@ -36,6 +32,29 @@ class BookingController extends BaseController
         $price = $_POST["price"];
         $locId = $_POST["locationId"];
         $roomType = $_POST["roomType"];
+
+        $minDate = new DateTime('today');
+        $maxDate = (new DateTime('today'))->modify('+1 year');
+
+        if (!Validation::validDates($checkIn, $checkOut, $minDate, $maxDate, 15)) {
+            customError("date");
+        }
+
+        if (!Validation::isNumberBetween($nrGuests, 1, 4)) {
+            customError("guest");
+        }
+
+        if (!is_numeric($price)) {
+            customError("param");
+        }
+
+        if (!in_array(strtolower($locId), ["pip", "dri"])) {
+            customError("param");
+        }
+
+        if (!strlen($roomType) === 3) {
+            customError("param");
+        }
 
         $nights = Validation::daysBetween($checkIn, $checkOut);
 
@@ -57,6 +76,29 @@ class BookingController extends BaseController
             $response->details->nights = $nights;
             $response->details->roomNr = $roomNr;
             echo json_encode($response);
+        }
+
+    }
+
+    public function getBookings()
+    {
+        if ($_SERVER["REQUEST_METHOD"] != "GET") {
+            customError("method");
+        }
+
+        if (!isset(explode(" ", $_SERVER['HTTP_AUTHORIZATION'])[1])) {
+            customError("jwt");
+        }
+
+        $userId = Validation::authenticateToken(explode(" ", $_SERVER['HTTP_AUTHORIZATION'])[1]);
+
+        if (!$userId) {
+            customError("jwt");
+        }
+
+        $guestModel = new GuestModel();
+        if (!$guestId = $guestModel->getGuestId($userId)) {
+            customError("jwt");
         }
 
     }

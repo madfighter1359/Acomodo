@@ -19,6 +19,15 @@ function customError($preset, $msg = "", $code = 500)
         case "jwt":
             $code = 401;
             $msg = "Failed to authenticate";
+            break;
+        case "date":
+            $code = 400;
+            $msg = "Bad dates";
+            break;
+        case "guest":
+            $code = 400;
+            $msg = "Invalid guest count";
+            break;
     }
 
     http_response_code($code);
