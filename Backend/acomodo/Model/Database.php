@@ -23,7 +23,8 @@ class Database
             $stmt->close();
             return $result;
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            //throw new Exception($e->getMessage());
+            customError("", $e->getMessage());
         }
         return false;
     }
