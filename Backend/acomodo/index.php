@@ -5,6 +5,34 @@ header("Access-Control-Allow-Origin: *");
 // header("Access-Control-Allow-Headers: *");
 require __DIR__ . "/inc/bootstrap.php";
 
+function customError($preset, $msg = "", $code = 500)
+{
+    switch ($preset) {
+        case "param":
+            $code = 400;
+            $msg = "Bad params";
+            break;
+        case "method":
+            $code = 405;
+            $msg = "Bad method";
+            break;
+        case "jwt":
+            $code = 401;
+            $msg = "Failed to authenticate";
+    }
+
+    http_response_code($code);
+    die(json_encode(["message" => $msg]));
+}
+
+function defaultError($errno, $errstr)
+{
+    customError("", $errstr);
+}
+
+set_error_handler("defaultError");
+
+
 mysqli_report(MYSQLI_REPORT_OFF);
 ini_set('display_errors', 1);
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

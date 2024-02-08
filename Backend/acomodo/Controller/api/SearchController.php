@@ -5,7 +5,7 @@ class SearchController extends BaseController
      * "/user/list" Endpoint - Get list of users
      */
     public function searchAction()
-    {
+    {l
         // $strErrorDesc = '';
         // $requestMethod = $_SERVER["REQUEST_METHOD"];
         // if (strtoupper($requestMethod) == 'GET') {
@@ -104,7 +104,7 @@ class SearchController extends BaseController
                 $response->{$row["location_id"]}->image = $row["image"];
 
                 // Use the search function with the current location and the passed params
-                $details = $searchModel->searchLocation($checkIn, $checkOut, $nrGuests, $row["location_id"]);
+                $details = $searchModel->searchLocation($checkIn, $checkOut, $nrGuests, strtolower($row["location_id"]));
                 // var_dump($details);
                 $details = $searchModel->getCheapestAndCount($details);
                 // $response->{$row["location_id"]} = $details;
@@ -166,7 +166,7 @@ class SearchController extends BaseController
             $searchModel = new SearchModel();
 
             // Make the search with the passed location id
-            $result = $searchModel->searchLocationDetailed($checkIn, $checkOut, $nrGuests, $locationId);
+            $result = $searchModel->searchLocationDetailed($checkIn, $checkOut, $nrGuests, strtolower($locationId));
 
             foreach ($result as $row) {
                 // Create empty object for the current room type
