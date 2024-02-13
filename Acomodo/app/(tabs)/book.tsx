@@ -13,14 +13,14 @@ import DateTimePicker, {
   DateTimePickerEvent,
   DateTimePickerAndroid,
 } from "@react-native-community/datetimepicker";
-import DatePicker from "react-multi-date-picker";
 import { router } from "expo-router";
 
 export default function book() {
   const DAY = 1000 * 86400;
+  const OFFSET = new Date().getTimezoneOffset();
   const [people, setPeople] = useState(1);
   const [checkIn, setCheckIn] = useState(
-    new Date(new Date().setHours(0, 0, 0, 0))
+    new Date(new Date(new Date().setHours(0, 0, 0, 0)).setMinutes(-OFFSET))
   );
   const [nights, setNights] = useState(1);
   const [checkOut, setcheckOut] = useState(new Date(checkIn.valueOf() + DAY));
@@ -87,6 +87,7 @@ export default function book() {
             onChange={(event, selectedDate) =>
               onChange(event, selectedDate, "in")
             }
+            timeZoneName={"Europe/London"}
           />
         ) : (
           <Button
@@ -98,6 +99,7 @@ export default function book() {
                 mode: "date",
                 onChange: (event, selectedDate) =>
                   onChange(event, selectedDate, "in"),
+                timeZoneName: "Europe/London",
               });
             }}
           >
@@ -137,6 +139,7 @@ export default function book() {
             onChange={(event, selectedDate) =>
               onChange(event, selectedDate, "out")
             }
+            timeZoneName={"Europe/London"}
           />
         ) : (
           <Button
@@ -148,6 +151,7 @@ export default function book() {
                 mode: "date",
                 onChange: (event, selectedDate) =>
                   onChange(event, selectedDate, "out"),
+                timeZoneName: "Europe/London",
               });
             }}
           >
