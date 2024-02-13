@@ -20,6 +20,13 @@ class SearchController extends BaseController
             $minDate = new DateTime('today');
             $maxDate = (new DateTime('today'))->modify('+1 year');
 
+            // OR
+            // $minDate = new DateTime(gmdate('Y-m-d'));
+            // $maxDate = (new DateTime(gmdate('Y-m-d')))->modify('+1 year');
+
+            // var_dump($minDate);
+            // var_dump($maxDate);
+
             // echo $checkIn;
             // echo $checkOut;
 

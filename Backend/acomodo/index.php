@@ -43,6 +43,7 @@ set_error_handler("defaultError");
 
 mysqli_report(MYSQLI_REPORT_OFF);
 ini_set('display_errors', 1);
+date_default_timezone_set("UTC");
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 // $uri = explode('/', $uri);
 // if ((isset($uri[3]) && $uri[3] != 'search') || !isset($uri[4])) {
