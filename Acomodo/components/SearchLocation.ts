@@ -1,4 +1,5 @@
 import axios from "axios";
+import { BASE_URL } from "../constants/URL";
 
 interface Props {
   checkIn: number;
@@ -19,18 +20,14 @@ export default async function SearchLocation({
 
   // Attempt to retrieve results for query from database by calling API
   try {
-    const response = await axios.get(
-      // "http://192.168.0.18/backend/locationQuery.php",
-      "http://82.25.148.82:81/backend/acomodo/search/details",
-      {
-        params: {
-          checkInDate: checkInFormatted,
-          checkOutDate: checkOutFormatted,
-          numberOfPeople: people,
-          locationId: locId,
-        },
-      }
-    );
+    const response = await axios.get(`${BASE_URL}/search/details`, {
+      params: {
+        checkInDate: checkInFormatted,
+        checkOutDate: checkOutFormatted,
+        numberOfPeople: people,
+        locationId: locId,
+      },
+    });
     // console.log(response.data);
     return response.data;
   } catch (e) {

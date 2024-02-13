@@ -1,4 +1,5 @@
 import axios from "axios";
+import { BASE_URL } from "../constants/URL";
 
 interface Props {
   token: string;
@@ -20,7 +21,8 @@ export default async function NewGuest({
   try {
     const response = await axios({
       method: "POST",
-      url: "http://192.168.0.77/backend/acomodo/signup",
+      baseURL: BASE_URL,
+      url: "signup",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: `Bearer ${token}`,

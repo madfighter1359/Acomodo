@@ -1,4 +1,5 @@
 import axios from "axios";
+import { BASE_URL } from "../constants/URL";
 
 interface Props {
   checkIn: number;
@@ -17,20 +18,20 @@ export default async function SearchForRoom({
 
   // Attempt to retrieve results for query from database by calling API
   try {
-    const response = await axios.get(
-      // "http://192.168.0.18/backend/reservationQuery.php",
-      "http://82.25.148.82:81/backend/acomodo/search",
-      {
-        params: {
-          checkInDate: checkInFormatted,
-          checkOutDate: checkOutFormatted,
-          numberOfPeople: people,
-        },
-      }
-    );
+    const response = await axios.get(`${BASE_URL}/search`, {
+      params: {
+        checkInDate: checkInFormatted,
+        checkOutDate: checkOutFormatted,
+        numberOfPeople: people,
+      },
+    });
     // console.log(response.data);
     return response.data;
   } catch (e) {
+    if (axios.isAxiosError(e)) {
+      console.log(e.response?.data);
+      return e.response?.status;
+    }
     console.log(e);
   }
 }

@@ -20,6 +20,9 @@ class SearchController extends BaseController
             $minDate = new DateTime('today');
             $maxDate = (new DateTime('today'))->modify('+1 year');
 
+            // echo $checkIn;
+            // echo $checkOut;
+
             if (!Validation::validDates($checkIn, $checkOut, $minDate, $maxDate, 15)) {
                 customError("date");
             }
