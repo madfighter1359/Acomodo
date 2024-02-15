@@ -6,27 +6,41 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Platform,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Link, router } from "expo-router";
 import { useSession } from "../ctx";
+import DateTimePicker, {
+  DateTimePickerEvent,
+  DateTimePickerAndroid,
+} from "@react-native-community/datetimepicker";
+import Button from "../components/Button";
 
 export default function SignUp() {
   const [form, setForm] = useState({
-    fullname: "Test",
-    email: "t@g.com",
-    password: "aqwsderf",
-    confirmPassword: "aqwsderf",
+    fullname: "",
+    email: "",
+    docNr: "",
+    dob: new Date(new Date().setFullYear(new Date().getFullYear() - 18)),
+    password: "",
+    confirmPassword: "",
   });
 
   const { signUp } = useSession();
 
   const handleSignUp = () => {
-    if (form.email && form.password && form.fullname) {
+    if (
+      form.email &&
+      form.password &&
+      form.fullname &&
+      form.docNr &&
+      form.dob
+    ) {
       if (form.password === form.confirmPassword) {
         console.log("Signing up");
 
-        signUp(form.email, form.password, form.fullname);
+        signUp(form.email, form.password, form.fullname, form.docNr, form.dob);
 
         router.back();
       } else {
@@ -34,6 +48,15 @@ export default function SignUp() {
       }
     } else {
       alert("Please input an email and password!");
+    }
+  };
+
+  const onChange = (
+    event: DateTimePickerEvent,
+    selectedDate: Date | undefined
+  ) => {
+    if (selectedDate) {
+      // set
     }
   };
 
@@ -72,6 +95,66 @@ export default function SignUp() {
                 placeholderTextColor="#6b7280"
                 style={styles.inputControl}
                 value={form.email}
+              />
+            </View>
+
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Date of birth</Text>
+
+              {Platform.OS === "ios" ? (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={form.dob}
+                  mode="date"
+                  onChange={(event, dob) =>
+                    // onChange(event, selectedDate)
+                    {
+                      if (dob) setForm({ ...form, dob });
+                    }
+                  }
+                  timeZoneName={"UTC"}
+                  maximumDate={
+                    new Date(
+                      new Date().setFullYear(new Date().getFullYear() - 18)
+                    )
+                  }
+                  style={styles.datePicker}
+                />
+              ) : (
+                <Button
+                  size="medium"
+                  onPress={() => {
+                    DateTimePickerAndroid.open({
+                      testID: "dateTimePicker",
+                      value: form.dob,
+                      mode: "date",
+                      onChange: (event, dob) => {
+                        if (dob) setForm({ ...form, dob });
+                      },
+                      timeZoneName: "UTC",
+                      maximumDate: new Date(
+                        new Date().setFullYear(new Date().getFullYear() - 18)
+                      ),
+                    });
+                  }}
+                >
+                  {form.dob.toString()}
+                </Button>
+              )}
+            </View>
+
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Personal document number</Text>
+
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="numeric"
+                onChangeText={(docNr) => setForm({ ...form, docNr })}
+                placeholder="12345678"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={form.docNr}
               />
             </View>
 
@@ -195,5 +278,8 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontWeight: "600",
     color: "#fff",
+  },
+  datePicker: {
+    marginRight: "auto",
   },
 });

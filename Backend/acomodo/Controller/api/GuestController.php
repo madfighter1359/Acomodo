@@ -22,7 +22,7 @@ class GuestController extends BaseController
             die("Invalid jwt");
         }
 
-        if (!isset($_POST["guestName"], $_POST["guestDoB"], $_POST["guestDocNr"])) {
+        if (!isset($_POST["guestName"], $_POST["guestDoB"], $_POST["guestDocNr"], $_POST["email"])) {
             http_response_code(400);
             die();
         }
@@ -31,10 +31,11 @@ class GuestController extends BaseController
         $guestName = $_POST["guestName"];
         $guestDoB = $_POST["guestDoB"];
         $guestDocNr = $_POST["guestDocNr"];
+        $email = $_POST["email"];
 
         $guestModel = new GuestModel();
 
-        $inserted = $guestModel->createGuest($userId, $guestName, $guestDoB, $guestDocNr);
+        $inserted = $guestModel->createGuest($userId, $guestName, $guestDoB, $guestDocNr, $email);
 
         if ($inserted) {
             $response = new stdClass();
@@ -44,6 +45,7 @@ class GuestController extends BaseController
             $response->details->guestName = $guestName;
             $response->details->guestDoB = $guestDoB;
             $response->details->guestDocNr = $guestDocNr;
+            $response->details->email = $email;
             $this->sendOutput(json_encode($response));
         }
 

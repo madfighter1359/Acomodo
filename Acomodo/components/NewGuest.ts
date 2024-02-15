@@ -6,6 +6,7 @@ interface Props {
   guestName: string;
   guestDoB: number;
   guestDocNr: string;
+  email: string;
 }
 
 export default async function NewGuest({
@@ -13,6 +14,7 @@ export default async function NewGuest({
   guestName,
   guestDoB,
   guestDocNr,
+  email,
 }: Props) {
   // Change dates to MySQL format
   const formattedDoB = new Date(guestDoB).toISOString().split("T")[0];
@@ -31,6 +33,7 @@ export default async function NewGuest({
         guestName: guestName,
         guestDoB: formattedDoB,
         guestDocNr: guestDocNr,
+        email: email,
       },
     });
     console.log(response.data);
@@ -40,6 +43,6 @@ export default async function NewGuest({
       console.log(e.response?.data);
       return e.response?.status;
     }
-    console.log(e);
+    return false;
   }
 }

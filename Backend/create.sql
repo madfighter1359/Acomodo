@@ -193,6 +193,7 @@ CREATE TABLE guest (
     guest_name varchar(64),
     date_of_birth date,
     document_number varchar(32),
+    email varchar(128),
     firebase_uid varchar(128),
     unique (firebase_uid)
 );

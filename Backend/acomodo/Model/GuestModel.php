@@ -13,10 +13,10 @@ class GuestModel extends Database
             return false;
         }
     }
-    public function createGuest($uid, $name, $doB, $docNr)
+    public function createGuest($uid, $name, $doB, $docNr, $email)
     {
-        $created = $this->insert("INSERT INTO guest (guest_name, date_of_birth, document_number, firebase_uid)
-        VALUES (?, ?, ?, ?);", [$name, $doB, $docNr, $uid], "ssss");
+        $created = $this->insert("INSERT INTO guest (guest_name, date_of_birth, document_number, firebase_uid, email)
+        VALUES (?, ?, ?, ?, ?);", [$name, $doB, $docNr, $uid, $email], "sssss");
 
         if ($created[0] === 1) {
             $id = $created[1];

@@ -11,14 +11,27 @@ import {
 import NewGuest from "./components/NewGuest";
 
 interface AuthContextProps {
-  signUp: (email: string, password: string, displayName: string) => void;
+  signUp: (
+    email: string,
+    password: string,
+    displayName: string,
+    documentNr: string,
+    dateOfBirth: Date
+  ) => void;
   signIn: (email: string, password: string) => void;
   signOut: () => void;
   session?: User | null;
 }
 
+// ???
 const AuthContext = React.createContext<AuthContextProps>({
-  signUp: (email: string, password: string) => {},
+  signUp: (
+    email: string,
+    password: string,
+    displayName: string,
+    documentNr: string,
+    dateOfBirth: Date
+  ) => {},
   signIn: (email: string, password: string) => {},
   signOut: () => {},
   session: null,
@@ -50,24 +63,32 @@ export function SessionProvider(props: React.PropsWithChildren) {
   return (
     <AuthContext.Provider
       value={{
-        signUp: (email: string, password: string, displayName: string) => {
+        signUp: (
+          email: string,
+          password: string,
+          displayName: string,
+          documentNr: string,
+          dateOfBirth: Date
+        ) => {
           createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
               const user = userCredential.user;
-              if (displayName) {
-                updateProfile(user, { displayName: displayName });
-              }
+              updateProfile(user, { displayName: displayName });
               user?.getIdToken(true).then((token) =>
                 NewGuest({
                   token: token,
                   guestName: displayName,
-                  guestDoB: 1646179200000,
-                  guestDocNr: "120923",
+                  guestDoB: dateOfBirth.getTime(),
+                  guestDocNr: documentNr,
+                  email: email,
                 }).then((code) => {
                   console.log(code);
-                  if (code!=200) {
-                  deleteUser(user);
-                }})
+                  if (code != 200) {
+                    deleteUser(user);
+                    return false;
+                  }
+                  return true;
+                })
               );
 
               setSession(user);
@@ -76,6 +97,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
               const errorCode = e.code;
               const errorMessage = e.message;
               console.log(errorCode, errorMessage);
+              return false;
             });
         },
         signIn: (email: string, password: string) => {
