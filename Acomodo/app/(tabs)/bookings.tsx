@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,7 +17,6 @@ import { useFocusEffect } from "expo-router";
 import { auth } from "../../firebase-config";
 import GetReservations from "../../components/api/GetReservations";
 import { FontAwesome } from "@expo/vector-icons";
-import Example from "../../components/ress";
 
 export default function Index() {
   const { session, signOut } = useSession();
@@ -66,69 +66,130 @@ export default function Index() {
         bookings.map(
           (
             {
-              reservation_id,
-              room_number,
-              location_id,
-              check_in_date,
-              check_out_date,
-              number_guests,
+              reservationId,
+              roomNr,
+              locationName,
+              checkIn,
+              checkOut,
+              nrGuests,
               price,
+              roomType,
+              locationImage,
             },
             index
           ) => {
             return (
-              <View
+              <TouchableOpacity
                 key={index}
-                style={[
-                  styles.cardWrapper,
-                  index === 0 && { borderTopWidth: 0 },
-                ]}
+                onPress={() => {
+                  // handle onPress
+                }}
               >
-                <TouchableOpacity
-                  onPress={() => {
-                    // handle onPress
-                  }}
-                >
-                  <View style={styles.card}>
-                    <View style={styles.cardBody}>
-                      <Text numberOfLines={1} style={styles.cardTitle}>
-                        {reservation_id}
-                      </Text>
+                <View style={styles.card}>
+                  <Image
+                    alt=""
+                    resizeMode="cover"
+                    source={{ uri: locationImage }}
+                    style={styles.cardImg}
+                  />
+                  <View style={styles.cardBody}>
+                    <Text>
+                      <Text style={styles.cardTitle}>{locationName}</Text>
+                      {"\n"}
+                      <Text style={styles.cardAirport}>{nrGuests} PERS</Text>
+                    </Text>
 
-                      <View style={styles.cardRow}>
-                        <View style={styles.cardRowItem}>
-                          <FontAwesome color="#173153" name="bed" size={13} />
+                    <View style={styles.cardRow}>
+                      <View style={styles.cardRowItem}>
+                        <FontAwesome
+                          color="#6f61c4"
+                          icon="right-to-bracket"
+                          size={10}
+                        />
 
-                          <Text style={styles.cardRowItemText}>
-                            {1} Bedrooms
-                          </Text>
-                        </View>
-
-                        <View style={styles.cardRowItem}>
-                          <FontAwesome
-                            color="#173153"
-                            name="plus-square"
-                            solid={true}
-                            size={13}
-                          />
-
-                          <Text style={styles.cardRowItemText}>
-                            {(2).toLocaleString("en-US")} sqft
-                          </Text>
-                        </View>
+                        <Text style={styles.cardRowItemText}>
+                          {new Date(checkIn).toLocaleDateString("ro-RO", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </Text>
                       </View>
 
-                      <Text style={styles.cardPrice}>
-                        $
+                      <View style={styles.cardRowItem}>
+                        <FontAwesome
+                          color="#6f61c4"
+                          icon="right-from-bracket"
+                          size={10}
+                        />
+
+                        <Text style={styles.cardRowItemText}>
+                          {new Date(checkOut).toLocaleDateString("ro-RO", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </Text>
+                      </View>
+                    </View>
+
+                    <Text style={styles.cardPrice}>
+                      <Text>total </Text>
+
+                      <Text style={styles.cardPriceValue}>
                         {(+price).toLocaleString("ro-RO", {
                           currency: "RON",
+                          // style: "currency",
                         })}{" "}
-                        / month
                       </Text>
+
+                      <Text style={styles.cardPriceCurrency}>RON</Text>
+                    </Text>
+
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        // backgroundColor: "purple",
+                        width: "100%",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <TouchableOpacity onPress={() => {}}>
+                        <View style={styles.btn}>
+                          <Text style={styles.btnText}>Re-book</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <View
+                        style={{
+                          justifyContent: "flex-end",
+                          // backgroundColor: "red",
+                          flexDirection: "row",
+                          alignItems: "flex-end",
+                          alignSelf: "flex-end",
+                          display: "flex",
+                        }}
+                      >
+                        <Text
+                          style={[
+                            styles.cardAvailabilityText,
+                            {
+                              fontSize: 14,
+                              fontWeight: "700",
+                              color: "#173153",
+                              paddingBottom: 0,
+                            },
+                          ]}
+                        >
+                          RES
+                        </Text>
+                        <Text style={styles.cardAvailabilityText}>
+                          #{reservationId}
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             );
           }
         )
@@ -157,52 +218,94 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "stretch",
-  },
-  cardWrapper: {
-    paddingVertical: 16,
-    borderTopWidth: 2,
-    borderColor: "#e6e7e8",
+    borderRadius: 12,
+    marginBottom: 16,
+    backgroundColor: "#fff",
   },
   cardImg: {
-    width: 88,
-    height: 88,
+    width: 120,
+    height: 154,
     borderRadius: 12,
-    marginRight: 16,
   },
   cardBody: {
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
-    paddingVertical: 4,
-    alignItems: "flex-start",
+    flexDirection: "column",
     justifyContent: "space-between",
+    alignItems: "flex-start",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    // backgroundColor: "green",
   },
   cardTitle: {
-    fontSize: 17,
-    lineHeight: 24,
+    fontSize: 20,
     fontWeight: "700",
-    color: "#222",
+    color: "#173153",
+    marginRight: 8,
+  },
+  cardAirport: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#5f697d",
   },
   cardRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
-    marginHorizontal: -6,
+    marginHorizontal: -8,
+    flexWrap: "wrap",
   },
   cardRowItem: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: 6,
   },
   cardRowItemText: {
-    fontSize: 15,
-    fontWeight: "500",
-    color: "#173153",
     marginLeft: 4,
+    fontSize: 12,
+    fontWeight: "500",
+    color: "#5f697d",
   },
   cardPrice: {
-    fontSize: 19,
+    fontSize: 13,
+    fontWeight: "500",
+    color: "#5f697d",
+  },
+  cardPriceValue: {
+    fontSize: 21,
     fontWeight: "700",
     color: "#173153",
+  },
+  cardPriceCurrency: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#6f61c4",
+  },
+  cardAvailabilityText: {
+    fontWeight: "500",
+    color: "#5f697d",
+    fontSize: 12,
+    paddingLeft: 2,
+    paddingBottom: 1,
+    // paddingRight: 2,
+  },
+  /** Button */
+  btn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    backgroundColor: "#173153",
+    borderColor: "#173153",
+  },
+  btnText: {
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: "600",
+    color: "#fff",
   },
 });

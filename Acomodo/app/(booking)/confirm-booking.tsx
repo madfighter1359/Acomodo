@@ -11,7 +11,6 @@ import {
 import React from "react";
 import { Link, Redirect, router, useLocalSearchParams } from "expo-router";
 import { useSession } from "../../ctx";
-import Details from "../../components/Details";
 import Swiper from "react-native-swiper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FeatherIcon from "react-native-vector-icons/Feather";

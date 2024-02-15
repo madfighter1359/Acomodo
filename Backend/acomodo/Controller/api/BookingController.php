@@ -105,18 +105,22 @@ class BookingController extends BaseController
 
         $results = $bookingModel->getReservations($guestId);
         $response = new stdClass();
-        // foreach ($results as $row) {
-        //     $response->{$row["reservation_id"]} = new stdClass();
-        //     $response->{$row["reservation_id"]}->guestId = $row["guest_id"];
-        //     $response->{$row["reservation_id"]}->roomNr = $row["room_number"];
-        //     $response->{$row["reservation_id"]}->locationId = $row["location_id"];
-        //     $response->{$row["reservation_id"]}->checkIn = $row["check_in_date"];
-        //     $response->{$row["reservation_id"]}->checkOut = $row["check_out_date"];
-        //     $response->{$row["reservation_id"]}->nrGuests = $row["number_guests"];
-        //     $response->{$row["reservation_id"]}->price = $row["price"];
-        // }
-
-        $response->reservations = $results;
+        $response->reservations = [];
+        foreach ($results as $row) {
+            $reservation = new stdClass();
+            $reservation->reservationId = $row["reservation_id"];
+            $reservation->guestId = $row["guest_id"];
+            $reservation->roomNr = $row["room_number"];
+            $reservation->locationId = $row["location_id"];
+            $reservation->checkIn = $row["check_in_date"];
+            $reservation->checkOut = $row["check_out_date"];
+            $reservation->nrGuests = $row["number_guests"];
+            $reservation->price = $row["price"];
+            $reservation->locationName = $row["location_name"];
+            $reservation->locationImage = $row["image"];
+            $reservation->roomType = $bookingModel->getRoomTypeName($row["room_number"], strtolower($row["location_id"]));
+            $response->reservations[] = $reservation;
+        }
 
         echo json_encode($response);
 

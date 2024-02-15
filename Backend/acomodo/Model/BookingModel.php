@@ -47,6 +47,13 @@ class BookingModel extends Database
 
     public function getReservations($guestId)
     {
-        return $this->select("SELECT * from reservation where guest_id = ?", [$guestId], "i");
+        return $this->select("SELECT reservation.*, location_name, image FROM reservation, location WHERE
+        guest_id = ? AND location.location_id = reservation.location_id;", [$guestId], "i");
+    }
+
+    public function getRoomTypeName($roomNr, $locationId)
+    {
+        return $this->select("SELECT type_name FROM room_type, {$locationId}_rooms WHERE
+        room_number=? AND room_type.type_id = {$locationId}_rooms.type_id", [$roomNr], "i")[0]["type_name"];
     }
 }
