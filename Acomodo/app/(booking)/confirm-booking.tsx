@@ -46,8 +46,9 @@ export default function ConfirmBooking() {
       numberOfPeople: form.numberOfPeople,
       locationId: form.locationId,
       roomType: form.roomType,
+      totalPrice: form.totalPrice,
     };
-    router.push("/payment");
+    router.push({ pathname: "/payment", params: params });
   };
 
   // const [details, setDetails] = React.useState<

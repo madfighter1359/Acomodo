@@ -20,10 +20,10 @@ class BookingModel extends Database
                 $resId = $booked[1];
                 return [$resId, $roomNr];
             } else {
-                die("Reservation failed");
+                customError("?");
             }
         } else {
-            die("Bad reservation");
+            customError("?");
         }
 
     }
@@ -36,12 +36,17 @@ class BookingModel extends Database
         AND capacity >= ? ORDER BY room_number ASC LIMIT 1;", [$checkIn, $checkOut, $roomType, $nrGuests], "sssi");
 
         if (sizeof($details) != 1) {
-            return false;
+            customError("", "No rooms available", 409);
         }
         // echo $details[0]["price"];
         if ($details[0]["price"] * $nights != $price) {
-            return false;
+            customError("", "Price mismatch");
         }
         return $details[0]["room_number"];
+    }
+
+    public function getReservations($guestId)
+    {
+        return $this->select("SELECT * from reservation where guest_id = ?", [$guestId], "i");
     }
 }

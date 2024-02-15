@@ -5,12 +5,15 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { FontAwesome6 } from "@expo/vector-icons";
 import Button from "../../components/Button";
 import { useSession } from "../../ctx";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import NewReservation from "../../components/api/NewReservation";
+import { auth } from "../../firebase-config";
 
 const items = [
   {
@@ -31,15 +34,50 @@ const items = [
 ];
 
 export default function Payment() {
+  // Check if authenticated
+  const { session } = useSession();
+  if (!session) router.navigate("/profile");
+
   const [value, setValue] = React.useState(0);
+  const form = useLocalSearchParams();
+  console.log(form);
 
   const handlePay = () => {
-    return;
+    // new column for paid
+    auth.currentUser
+      ?.getIdToken(true)
+      .then((token) => {
+        NewReservation({
+          token: token,
+          checkInDate: +form.checkInDate,
+          checkOutDate: +form.checkOutDate,
+          numberOfPeople: +form.numberOfPeople,
+          price: +form.totalPrice,
+          locationId: form.locationId.toString(),
+          roomType: form.roomType.toString(),
+        }).then((result) => {
+          console.log(result);
+          if (!result[0]) {
+            Alert.alert("Booking failed", result[1], [
+              {
+                text: "Restart booking",
+                onPress: () => router.navigate("/"),
+              },
+            ]);
+          } else {
+            // console.log(result);
+            const params = {
+              reservationId: result[1],
+              ...result[2],
+            };
+            console.log(params);
+            router.navigate("/");
+            router.replace({ pathname: "/booking-confirmed", params: params });
+          }
+        });
+      })
+      .catch((e) => console.log(e));
   };
-
-  const { session } = useSession();
-
-  if (!session) router.push("/profile");
 
   return (
     <View>
@@ -129,7 +167,7 @@ export default function Payment() {
       </View>
       <View style={{ paddingTop: 100 }}>
         <Button onPress={handlePay} size={"xl"}>
-          Pay now!
+          {value == 0 ? "Book" : "Pay"} now!
         </Button>
       </View>
     </View>

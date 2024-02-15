@@ -10,7 +10,7 @@ import {
 interface Props {
   size: "xs" | "small" | "medium" | "large" | "xl";
   type?: "primary" | "secondary";
-  children: string;
+  children: string | string[];
   onPress?: () => void;
 }
 

@@ -101,5 +101,24 @@ class BookingController extends BaseController
             customError("jwt");
         }
 
+        $bookingModel = new BookingModel();
+
+        $results = $bookingModel->getReservations($guestId);
+        $response = new stdClass();
+        // foreach ($results as $row) {
+        //     $response->{$row["reservation_id"]} = new stdClass();
+        //     $response->{$row["reservation_id"]}->guestId = $row["guest_id"];
+        //     $response->{$row["reservation_id"]}->roomNr = $row["room_number"];
+        //     $response->{$row["reservation_id"]}->locationId = $row["location_id"];
+        //     $response->{$row["reservation_id"]}->checkIn = $row["check_in_date"];
+        //     $response->{$row["reservation_id"]}->checkOut = $row["check_out_date"];
+        //     $response->{$row["reservation_id"]}->nrGuests = $row["number_guests"];
+        //     $response->{$row["reservation_id"]}->price = $row["price"];
+        // }
+
+        $response->reservations = $results;
+
+        echo json_encode($response);
+
     }
 }

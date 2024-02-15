@@ -5,3 +5,5 @@ Params seem to get sent to every following screen so careful with how navigation
 For raspberry pi: everything is case sensitive (e.g Backend not backend, and had to convert location id to lower case since DRI_rooms != dri_rooms. not quite sure why this is the case but oh well)
 
 Maybe implement a global context (or just for the .ts files that make requests) with a settings switch which switches from local to public mode
+
+Booking confirm screen needs details of transaction: probably need a transaction table alongisde reservation table

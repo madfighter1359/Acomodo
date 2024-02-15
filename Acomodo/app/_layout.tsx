@@ -29,6 +29,12 @@ export default function Layout() {
           options={{ title: "Review details", headerBackTitleVisible: false }}
         />
         <Stack.Screen
+          name="booking-confirmed"
+          options={{
+            title: "Booking confirmed!",
+          }}
+        />
+        <Stack.Screen
           name="sign-up"
           options={{ title: "Sign Up", headerBackTitleVisible: false }}
         />

@@ -12,18 +12,18 @@ export default function Layout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Book",
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="house" color={color} size={size * 0.7} />
+            <FontAwesome name="suitcase" color={color} size={size * 0.7} />
           ),
         }}
       />
       <Tabs.Screen
-        name="book"
+        name="bookings"
         options={{
-          title: "Book",
+          title: "Bookings",
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="suitcase" color={color} size={size * 0.7} />
+            <FontAwesome name="receipt" color={color} size={size * 0.7} />
           ),
         }}
       />
@@ -43,6 +43,13 @@ export default function Layout() {
           // },
         }}
       />
+      {/* <Tabs.Screen
+        name="booking-confirmed"
+        options={{
+          title: "Booking confirmed!",
+          href: null,
+        }}
+      /> */}
     </Tabs>
   );
 }

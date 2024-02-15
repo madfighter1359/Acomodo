@@ -28,6 +28,10 @@ function customError($preset, $msg = "", $code = 500)
             $code = 400;
             $msg = "Invalid guest count";
             break;
+        case "?":
+            $code = 500;
+            $msg = "Unkown error";
+            break;
     }
 
     http_response_code($code);
@@ -72,6 +76,11 @@ switch ($uri) {
         require PROJECT_ROOT_PATH . "/Controller/Api/GuestController.php";
         $objFeedController = new GuestController();
         $objFeedController->newGuest();
+        break;
+    case '/backend/acomodo/guest/bookings':
+        require PROJECT_ROOT_PATH . "/Controller/Api/BookingController.php";
+        $objFeedController = new BookingController();
+        $objFeedController->getBookings();
         break;
     default:
         http_response_code(404);
