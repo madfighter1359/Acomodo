@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import React, {
+  LegacyRef,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -6,23 +12,78 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from "react-native";
 import { useSession } from "../ctx";
-import { router, Link } from "expo-router";
+import {
+  router,
+  Link,
+  useLocalSearchParams,
+  useFocusEffect,
+} from "expo-router";
 
 export default function SignIn() {
-  const { signIn } = useSession();
+  const { signIn, session } = useSession();
+  if (session) router.back();
+
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  const handleSignIn = () => {
+  const params = useLocalSearchParams<{ email: string }>();
+
+  if (params.email && !form.email) {
+    console.log("ran");
+    setForm({ ...form, email: params.email });
+  }
+
+  const handleSignIn = async () => {
     if (form.email && form.password) {
       console.log("Signing in");
 
-      signIn(form.email, form.password);
-      router.back();
+      const res = await signIn(form.email, form.password);
+
+      if (res === true) {
+        router.back();
+        Alert.alert("Succesfully signed in!");
+      } else {
+        switch (res) {
+          case "auth/invalid-credential":
+            Alert.alert(
+              "Sign in error",
+              "Your email or password are incorrect. Please try again or sign up now!",
+              [
+                {
+                  text: "Try again",
+                },
+                { text: "Sign up", onPress: () => router.navigate("/sign-up") },
+              ]
+            );
+            break;
+          case "auth/invalid-email":
+            Alert.alert(
+              "Sign in error",
+              "Your email address is invalid. Please try again",
+              [
+                {
+                  text: "Try again",
+                },
+              ]
+            );
+            break;
+          default:
+            Alert.alert(
+              "Sign in error",
+              "An unkown error occured. Please try again",
+              [
+                {
+                  text: "Try again",
+                },
+              ]
+            );
+        }
+      }
     } else {
       alert("Please input an email and password!");
     }

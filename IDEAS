@@ -7,3 +7,7 @@ For raspberry pi: everything is case sensitive (e.g Backend not backend, and had
 Maybe implement a global context (or just for the .ts files that make requests) with a settings switch which switches from local to public mode
 
 Booking confirm screen needs details of transaction: probably need a transaction table alongisde reservation table
+
+fix ugly display of dates on android + look at date logic again
+
+warning when redirecting after sign in, slightly weird redirecting

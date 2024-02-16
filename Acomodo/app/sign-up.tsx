@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   Platform,
+  Alert,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Link, router } from "expo-router";
@@ -16,6 +17,7 @@ import DateTimePicker, {
   DateTimePickerAndroid,
 } from "@react-native-community/datetimepicker";
 import Button from "../components/Button";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function SignUp() {
   const [form, setForm] = useState({
@@ -27,9 +29,11 @@ export default function SignUp() {
     confirmPassword: "",
   });
 
-  const { signUp } = useSession();
+  const { signUp, session } = useSession();
 
-  const handleSignUp = () => {
+  if (session) router.back();
+
+  const handleSignUp = async () => {
     if (
       form.email &&
       form.password &&
@@ -37,17 +41,94 @@ export default function SignUp() {
       form.docNr &&
       form.dob
     ) {
+      if (form.password.length < 6) {
+        Alert.alert(
+          "Your password is too weak. Please use at least six characters",
+          "",
+          [
+            {
+              text: "Retry",
+            },
+          ]
+        );
+        return;
+      }
       if (form.password === form.confirmPassword) {
         console.log("Signing up");
 
-        signUp(form.email, form.password, form.fullname, form.docNr, form.dob);
+        const res = await signUp(
+          form.email,
+          form.password,
+          form.fullname,
+          form.docNr,
+          form.dob
+        );
 
-        router.back();
+        console.log(res);
+
+        if (res === true) {
+          router.back();
+          Alert.alert("Account created succesfully!");
+        } else {
+          switch (res) {
+            case "auth/weak-password":
+              Alert.alert(
+                "Sign up error",
+                "Your password is too weak. Please use at least six characters",
+                [
+                  {
+                    text: "Retry",
+                  },
+                ]
+              );
+              break;
+            case "auth/invalid-email":
+              Alert.alert(
+                "Sign up error",
+                "Your email address is invalid. Please try again",
+                [
+                  {
+                    text: "Retry",
+                  },
+                ]
+              );
+              break;
+            case "auth/email-already-in-use":
+              Alert.alert(
+                "Sign up error",
+                "Your email address is already in use. Please sign in or use a different email",
+                [
+                  {
+                    text: "Sign in",
+                    onPress: () =>
+                      router.navigate({
+                        pathname: "/sign-in",
+                        params: { email: form.email },
+                      }),
+                  },
+                  {
+                    text: "Retry",
+                  },
+                ]
+              );
+              break;
+            default:
+              Alert.alert(
+                "Sign up error",
+                "There was an unkown error signing up. Please check your details and or try again later",
+                [
+                  {
+                    text: "Try again",
+                  },
+                ]
+              );
+          }
+        }
       } else {
         alert("Passwords must match!");
       }
     } else {
-      alert("Please input an email and password!");
+      alert("Please input all the required details!");
     }
   };
 
@@ -61,151 +142,149 @@ export default function SignUp() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Getting Started</Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Getting Started</Text>
 
-          <Text style={styles.subtitle}>Create an account to continue</Text>
-        </View>
-
-        <KeyboardAwareScrollView>
-          <View style={styles.form}>
-            <View style={styles.input}>
-              <Text style={styles.inputLabel}>Full name</Text>
-
-              <TextInput
-                onChangeText={(fullname) => setForm({ ...form, fullname })}
-                placeholder="John Doe"
-                placeholderTextColor="#6b7280"
-                style={styles.inputControl}
-                value={form.fullname}
-              />
-            </View>
-
-            <View style={styles.input}>
-              <Text style={styles.inputLabel}>Email address</Text>
-
-              <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="email-address"
-                onChangeText={(email) => setForm({ ...form, email })}
-                placeholder="john@example.com"
-                placeholderTextColor="#6b7280"
-                style={styles.inputControl}
-                value={form.email}
-              />
-            </View>
-
-            <View style={styles.input}>
-              <Text style={styles.inputLabel}>Date of birth</Text>
-
-              {Platform.OS === "ios" ? (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={form.dob}
-                  mode="date"
-                  onChange={(event, dob) =>
-                    // onChange(event, selectedDate)
-                    {
-                      if (dob) setForm({ ...form, dob });
-                    }
-                  }
-                  timeZoneName={"UTC"}
-                  maximumDate={
-                    new Date(
-                      new Date().setFullYear(new Date().getFullYear() - 18)
-                    )
-                  }
-                  style={styles.datePicker}
-                />
-              ) : (
-                <Button
-                  size="medium"
-                  onPress={() => {
-                    DateTimePickerAndroid.open({
-                      testID: "dateTimePicker",
-                      value: form.dob,
-                      mode: "date",
-                      onChange: (event, dob) => {
-                        if (dob) setForm({ ...form, dob });
-                      },
-                      timeZoneName: "UTC",
-                      maximumDate: new Date(
-                        new Date().setFullYear(new Date().getFullYear() - 18)
-                      ),
-                    });
-                  }}
-                >
-                  {form.dob.toString()}
-                </Button>
-              )}
-            </View>
-
-            <View style={styles.input}>
-              <Text style={styles.inputLabel}>Personal document number</Text>
-
-              <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="numeric"
-                onChangeText={(docNr) => setForm({ ...form, docNr })}
-                placeholder="12345678"
-                placeholderTextColor="#6b7280"
-                style={styles.inputControl}
-                value={form.docNr}
-              />
-            </View>
-
-            <View style={styles.input}>
-              <Text style={styles.inputLabel}>Password</Text>
-
-              <TextInput
-                autoCorrect={false}
-                onChangeText={(password) => setForm({ ...form, password })}
-                placeholder="********"
-                placeholderTextColor="#6b7280"
-                style={styles.inputControl}
-                secureTextEntry={true}
-                value={form.password}
-              />
-            </View>
-
-            <View style={styles.input}>
-              <Text style={styles.inputLabel}>Confirm Password</Text>
-
-              <TextInput
-                autoCorrect={false}
-                onChangeText={(confirmPassword) =>
-                  setForm({ ...form, confirmPassword })
-                }
-                placeholder="********"
-                placeholderTextColor="#6b7280"
-                style={styles.inputControl}
-                secureTextEntry={true}
-                value={form.confirmPassword}
-              />
-            </View>
-
-            <View style={styles.formAction}>
-              <TouchableOpacity onPress={handleSignUp}>
-                <View style={styles.btn}>
-                  <Text style={styles.btnText}>Sign up</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-
-            <Link href="/sign-in" replace={false}>
-              <Text style={styles.formFooter}>
-                Already have an account?{" "}
-                <Text style={{ textDecorationLine: "underline" }}>Sign in</Text>
-              </Text>
-            </Link>
-          </View>
-        </KeyboardAwareScrollView>
+        <Text style={styles.subtitle}>Create an account to continue</Text>
       </View>
-    </SafeAreaView>
+
+      <KeyboardAwareScrollView>
+        <View style={styles.form}>
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Full name</Text>
+
+            <TextInput
+              onChangeText={(fullname) => setForm({ ...form, fullname })}
+              placeholder="John Doe"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              value={form.fullname}
+            />
+          </View>
+
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Email address</Text>
+
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="email-address"
+              onChangeText={(email) => setForm({ ...form, email })}
+              placeholder="john@example.com"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              value={form.email}
+            />
+          </View>
+
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Date of birth</Text>
+
+            {Platform.OS === "ios" ? (
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={form.dob}
+                mode="date"
+                onChange={(event, dob) =>
+                  // onChange(event, selectedDate)
+                  {
+                    if (dob) setForm({ ...form, dob });
+                  }
+                }
+                timeZoneName={"UTC"}
+                maximumDate={
+                  new Date(
+                    new Date().setFullYear(new Date().getFullYear() - 18)
+                  )
+                }
+                style={styles.datePicker}
+              />
+            ) : (
+              <Button
+                size="medium"
+                onPress={() => {
+                  DateTimePickerAndroid.open({
+                    testID: "dateTimePicker",
+                    value: form.dob,
+                    mode: "date",
+                    onChange: (event, dob) => {
+                      if (dob) setForm({ ...form, dob });
+                    },
+                    timeZoneName: "UTC",
+                    maximumDate: new Date(
+                      new Date().setFullYear(new Date().getFullYear() - 18)
+                    ),
+                  });
+                }}
+              >
+                {form.dob.toUTCString()}
+              </Button>
+            )}
+          </View>
+
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Personal document number</Text>
+
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="default"
+              onChangeText={(docNr) => setForm({ ...form, docNr })}
+              placeholder="12345678ABC"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              value={form.docNr}
+            />
+          </View>
+
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Password</Text>
+
+            <TextInput
+              autoCorrect={false}
+              onChangeText={(password) => setForm({ ...form, password })}
+              placeholder="********"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              secureTextEntry={true}
+              value={form.password}
+            />
+          </View>
+
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Confirm Password</Text>
+
+            <TextInput
+              autoCorrect={false}
+              onChangeText={(confirmPassword) =>
+                setForm({ ...form, confirmPassword })
+              }
+              placeholder="********"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              secureTextEntry={true}
+              value={form.confirmPassword}
+            />
+          </View>
+
+          <View style={styles.formAction}>
+            <TouchableOpacity onPress={handleSignUp}>
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>Sign up</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <Link href="/sign-in" replace={false}>
+            <Text style={styles.formFooter}>
+              Already have an account?{" "}
+              <Text style={{ textDecorationLine: "underline" }}>Sign in</Text>
+            </Text>
+          </Link>
+        </View>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }
 
@@ -216,9 +295,10 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
+    backgroundColor: "#fff",
   },
   header: {
-    marginVertical: 24,
+    marginBottom: 24,
     paddingHorizontal: 24,
   },
   form: {

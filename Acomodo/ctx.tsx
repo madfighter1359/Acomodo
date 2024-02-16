@@ -9,6 +9,7 @@ import {
   deleteUser,
 } from "firebase/auth";
 import NewGuest from "./components/NewGuest";
+import { FirebaseError } from "firebase/app";
 
 interface AuthContextProps {
   signUp: (
@@ -17,22 +18,22 @@ interface AuthContextProps {
     displayName: string,
     documentNr: string,
     dateOfBirth: Date
-  ) => void;
-  signIn: (email: string, password: string) => void;
+  ) => Promise<boolean | string>;
+  signIn: (email: string, password: string) => Promise<boolean | string>;
   signOut: () => void;
   session?: User | null;
 }
 
 // ???
 const AuthContext = React.createContext<AuthContextProps>({
-  signUp: (
+  signUp: async (
     email: string,
     password: string,
     displayName: string,
     documentNr: string,
     dateOfBirth: Date
-  ) => {},
-  signIn: (email: string, password: string) => {},
+  ) => false,
+  signIn: async (email: string, password: string) => false,
   signOut: () => {},
   session: null,
 });
@@ -63,54 +64,67 @@ export function SessionProvider(props: React.PropsWithChildren) {
   return (
     <AuthContext.Provider
       value={{
-        signUp: (
+        signUp: async (
           email: string,
           password: string,
           displayName: string,
           documentNr: string,
           dateOfBirth: Date
         ) => {
-          createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-              const user = userCredential.user;
-              updateProfile(user, { displayName: displayName });
-              user?.getIdToken(true).then((token) =>
-                NewGuest({
-                  token: token,
-                  guestName: displayName,
-                  guestDoB: dateOfBirth.getTime(),
-                  guestDocNr: documentNr,
-                  email: email,
-                }).then((code) => {
-                  console.log(code);
-                  if (code != 200) {
-                    deleteUser(user);
-                    return false;
-                  }
-                  return true;
-                })
-              );
+          try {
+            const userCredential = await createUserWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+            const user = userCredential.user;
+            await updateProfile(user, { displayName: displayName });
+            const token = await user?.getIdToken(true);
+            const code = await NewGuest({
+              token: token,
+              guestName: displayName,
+              guestDoB: dateOfBirth.getTime(),
+              guestDocNr: documentNr,
+              email: email,
+            });
 
-              setSession(user);
-            })
-            .catch((e) => {
+            console.log(code);
+            if (code != 200) {
+              deleteUser(user);
+              return "backendError";
+            }
+            setSession(user);
+            return true;
+          } catch (e) {
+            if (e instanceof FirebaseError) {
               const errorCode = e.code;
               const errorMessage = e.message;
               console.log(errorCode, errorMessage);
-              return false;
-            });
+              return errorCode;
+            }
+
+            return false;
+          }
         },
-        signIn: (email: string, password: string) => {
-          signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-              const user = userCredential.user;
-              setSession(user);
-            })
-            .catch((e) => {
+        signIn: async (email: string, password: string) => {
+          try {
+            const userCredential = await signInWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+            const user = userCredential.user;
+            setSession(user);
+            return true;
+          } catch (e) {
+            if (e instanceof FirebaseError) {
               const errorCode = e.code;
               const errorMessage = e.message;
               console.log(errorCode, errorMessage);
-            });
+              return errorCode;
+            }
+            return false;
+          }
         },
         signOut: () => {
           auth.signOut();
