@@ -41,9 +41,9 @@ export default function Index() {
     });
   };
 
-  useFocusEffect(() => {
+  useEffect(() => {
     getBookings();
-  });
+  }, []);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -63,135 +63,139 @@ export default function Index() {
       }
     >
       {loaded ? (
-        bookings.map(
-          (
-            {
-              reservationId,
-              roomNr,
-              locationName,
-              checkIn,
-              checkOut,
-              nrGuests,
-              price,
-              roomType,
-              locationImage,
-            },
-            index
-          ) => {
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  // handle onPress
-                }}
-              >
-                <View style={styles.card}>
-                  <Image
-                    alt=""
-                    resizeMode="cover"
-                    source={{ uri: locationImage }}
-                    style={styles.cardImg}
-                  />
-                  <View style={styles.cardBody}>
-                    <Text>
-                      <Text style={styles.cardTitle}>{locationName}</Text>
-                      {"\n"}
-                      <Text style={styles.cardAirport}>{nrGuests} PERS</Text>
-                    </Text>
-
-                    <View style={styles.cardRow}>
-                      <View style={styles.cardRowItem}>
-                        <FontAwesome
-                          color="#6f61c4"
-                          icon="right-to-bracket"
-                          size={10}
-                        />
-
-                        <Text style={styles.cardRowItemText}>
-                          {new Date(checkIn).toLocaleDateString("ro-RO", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          })}
-                        </Text>
-                      </View>
-
-                      <View style={styles.cardRowItem}>
-                        <FontAwesome
-                          color="#6f61c4"
-                          icon="right-from-bracket"
-                          size={10}
-                        />
-
-                        <Text style={styles.cardRowItemText}>
-                          {new Date(checkOut).toLocaleDateString("ro-RO", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          })}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <Text style={styles.cardPrice}>
-                      <Text>total </Text>
-
-                      <Text style={styles.cardPriceValue}>
-                        {(+price).toLocaleString("ro-RO", {
-                          currency: "RON",
-                          // style: "currency",
-                        })}{" "}
+        bookings.length >= 1 ? (
+          bookings.map(
+            (
+              {
+                reservationId,
+                roomNr,
+                locationName,
+                checkIn,
+                checkOut,
+                nrGuests,
+                price,
+                roomType,
+                locationImage,
+              },
+              index
+            ) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    // handle onPress
+                  }}
+                >
+                  <View style={styles.card}>
+                    <Image
+                      alt=""
+                      resizeMode="cover"
+                      source={{ uri: locationImage }}
+                      style={styles.cardImg}
+                    />
+                    <View style={styles.cardBody}>
+                      <Text>
+                        <Text style={styles.cardTitle}>{locationName}</Text>
+                        {"\n"}
+                        <Text style={styles.cardAirport}>{nrGuests} PERS</Text>
                       </Text>
 
-                      <Text style={styles.cardPriceCurrency}>RON</Text>
-                    </Text>
+                      <View style={styles.cardRow}>
+                        <View style={styles.cardRowItem}>
+                          <FontAwesome
+                            color="#6f61c4"
+                            icon="right-to-bracket"
+                            size={10}
+                          />
 
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        // backgroundColor: "purple",
-                        width: "100%",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <TouchableOpacity onPress={() => {}}>
-                        <View style={styles.btn}>
-                          <Text style={styles.btnText}>Re-book</Text>
+                          <Text style={styles.cardRowItemText}>
+                            {new Date(checkIn).toLocaleDateString("ro-RO", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </Text>
                         </View>
-                      </TouchableOpacity>
+
+                        <View style={styles.cardRowItem}>
+                          <FontAwesome
+                            color="#6f61c4"
+                            icon="right-from-bracket"
+                            size={10}
+                          />
+
+                          <Text style={styles.cardRowItemText}>
+                            {new Date(checkOut).toLocaleDateString("ro-RO", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <Text style={styles.cardPrice}>
+                        <Text>total </Text>
+
+                        <Text style={styles.cardPriceValue}>
+                          {(+price).toLocaleString("ro-RO", {
+                            currency: "RON",
+                            // style: "currency",
+                          })}{" "}
+                        </Text>
+
+                        <Text style={styles.cardPriceCurrency}>RON</Text>
+                      </Text>
+
                       <View
                         style={{
-                          justifyContent: "flex-end",
-                          // backgroundColor: "red",
                           flexDirection: "row",
-                          alignItems: "flex-end",
-                          alignSelf: "flex-end",
-                          display: "flex",
+                          // backgroundColor: "purple",
+                          width: "100%",
+                          justifyContent: "space-between",
                         }}
                       >
-                        <Text
-                          style={[
-                            styles.cardAvailabilityText,
-                            {
-                              fontSize: 14,
-                              fontWeight: "700",
-                              color: "#173153",
-                              paddingBottom: 0,
-                            },
-                          ]}
+                        <TouchableOpacity onPress={() => {}}>
+                          <View style={styles.btn}>
+                            <Text style={styles.btnText}>Re-book</Text>
+                          </View>
+                        </TouchableOpacity>
+                        <View
+                          style={{
+                            justifyContent: "flex-end",
+                            // backgroundColor: "red",
+                            flexDirection: "row",
+                            alignItems: "flex-end",
+                            alignSelf: "flex-end",
+                            display: "flex",
+                          }}
                         >
-                          RES
-                        </Text>
-                        <Text style={styles.cardAvailabilityText}>
-                          #{reservationId}
-                        </Text>
+                          <Text
+                            style={[
+                              styles.cardAvailabilityText,
+                              {
+                                fontSize: 14,
+                                fontWeight: "700",
+                                color: "#173153",
+                                paddingBottom: 0,
+                              },
+                            ]}
+                          >
+                            RES
+                          </Text>
+                          <Text style={styles.cardAvailabilityText}>
+                            #{reservationId}
+                          </Text>
+                        </View>
                       </View>
                     </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            );
-          }
+                </TouchableOpacity>
+              );
+            }
+          )
+        ) : (
+          <Text>No reservations</Text>
         )
       ) : error ? (
         <Text>Error</Text>
