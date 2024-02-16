@@ -29,6 +29,7 @@ export default async function GetReservations({ token }: Props) {
         return false;
       }
     }
+    console.log(e);
     return false;
   }
 }

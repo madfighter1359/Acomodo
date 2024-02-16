@@ -199,6 +199,7 @@ export default function SignUp() {
                   )
                 }
                 style={styles.datePicker}
+                themeVariant="light"
               />
             ) : (
               <Button

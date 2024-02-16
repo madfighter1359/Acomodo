@@ -7,16 +7,18 @@ import {
   TouchableOpacity,
   View,
   Image,
+  ActivityIndicator,
+  Platform,
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useSession } from "../../ctx";
 import { StatusBar, setStatusBarStyle } from "expo-status-bar";
 import { useFocusEffect } from "expo-router";
 import { auth } from "../../firebase-config";
 import GetReservations from "../../components/api/GetReservations";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 
 export default function Index() {
   const { session, signOut } = useSession();
@@ -29,6 +31,7 @@ export default function Index() {
   const [error, setError] = React.useState(false);
 
   const getBookings = async () => {
+    // console.log("updated");
     auth.currentUser?.getIdToken(false).then((token) => {
       GetReservations({ token: token }).then((data) => {
         if (data !== false) {
@@ -50,7 +53,7 @@ export default function Index() {
     setError(false);
     setTimeout(() => {
       setRefreshing(false);
-    }, 1000);
+    }, 500);
     setLoaded(false);
     getBookings();
   }, []);
@@ -59,7 +62,11 @@ export default function Index() {
     <ScrollView
       contentContainerStyle={styles.container}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          tintColor={"#94A3B8"}
+        />
       }
     >
       {loaded ? (
@@ -195,22 +202,98 @@ export default function Index() {
             }
           )
         ) : (
-          <Text>No reservations</Text>
+          <View style={styles.empty}>
+            <FontAwesome6 color="#94A3B8" name="receipt" size={36} />
+
+            <Text style={styles.emptyTitle}>No bookings</Text>
+
+            <Text style={styles.emptyDescription}>
+              Make a reservation and it will show up here
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => {
+                router.navigate("/");
+              }}
+            >
+              <View style={styles.emptyBtn}>
+                <Text style={styles.emptyBtnText}>Book now</Text>
+
+                <FontAwesome6
+                  color="#fff"
+                  name="circle-arrow-right"
+                  size={18}
+                  style={{ marginLeft: 12 }}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
         )
-      ) : error ? (
-        <Text>Error</Text>
       ) : (
-        <Text>Loading...</Text>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            // backgroundColor: "purple",
+            flex: 1,
+          }}
+        >
+          <Text style={{ fontSize: 32 }}>
+            {error ? (
+              <Text>An error occured</Text>
+            ) : (
+              // <Text>Loading...</Text>
+              <ActivityIndicator
+                size={"large"}
+                color={Platform.OS == "ios" ? "#94A3B8" : "#2b64e3"}
+              />
+            )}
+          </Text>
+        </View>
       )}
     </ScrollView>
   ) : (
-    <Text>Please sign up or sign in!</Text>
+    <View
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        flex: 1,
+      }}
+    >
+      <View style={styles.empty}>
+        <FontAwesome6 color="#94A3B8" solid name="user" size={36} />
+
+        <Text style={styles.emptyTitle}>Not signed in</Text>
+
+        <Text style={styles.emptyDescription}>
+          Please sign in to view your bookings
+        </Text>
+
+        <TouchableOpacity
+          onPress={() => {
+            router.navigate("/profile");
+          }}
+        >
+          <View style={styles.emptyBtn}>
+            <Text style={styles.emptyBtnText}>Authenticate</Text>
+
+            <FontAwesome6
+              color="#fff"
+              name="circle-arrow-right"
+              size={18}
+              style={{ marginLeft: 12 }}
+            />
+          </View>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     padding: 24,
+    flex: 1,
   },
   title: {
     fontSize: 32,
@@ -309,6 +392,44 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 13,
     lineHeight: 18,
+    fontWeight: "600",
+    color: "#fff",
+  },
+  /** Empty */
+  empty: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    // backgroundColor: "green",
+  },
+  emptyTitle: {
+    fontSize: 21,
+    fontWeight: "600",
+    color: "#000",
+    marginBottom: 8,
+    marginTop: 16,
+  },
+  emptyDescription: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "#878787",
+    marginBottom: 24,
+  },
+  /** Button */
+  emptyBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    backgroundColor: "#2b64e3",
+    borderColor: "#2b64e3",
+  },
+  emptyBtnText: {
+    fontSize: 17,
+    lineHeight: 24,
     fontWeight: "600",
     color: "#fff",
   },

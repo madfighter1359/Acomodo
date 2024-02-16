@@ -52,6 +52,7 @@ export default function Profile() {
                   guestName: "Testy Amith",
                   guestDoB: 1646179200000,
                   guestDocNr: "120923",
+                  email: "s@s.com",
                 })
               );
             }}
@@ -66,13 +67,13 @@ export default function Profile() {
           <Button
             onPress={() => router.push("/sign-in")}
             size="medium"
-            type="secondary"
+            type="primary"
           >
             Sign In
           </Button>
           <Button
             size="medium"
-            type="secondary"
+            type="primary"
             onPress={() => router.push("/sign-up")}
           >
             Sign Up

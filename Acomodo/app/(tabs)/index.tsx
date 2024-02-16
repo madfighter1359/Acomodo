@@ -93,6 +93,7 @@ export default function book() {
             }
             timeZoneName={"Europe/London"}
             // minimumDate={new Date(new Date().setHours(0, 0, 0, 0))}
+            themeVariant="light"
           />
         ) : (
           <Button
@@ -147,6 +148,7 @@ export default function book() {
             }
             timeZoneName={"Europe/London"}
             // minimumDate={new Date(new Date().setHours(22, 0, 0, 0))}
+            themeVariant="light"
           />
         ) : (
           <Button
