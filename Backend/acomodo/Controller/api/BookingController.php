@@ -22,7 +22,8 @@ class BookingController extends BaseController
             customError("jwt");
         }
 
-        if (!isset($_POST["checkInDate"], $_POST["checkOutDate"], $_POST["numberOfPeople"], $_POST["price"], $_POST["locationId"], $_POST["roomType"])) {
+        if (!isset($_POST["checkInDate"], $_POST["checkOutDate"], $_POST["numberOfPeople"], $_POST["price"],
+            $_POST["locationId"], $_POST["roomType"], $_POST["paymentMethod"], $_POST["paid"])) {
             customError("param");
         }
 
@@ -32,6 +33,8 @@ class BookingController extends BaseController
         $price = $_POST["price"];
         $locId = $_POST["locationId"];
         $roomType = $_POST["roomType"];
+        $paymentMethod = $_POST["paymentMethod"];
+        $paid = $_POST["paid"];
 
         $minDate = new DateTime('today');
         $maxDate = (new DateTime('today'))->modify('+1 year');
@@ -56,26 +59,54 @@ class BookingController extends BaseController
             customError("param");
         }
 
+        if (strlen($paymentMethod) > 32) {
+            customError("param");
+        }
+
+        if (!in_array($paid, [0, 1])) {
+            customError("param");
+        }
+
         $nights = Validation::daysBetween($checkIn, $checkOut);
 
         $bookingModel = new BookingModel();
         [$reservation, $roomNr] = $bookingModel->makeReservation($checkIn, $checkOut, $guestId, $nrGuests, $price, $locId, $roomType, $nights);
 
         if ($reservation !== false) {
-            $response = new stdClass();
-            $response->status = "Success";
-            $response->reservationId = $reservation;
-            $response->details = new stdClass();
-            $response->details->checkIn = $checkIn;
-            $response->details->checkOut = $checkOut;
-            $response->details->guestId = $guestId;
-            $response->details->nrGuests = $nrGuests;
-            $response->details->price = $price;
-            $response->details->locId = $locId;
-            $response->details->roomType = $roomType;
-            $response->details->nights = $nights;
-            $response->details->roomNr = $roomNr;
-            echo json_encode($response);
+
+            $date = date("Y-m-d");
+
+            $transaction = $bookingModel->createTransaction($reservation, $date, $paymentMethod, $price, $paid);
+
+            if ($transaction !== false) {
+                $response = new stdClass();
+                $response->status = "Success";
+                $response->reservationId = $reservation;
+                $response->reservation = new stdClass();
+                $response->reservation->checkIn = $checkIn;
+                $response->reservation->checkOut = $checkOut;
+                $response->reservation->guestId = $guestId;
+                $response->reservation->nrGuests = $nrGuests;
+                $response->reservation->price = $price;
+                $response->reservation->locId = $locId;
+                $response->reservation->roomType = $roomType;
+                $response->reservation->nights = $nights;
+                $response->reservation->roomNr = $roomNr;
+
+                $guestModel = new GuestModel();
+                $guestDetails = $guestModel->getGuestDetails($guestId);
+                $guestEmail = $guestDetails["email"];
+                $guestName = $guestDetails["guest_name"];
+                $response->transactionId = $transaction;
+                $response->transaction = new stdClass();
+                $response->transaction->date = $date;
+                $response->transaction->paymentMethod = $paymentMethod;
+                $response->transaction->email = $guestEmail;
+                $response->transaction->fullName = $guestName;
+                $response->transaction->paid = $paid;
+                echo json_encode($response);
+            }
+
         }
 
     }

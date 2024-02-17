@@ -35,6 +35,7 @@ class Database
         try {
             $stmt = $this->executeStatement($query, $params, $param_types);
             if ($stmt->errno) {
+                echo $stmt->error;
                 return [0, $stmt->errno];
             }
             $rows = $stmt->affected_rows;

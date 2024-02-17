@@ -18,16 +18,19 @@ import { auth } from "../../firebase-config";
 const items = [
   {
     label: "Cash at reception",
+    name: "cash",
     icon: "money-bills",
     available: true,
   },
   {
     label: "Card",
+    name: "card",
     icon: "credit-card",
     available: false,
   },
   {
     label: "Bank transfer",
+    name: "transfer",
     icon: "building-columns",
     available: false,
   },
@@ -39,6 +42,7 @@ export default function Payment() {
   if (!session) router.navigate("/profile");
 
   const [value, setValue] = React.useState(0);
+  const [paid, setPaid] = React.useState(false);
   const form = useLocalSearchParams();
   console.log(form);
 
@@ -55,6 +59,8 @@ export default function Payment() {
           price: +form.totalPrice,
           locationId: form.locationId.toString(),
           roomType: form.roomType.toString(),
+          paymentMethod: items[value].name,
+          paid: paid,
         }).then((result) => {
           console.log(result);
           if (!result[0]) {
@@ -69,6 +75,9 @@ export default function Payment() {
             const params = {
               reservationId: result[1],
               ...result[2],
+              transactionId: result[3],
+              ...result[4],
+              // oldReservation: Math.random() > 0.5 ? true : null,
             };
             console.log(params);
             router.navigate("/");

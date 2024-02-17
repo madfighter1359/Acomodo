@@ -68,6 +68,7 @@ export default function Index() {
           tintColor={"#94A3B8"}
         />
       }
+      indicatorStyle="black"
     >
       {loaded ? (
         bookings.length >= 1 ? (
@@ -293,7 +294,8 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     padding: 24,
-    flex: 1,
+    // flex: 1,
+    flexGrow: 1,
   },
   title: {
     fontSize: 32,

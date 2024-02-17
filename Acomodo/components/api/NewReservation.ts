@@ -9,6 +9,8 @@ interface Props {
   price: number;
   locationId: string;
   roomType: string;
+  paymentMethod: string;
+  paid: boolean;
 }
 
 export default async function NewReservation({
@@ -19,6 +21,8 @@ export default async function NewReservation({
   price,
   locationId,
   roomType,
+  paymentMethod,
+  paid,
 }: Props) {
   // Change dates to MySQL format
   const checkInFormatted = new Date(checkInDate).toISOString().split("T")[0];
@@ -41,11 +45,19 @@ export default async function NewReservation({
         price: price,
         locationId: locationId,
         roomType: roomType,
+        paymentMethod: paymentMethod,
+        paid: paid ? 1 : 0,
       },
     });
     // console.log(response.data);
     if (response.data.status == "Success") {
-      return [true, response.data.reservationId, response.data.details];
+      return [
+        true,
+        response.data.reservationId,
+        response.data.reservation,
+        response.data.transactionId,
+        response.data.transaction,
+      ];
     }
     return [false, "An unkown error occured."];
   } catch (e) {

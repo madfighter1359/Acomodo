@@ -241,3 +241,24 @@ INSERT INTO
     )
 values
     (13, 1, "DRI", "2024-02-01", "2024-02-06", 2, 600);
+
+CREATE TABLE transaction (
+    transaction_id int primary key auto_increment,
+    reservation_id int not null,
+    transaction_date date,
+    payment_method varchar(8) CHECK (payment_method IN ("cash", "card", "transfer")),
+    amount int,
+    paid boolean,
+    foreign key (reservation_id) references reservation (reservation_id)
+);
+
+INSERT INTO
+    transaction (
+        reservation_id,
+        transaction_date,
+        payment_method,
+        amount,
+        paid
+    )
+values
+    (1, "2024-01-20", "cash", 600, true);

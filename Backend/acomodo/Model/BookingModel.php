@@ -56,4 +56,16 @@ class BookingModel extends Database
         return $this->select("SELECT type_name FROM room_type, {$locationId}_rooms WHERE
         room_number=? AND room_type.type_id = {$locationId}_rooms.type_id", [$roomNr], "i")[0]["type_name"];
     }
+
+    public function createTransaction($resId, $date, $paymentMethod, $amount, $paid)
+    {
+        $created = $this->insert("INSERT INTO transaction ( reservation_id, transaction_date, payment_method, amount, paid)
+        values (?,?,?,?,?);", [$resId, $date, $paymentMethod, $amount, $paid], "issii");
+        if ($created[0] == 1) {
+            $transactionId = $created[1];
+            return $transactionId;
+        } else {
+            customError("?");
+        }
+    }
 }

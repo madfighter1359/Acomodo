@@ -1,5 +1,5 @@
 import React from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
   StyleSheet,
   View,
@@ -13,35 +13,43 @@ import FeatherIcon from "react-native-vector-icons/Feather";
 import { FontAwesome6 } from "@expo/vector-icons";
 
 export default function ConfirmScreen() {
-  const form = useLocalSearchParams();
+  const form = useLocalSearchParams<any>();
   console.log(form);
   return (
-    <View style={{ flex: 1 }}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-        <View style={styles.container}>
-          <ScrollView
-            contentContainerStyle={styles.receipt}
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={styles.receiptLogo}>
-              <FeatherIcon color="#fff" name="codepen" size={32} />
-            </View>
+    <>
+      {form.oldReservation && (
+        <Stack.Screen
+          options={{
+            title: "Booking info",
+          }}
+        />
+      )}
+      <View style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+          <View style={styles.container}>
+            <ScrollView
+              contentContainerStyle={styles.receipt}
+              showsVerticalScrollIndicator={false}
+            >
+              <View style={styles.receiptLogo}>
+                <FeatherIcon color="#fff" name="codepen" size={32} />
+              </View>
 
-            <Text style={styles.receiptTitle}>{form.locId}</Text>
+              <Text style={styles.receiptTitle}>{form.locId}</Text>
 
-            <Text style={styles.receiptSubtitle}>
-              Reservation #{form.reservationId}
-            </Text>
-
-            <View style={styles.receiptPrice}>
-              <Text style={styles.receiptPriceText}>
-                {(+form.price).toLocaleString("ro-RO", {
-                  currency: "RON",
-                  style: "currency",
-                })}
+              <Text style={styles.receiptSubtitle}>
+                Reservation #{form.reservationId}
               </Text>
 
-              {/* <Text
+              <View style={styles.receiptPrice}>
+                <Text style={styles.receiptPriceText}>
+                  {(+form.price).toLocaleString("ro-RO", {
+                    currency: "RON",
+                    style: "currency",
+                  })}
+                </Text>
+
+                {/* <Text
                 style={[
                   styles.receiptPriceText,
                   { fontSize: 20, lineHeight: 32 },
@@ -49,105 +57,102 @@ export default function ConfirmScreen() {
               >
                 .00
               </Text> */}
+              </View>
+
+              <Text style={styles.receiptDescription}>
+                {form.roomType} room ·{" "}
+                {new Date(form.checkIn).toLocaleDateString("ro-RO")} -{" "}
+                {new Date(form.checkOut).toLocaleDateString("ro-RO")}
+              </Text>
+
+              <View style={styles.divider}>
+                <View style={styles.dividerInset} />
+              </View>
+
+              <View style={styles.details}>
+                <Text style={styles.detailsTitle}>Transaction details</Text>
+
+                <View style={styles.detailsRow}>
+                  <Text style={styles.detailsField}>Date</Text>
+
+                  <Text style={styles.detailsValue}>
+                    {new Date(form.date.toString()).toLocaleDateString("ro-RO")}
+                  </Text>
+                </View>
+
+                <View style={styles.detailsRow}>
+                  <Text style={styles.detailsField}>Payment method</Text>
+
+                  <Text style={styles.detailsValue}>
+                    {form.paymentMethod.charAt(0).toUpperCase() +
+                      form.paymentMethod.slice(1)}
+                  </Text>
+                </View>
+
+                <View style={styles.detailsRow}>
+                  <Text style={styles.detailsField}>Transaction ID</Text>
+
+                  <Text style={styles.detailsValue}>{form.transactionId}</Text>
+                </View>
+
+                <View style={styles.detailsRow}>
+                  <Text style={styles.detailsField}>Billing Name</Text>
+
+                  <Text style={styles.detailsValue}>{form.fullName}</Text>
+                </View>
+
+                <View style={styles.detailsRow}>
+                  <Text style={styles.detailsField}>Billing Email</Text>
+
+                  <Text style={styles.detailsValue}>{form.email}</Text>
+                </View>
+
+                <View style={styles.detailsRow}>
+                  <Text style={styles.detailsField}>Status</Text>
+
+                  <Text style={styles.detailsValue}>
+                    {form.paid == 1 ? "Paid" : "To be paid"}
+                  </Text>
+                </View>
+              </View>
+            </ScrollView>
+          </View>
+        </SafeAreaView>
+
+        <View style={styles.overlay}>
+          <TouchableOpacity
+            onPress={() => {
+              router.replace("/bookings");
+            }}
+          >
+            <View style={styles.btn}>
+              <Text style={styles.btnText}>My bookings</Text>
+              <FontAwesome6
+                name="arrow-right"
+                size={25}
+                color="white"
+                style={{ padding: 10, paddingLeft: 12 }}
+              />
             </View>
-
-            <Text style={styles.receiptDescription}>
-              Software Development March 2023 - April 2023
-            </Text>
-
-            <View style={styles.divider}>
-              <View style={styles.dividerInset} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              // handle onPress
+            }}
+          >
+            <View style={styles.btnSecondary}>
+              <Text style={styles.btnSecondaryText}>Save as PDF</Text>
+              <FontAwesome6
+                name="download"
+                color="#8338ec"
+                size={18}
+                style={{ paddingLeft: 7 }}
+              />
             </View>
-
-            <View style={styles.details}>
-              <Text style={styles.detailsTitle}>Transaction details</Text>
-
-              <View style={styles.detailsRow}>
-                <Text style={styles.detailsField}>Date</Text>
-
-                <Text style={styles.detailsValue}>
-                  {
-                    // Not accurate
-                    new Date().toLocaleDateString("ro-RO")
-                  }
-                </Text>
-              </View>
-
-              <View style={styles.detailsRow}>
-                <Text style={styles.detailsField}>Category</Text>
-
-                <Text style={styles.detailsValue}>Development</Text>
-              </View>
-
-              <View style={styles.detailsRow}>
-                <Text style={styles.detailsField}>Payment method</Text>
-
-                <Text style={styles.detailsValue}>Visa ending in 0182</Text>
-              </View>
-
-              <View style={styles.detailsRow}>
-                <Text style={styles.detailsField}>Receipt Number</Text>
-
-                <Text style={styles.detailsValue}>9876543210</Text>
-              </View>
-
-              <View style={styles.detailsRow}>
-                <Text style={styles.detailsField}>Billing Name</Text>
-
-                <Text style={styles.detailsValue}>John Smith</Text>
-              </View>
-
-              <View style={styles.detailsRow}>
-                <Text style={styles.detailsField}>Billing Email</Text>
-
-                <Text style={styles.detailsValue}>johnsmith@example.com</Text>
-              </View>
-
-              <View style={styles.detailsRow}>
-                <Text style={styles.detailsField}>Billing Address</Text>
-
-                <Text style={styles.detailsValue}>
-                  1234 Elm Street, Suite 567, Anytown, USA
-                </Text>
-              </View>
-            </View>
-          </ScrollView>
+          </TouchableOpacity>
         </View>
-      </SafeAreaView>
-
-      <View style={styles.overlay}>
-        <TouchableOpacity
-          onPress={() => {
-            router.replace("/bookings");
-          }}
-        >
-          <View style={styles.btn}>
-            <Text style={styles.btnText}>My bookings</Text>
-            <FontAwesome6
-              name="arrow-right"
-              size={25}
-              color="white"
-              style={{ padding: 10, paddingLeft: 12 }}
-            />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            // handle onPress
-          }}
-        >
-          <View style={styles.btnSecondary}>
-            <Text style={styles.btnSecondaryText}>Save as PDF</Text>
-            <FontAwesome6
-              name="download"
-              color="#8338ec"
-              size={18}
-              style={{ paddingLeft: 7 }}
-            />
-          </View>
-        </TouchableOpacity>
       </View>
-    </View>
+    </>
   );
 }
 
