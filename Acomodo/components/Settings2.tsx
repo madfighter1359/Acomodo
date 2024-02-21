@@ -1,173 +1,51 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Link } from "expo-router";
-import { useSession } from "../../ctx";
-import Button from "../../components/Button";
-import { router } from "expo-router";
-import { auth } from "../../firebase-config";
-import NewGuest from "../../components/api/NewGuest";
-import Example from "../../components/Settings";
-import Settings from "../../components/Settings2";
-import { ScrollView, TouchableOpacity, Switch, Image } from "react-native";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  SafeAreaView,
+  View,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  Switch,
+  Image,
+} from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
-import { FontAwesome6 } from "@expo/vector-icons";
 
-export default function Profile() {
-  const { session, signOut, signIn } = useSession();
-  const [form, setForm] = React.useState({
+export default function Settings() {
+  const [form, setForm] = useState({
     emailNotifications: true,
     pushNotifications: false,
   });
+
   return (
-    // <SafeAreaView style={styles.container}>
-    //   {session ? (
-    //     <>
-    //       <Button
-    //         onPress={() => {
-    //           alert(session?.uid);
-    //         }}
-    //         size="medium"
-    //         type="secondary"
-    //       >
-    //         User
-    //       </Button>
-    //       <Button
-    //         onPress={() => {
-    //           signOut();
-    //           router.replace("/");
-    //         }}
-    //         size="medium"
-    //         type="secondary"
-    //       >
-    //         Sign Out
-    //       </Button>
-    //       <Button
-    //         onPress={() => {
-    //           auth.currentUser
-    //             ?.getIdToken(true)
-    //             .then((token) => console.log(token));
-    //         }}
-    //         size="medium"
-    //         type="secondary"
-    //       >
-    //         Token
-    //       </Button>
-    //       <Button
-    //         onPress={() => {
-    //           auth.currentUser?.getIdToken(true).then((token) =>
-    //             NewGuest({
-    //               token: token,
-    //               guestName: "Testy Amith",
-    //               guestDoB: 1646179200000,
-    //               guestDocNr: "120923",
-    //               email: "s@s.com",
-    //             })
-    //           );
-    //         }}
-    //         size="medium"
-    //         type="secondary"
-    //       >
-    //         Register
-    //       </Button>
-    //     </>
-    //   ) : (
-    //     <>
-    //       <Button
-    //         onPress={() => router.push("/sign-in")}
-    //         size="medium"
-    //         type="primary"
-    //       >
-    //         Sign In
-    //       </Button>
-    //       <Button
-    //         size="medium"
-    //         type="primary"
-    //         onPress={() => router.push("/sign-up")}
-    //       >
-    //         Sign Up
-    //       </Button>
-    //       <Button
-    //         size="medium"
-    //         type="secondary"
-    //         onPress={() => {
-    //           signIn("a@m.com", "aqwsderf");
-    //           router.replace("/");
-    //         }}
-    //       >
-    //         Sign In (Dev)
-    //       </Button>
-    //     </>
-    //   )}
-    // </SafeAreaView>
-    // <Example />
-    // <Settings />
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={[styles.section, { paddingTop: 4 }]}>
           <Text style={styles.sectionTitle}>Account</Text>
 
           <View style={styles.sectionBody}>
-            {session ? (
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
+            <TouchableOpacity
+              onPress={() => {
+                // handle onPress
+              }}
+              style={styles.profile}
+            >
+              <Image
+                alt=""
+                source={{
+                  uri: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80",
                 }}
-                style={styles.profile}
-              >
-                {/* <Image
-                  alt=""
-                  source={{
-                    uri: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80",
-                  }}
-                  style={styles.profileAvatar}
-                /> */}
-                <FontAwesome6 name="user" size={32} style={{ padding: 13 }} />
+                style={styles.profileAvatar}
+              />
 
-                <View style={styles.profileBody}>
-                  <Text style={styles.profileName}>{session.displayName}</Text>
+              <View style={styles.profileBody}>
+                <Text style={styles.profileName}>John Doe</Text>
 
-                  <Text style={styles.profileHandle}>{session.email}</Text>
-                </View>
+                <Text style={styles.profileHandle}>john.doe@mail.com</Text>
+              </View>
 
-                <FeatherIcon color="#bcbcbc" name="chevron-right" size={22} />
-              </TouchableOpacity>
-            ) : (
-              <>
-                <View
-                  style={[
-                    styles.rowWrapper,
-                    styles.rowFirst,
-                    { alignItems: "center" },
-                  ]}
-                >
-                  <TouchableOpacity
-                    onPress={() => router.push("/sign-in")}
-                    style={styles.row}
-                  >
-                    <Text style={[styles.rowLabel, styles.rowLabelSign]}>
-                      Sign In
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View
-                  style={[
-                    styles.rowWrapper,
-                    styles.rowLast,
-                    { alignItems: "center" },
-                  ]}
-                >
-                  <TouchableOpacity
-                    onPress={() => router.push("/sign-up")}
-                    style={styles.row}
-                  >
-                    <Text style={[styles.rowLabel, styles.rowLabelSign]}>
-                      Sign Up
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            )}
+              <FeatherIcon color="#bcbcbc" name="chevron-right" size={22} />
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -309,31 +187,29 @@ export default function Profile() {
           </View>
         </View>
 
-        {session && (
-          <View style={styles.section}>
-            <View style={styles.sectionBody}>
-              <View
-                style={[
-                  styles.rowWrapper,
-                  styles.rowFirst,
-                  styles.rowLast,
-                  { alignItems: "center" },
-                ]}
+        <View style={styles.section}>
+          <View style={styles.sectionBody}>
+            <View
+              style={[
+                styles.rowWrapper,
+                styles.rowFirst,
+                styles.rowLast,
+                { alignItems: "center" },
+              ]}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
+                }}
+                style={styles.row}
               >
-                <TouchableOpacity
-                  onPress={() => {
-                    signOut();
-                  }}
-                  style={styles.row}
-                >
-                  <Text style={[styles.rowLabel, styles.rowLabelLogout]}>
-                    Log Out
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                <Text style={[styles.rowLabel, styles.rowLabelLogout]}>
+                  Log Out
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
-        )}
+        </View>
 
         <Text style={styles.contentFooter}>App Version 2.24 #50491</Text>
       </ScrollView>
@@ -342,11 +218,6 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  // },
   container: {
     padding: 0,
     flexGrow: 1,
@@ -480,11 +351,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "600",
     color: "#dc2626",
-  },
-  rowLabelSign: {
-    width: "100%",
-    textAlign: "center",
-    fontWeight: "600",
-    color: "#2b64e3",
   },
 });
