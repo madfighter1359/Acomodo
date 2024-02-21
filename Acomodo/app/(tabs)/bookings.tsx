@@ -19,6 +19,7 @@ import { useFocusEffect } from "expo-router";
 import { auth } from "../../firebase-config";
 import GetReservations from "../../components/api/GetReservations";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import Loading from "../../components/Loading";
 
 export default function Index() {
   const { session, signOut } = useSession();
@@ -231,26 +232,7 @@ export default function Index() {
           </View>
         )
       ) : (
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            // backgroundColor: "purple",
-            flex: 1,
-          }}
-        >
-          <Text style={{ fontSize: 32 }}>
-            {error ? (
-              <Text>An error occured</Text>
-            ) : (
-              // <Text>Loading...</Text>
-              <ActivityIndicator
-                size={"large"}
-                color={Platform.OS == "ios" ? "#94A3B8" : "#2b64e3"}
-              />
-            )}
-          </Text>
-        </View>
+        <Loading />
       )}
     </ScrollView>
   ) : (

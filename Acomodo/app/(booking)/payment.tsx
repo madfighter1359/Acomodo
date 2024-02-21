@@ -14,6 +14,7 @@ import { useSession } from "../../ctx";
 import { router, useLocalSearchParams } from "expo-router";
 import NewReservation from "../../components/api/NewReservation";
 import { auth } from "../../firebase-config";
+import Loading from "../../components/Loading";
 
 const items = [
   {
@@ -41,6 +42,8 @@ export default function Payment() {
   const { session } = useSession();
   if (!session) router.navigate("/profile");
 
+  const [loading, setLoading] = React.useState(false);
+
   const [value, setValue] = React.useState(0);
   const [paid, setPaid] = React.useState(false);
   const form = useLocalSearchParams();
@@ -48,6 +51,7 @@ export default function Payment() {
 
   const handlePay = () => {
     // new column for paid
+    setLoading(true);
     auth.currentUser
       ?.getIdToken(true)
       .then((token) => {
@@ -89,81 +93,85 @@ export default function Payment() {
   };
 
   return (
-    <View>
-      <View style={styles.container}>
-        {/* <Text style={styles.title}>Credit Cards</Text> */}
-        {items.map(({ label, icon, available }, index) => {
-          const isFirst = index === 0;
-          const isLast = index === items.length - 1;
-          const isActive = value === index;
-          return (
-            <View
-              key={index}
-              style={[
-                styles.radioWrapper,
-                isActive && styles.radioActive,
-                isFirst && styles.radioFirst,
-                isLast && styles.radioLast,
-                !available && styles.radioUnavailable,
-              ]}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  if (available) setValue(index);
-                }}
-              >
-                <View style={styles.radio}>
-                  <View
-                    style={[
-                      styles.radioInput,
-                      isActive && styles.radioInputActive,
-                    ]}
-                  />
-
-                  <Text style={styles.radioLabel}>{label}</Text>
-
-                  {!available && (
-                    <View
-                      style={{
-                        backgroundColor: "#D3D3D3",
-                        padding: 3,
-                        marginLeft: 20,
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <FontAwesome6
-                        name="triangle-exclamation"
-                        size={13}
-                        style={{ padding: 2 }}
+    <View style={{ flex: 1 }}>
+      {loading ? (
+        <Loading />
+      ) : (
+        <View>
+          <View style={styles.container}>
+            {/* <Text style={styles.title}>Credit Cards</Text> */}
+            {items.map(({ label, icon, available }, index) => {
+              const isFirst = index === 0;
+              const isLast = index === items.length - 1;
+              const isActive = value === index;
+              return (
+                <View
+                  key={index}
+                  style={[
+                    styles.radioWrapper,
+                    isActive && styles.radioActive,
+                    isFirst && styles.radioFirst,
+                    isLast && styles.radioLast,
+                    !available && styles.radioUnavailable,
+                  ]}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (available) setValue(index);
+                    }}
+                  >
+                    <View style={styles.radio}>
+                      <View
+                        style={[
+                          styles.radioInput,
+                          isActive && styles.radioInputActive,
+                        ]}
                       />
-                      <Text style={{ fontSize: 13, padding: 2 }}>
-                        Unavailable
+
+                      <Text style={styles.radioLabel}>{label}</Text>
+
+                      {!available && (
+                        <View
+                          style={{
+                            backgroundColor: "#D3D3D3",
+                            padding: 3,
+                            marginLeft: 20,
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <FontAwesome6
+                            name="triangle-exclamation"
+                            size={13}
+                            style={{ padding: 2 }}
+                          />
+                          <Text style={{ fontSize: 13, padding: 2 }}>
+                            Unavailable
+                          </Text>
+                        </View>
+                      )}
+
+                      <Text
+                        style={[
+                          styles.radioPrice,
+                          isActive && styles.radioPriceActive,
+                        ]}
+                      >
+                        <FontAwesome6 name={icon} size={15} />
                       </Text>
                     </View>
-                  )}
-
-                  <Text
-                    style={[
-                      styles.radioPrice,
-                      isActive && styles.radioPriceActive,
-                    ]}
-                  >
-                    <FontAwesome6 name={icon} size={15} />
-                  </Text>
+                  </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
-            </View>
-          );
-        })}
-      </View>
-      <View style={styles.contact}>
-        <FeatherIcon name="info" color="#0069fe" size={20} />
-        <Text style={styles.contactText}>
-          Certain payment methods are currently unavailable. We apologise for
-          the inconvenience{" "}
-          {/* <TouchableOpacity
+              );
+            })}
+          </View>
+          <View style={styles.contact}>
+            <FeatherIcon name="info" color="#0069fe" size={20} />
+            <Text style={styles.contactText}>
+              Certain payment methods are currently unavailable. We apologise
+              for the inconvenience{" "}
+              {/* <TouchableOpacity
             onPress={() => {
               // handle onPress
             }}
@@ -172,13 +180,15 @@ export default function Payment() {
               Contact us
             </Text>
           </TouchableOpacity> */}
-        </Text>
-      </View>
-      <View style={{ paddingTop: 100 }}>
-        <Button onPress={handlePay} size={"xl"}>
-          {value == 0 ? "Book" : "Pay"} now!
-        </Button>
-      </View>
+            </Text>
+          </View>
+          <View style={{ paddingTop: 100 }}>
+            <Button onPress={handlePay} size={"xl"}>
+              {value == 0 ? "Book" : "Pay"} now!
+            </Button>
+          </View>
+        </View>
+      )}
     </View>
   );
 }

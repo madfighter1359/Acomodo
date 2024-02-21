@@ -40,24 +40,37 @@ export default function book() {
         if (checkOut <= selectedDate) {
           setcheckOut(new Date(selectedDate.valueOf() + DAY));
           setNights(1);
-        } else
-          setNights(
-            Math.round((checkOut.valueOf() - selectedDate.valueOf()) / DAY)
-          );
+        } else {
+          if (checkOut.getTime() - selectedDate.getTime() < DAY * 15) {
+            setNights(
+              Math.round((checkOut.valueOf() - selectedDate.valueOf()) / DAY)
+            );
+          } else {
+            setcheckOut(new Date(selectedDate.valueOf() + DAY * 15));
+            setNights(15);
+          }
+        }
       } else {
         setcheckOut(selectedDate);
         if (checkIn >= selectedDate) {
           setCheckIn(new Date(selectedDate.valueOf() - DAY));
           setNights(1);
-        } else
-          setNights(
-            Math.round((selectedDate.valueOf() - checkIn.valueOf()) / DAY)
-          );
+        } else {
+          if (selectedDate.valueOf() - checkIn.valueOf() < DAY * 15) {
+            setNights(
+              Math.round((selectedDate.valueOf() - checkIn.valueOf()) / DAY)
+            );
+          } else {
+            setCheckIn(new Date(selectedDate.valueOf() - DAY * 15));
+            setNights(15);
+          }
+        }
       }
     }
   };
 
   const handleSearch = () => {
+    // setLoading(true);
     const form = {
       checkInDate: checkIn.valueOf(),
       checkOutDate: checkOut.valueOf(),
@@ -67,13 +80,14 @@ export default function book() {
     router.push({ pathname: "/location-select", params: form });
   };
 
+  console.log("rendered index");
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.formItem}>
         <Text style={styles.formItemText}>How many people?</Text>
         <Counter
           inc={() => {
-            if (people < 8) setPeople(people + 1);
+            if (people < 4) setPeople(people + 1);
           }}
           dec={() => {
             if (people > 1) setPeople(people - 1);

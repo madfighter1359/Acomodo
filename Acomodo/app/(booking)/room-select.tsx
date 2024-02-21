@@ -12,11 +12,14 @@ import { router, useLocalSearchParams } from "expo-router";
 import SearchLocation from "../../components/SearchLocation";
 import FontAwesome from "react-native-vector-icons/FontAwesome6";
 import { functionTypeParam } from "@babel/types";
+import Loading from "../../components/Loading";
 
 // Need to get available room types
 export default function RoomSelect() {
   const form = useLocalSearchParams();
   console.log(form);
+
+  const [loading, setLoading] = useState(true);
 
   const [items, setItems] = useState<
     {
@@ -74,146 +77,151 @@ export default function RoomSelect() {
       }
       results.sort((a, b) => a.price - b.price);
       setItems(results);
+      setLoading(false);
     });
   }, []);
 
   return (
-    <SafeAreaView>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Rooms</Text>
+    <View style={{ flex: 1 }}>
+      {loading ? (
+        <Loading />
+      ) : (
+        <ScrollView contentContainerStyle={styles.container}>
+          <Text style={styles.title}>Rooms</Text>
 
-        {items.map(
-          (
-            {
-              img,
-              type,
-              capacity,
-              checkIn,
-              checkOut,
-              price,
-              available,
-              typeId,
-            },
-            index
-          ) => {
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  // handle onPress
-                }}
-              >
-                <View style={styles.card}>
-                  <Image
-                    alt=""
-                    resizeMode="cover"
-                    source={{ uri: img }}
-                    style={styles.cardImg}
-                  />
-                  <View style={styles.cardBody}>
-                    <Text>
-                      <Text style={styles.cardTitle}>{type}</Text>
-                      {"\n"}
-                      <Text style={styles.cardAirport}>{capacity} PERS</Text>
-                    </Text>
-
-                    <View style={styles.cardRow}>
-                      <View style={styles.cardRowItem}>
-                        <FontAwesome
-                          color="#6f61c4"
-                          name="right-to-bracket"
-                          size={10}
-                        />
-
-                        <Text style={styles.cardRowItemText}>
-                          {new Date(checkIn).toLocaleDateString("ro-RO", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          })}
-                        </Text>
-                      </View>
-
-                      <View style={styles.cardRowItem}>
-                        <FontAwesome
-                          color="#6f61c4"
-                          name="right-from-bracket"
-                          size={10}
-                        />
-
-                        <Text style={styles.cardRowItemText}>
-                          {new Date(checkOut).toLocaleDateString("ro-RO", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          })}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <Text style={styles.cardPrice}>
-                      <Text>total </Text>
-
-                      <Text style={styles.cardPriceValue}>
-                        {price.toLocaleString("ro-RO")}{" "}
+          {items.map(
+            (
+              {
+                img,
+                type,
+                capacity,
+                checkIn,
+                checkOut,
+                price,
+                available,
+                typeId,
+              },
+              index
+            ) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    // handle onPress
+                  }}
+                >
+                  <View style={styles.card}>
+                    <Image
+                      alt=""
+                      resizeMode="cover"
+                      source={{ uri: img }}
+                      style={styles.cardImg}
+                    />
+                    <View style={styles.cardBody}>
+                      <Text>
+                        <Text style={styles.cardTitle}>{type}</Text>
+                        {"\n"}
+                        <Text style={styles.cardAirport}>{capacity} PERS</Text>
                       </Text>
 
-                      <Text style={styles.cardPriceCurrency}>RON</Text>
-                    </Text>
+                      <View style={styles.cardRow}>
+                        <View style={styles.cardRowItem}>
+                          <FontAwesome
+                            color="#6f61c4"
+                            name="right-to-bracket"
+                            size={10}
+                          />
 
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        // backgroundColor: "purple",
-                        width: "100%",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <TouchableOpacity
-                        onPress={() => {
-                          handleBook(typeId, type, img, price);
-                        }}
-                      >
-                        <View style={styles.btn}>
-                          <Text style={styles.btnText}>Book now</Text>
+                          <Text style={styles.cardRowItemText}>
+                            {new Date(checkIn).toLocaleDateString("ro-RO", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </Text>
                         </View>
-                      </TouchableOpacity>
+
+                        <View style={styles.cardRowItem}>
+                          <FontAwesome
+                            color="#6f61c4"
+                            name="right-from-bracket"
+                            size={10}
+                          />
+
+                          <Text style={styles.cardRowItemText}>
+                            {new Date(checkOut).toLocaleDateString("ro-RO", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <Text style={styles.cardPrice}>
+                        <Text>total </Text>
+
+                        <Text style={styles.cardPriceValue}>
+                          {price.toLocaleString("ro-RO")}{" "}
+                        </Text>
+
+                        <Text style={styles.cardPriceCurrency}>RON</Text>
+                      </Text>
+
                       <View
                         style={{
-                          justifyContent: "flex-end",
-                          // backgroundColor: "red",
                           flexDirection: "row",
-                          alignItems: "flex-end",
-                          alignSelf: "flex-end",
-                          display: "flex",
+                          // backgroundColor: "purple",
+                          width: "100%",
+                          justifyContent: "space-between",
                         }}
                       >
-                        <Text
-                          style={[
-                            styles.cardAvailabilityText,
-                            {
-                              fontSize: 17,
-                              fontWeight: "700",
-                              color: "#173153",
-                              paddingBottom: 0,
-                            },
-                          ]}
+                        <TouchableOpacity
+                          onPress={() => {
+                            handleBook(typeId, type, img, price);
+                          }}
                         >
-                          {available}
-                        </Text>
-                        <Text style={styles.cardAvailabilityText}>
-                          available
-                        </Text>
+                          <View style={styles.btn}>
+                            <Text style={styles.btnText}>Book now</Text>
+                          </View>
+                        </TouchableOpacity>
+                        <View
+                          style={{
+                            justifyContent: "flex-end",
+                            // backgroundColor: "red",
+                            flexDirection: "row",
+                            alignItems: "flex-end",
+                            alignSelf: "flex-end",
+                            display: "flex",
+                          }}
+                        >
+                          <Text
+                            style={[
+                              styles.cardAvailabilityText,
+                              {
+                                fontSize: 17,
+                                fontWeight: "700",
+                                color: "#173153",
+                                paddingBottom: 0,
+                              },
+                            ]}
+                          >
+                            {available}
+                          </Text>
+                          <Text style={styles.cardAvailabilityText}>
+                            available
+                          </Text>
+                        </View>
                       </View>
                     </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            );
-          }
-        )}
-      </ScrollView>
-    </SafeAreaView>
+                </TouchableOpacity>
+              );
+            }
+          )}
+        </ScrollView>
+      )}
+    </View>
   );
 }
 

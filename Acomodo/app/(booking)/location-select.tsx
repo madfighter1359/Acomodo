@@ -13,6 +13,8 @@ import { useLocalSearchParams } from "expo-router";
 import SearchForRoom from "../../components/SearchForRoom";
 import FontAwesome from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
+import Error from "../../components/Error";
+import Loading from "../../components/Loading";
 
 export default function LocationSelect() {
   // Get search terms passed to screen
@@ -31,25 +33,37 @@ export default function LocationSelect() {
     }[]
   >([]);
 
+  const [error, setError] = useState(false);
+
+  const [loading, setLoading] = useState(true);
+
   // Runs on load, makes the search and sets state with results
+
+  // Could maybe sort by available rooms?
   useEffect(() => {
     SearchForRoom({
       checkIn: Number(form.checkInDate),
       checkOut: Number(form.checkOutDate),
       people: Number(form.numberOfPeople),
-    }).then((data) => {
-      let results = [];
-      for (const key in data) {
-        results.push({
-          img: data[key].image,
-          name: data[key].locationName,
-          rooms: data[key].available,
-          location: data[key].area,
-          cheapest: data[key].cheapest,
-          locationId: key,
-        });
+    }).then((res) => {
+      if (res[0] == 200) {
+        let results = [];
+        const data = res[1];
+        for (const key in data) {
+          results.push({
+            img: data[key].image,
+            name: data[key].locationName,
+            rooms: data[key].available,
+            location: data[key].area,
+            cheapest: data[key].cheapest,
+            locationId: key,
+          });
+        }
+        setItems(results);
+      } else {
+        setError(true);
       }
-      setItems(results);
+      setLoading(false);
     });
   }, []);
 
@@ -66,86 +80,100 @@ export default function LocationSelect() {
     router.push({ pathname: "/room-select", params: params });
   };
 
+  console.log("rendered location select");
   return (
-    <SafeAreaView>
-      {/* <Pressable
-        onPress={() =>
-          SearchForRoom({
-            checkIn: Number(form.checkInDate),
-            checkOut: Number(form.checkOutDate),
-            people: Number(form.numberOfPeople),
-          })
-        }
-      >
-        <Text style={{ fontSize: 20 }}>Press</Text>
-      </Pressable> */}
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Locations</Text>
+    <View style={styles.main}>
+      {loading ? (
+        <Loading />
+      ) : error ? (
+        <Error
+          desc="There was an issue with the selected dates"
+          resolution="Try again"
+          action={() => router.back()}
+        />
+      ) : (
+        <ScrollView contentContainerStyle={styles.container}>
+          <Text style={styles.title}>Locations</Text>
 
-        {items.map(
-          ({ img, name, rooms, location, cheapest, locationId }, index) => {
-            return (
-              <View
-                key={index}
-                style={[
-                  styles.cardWrapper,
-                  index === 0 && { borderTopWidth: 0 },
-                ]}
-              >
-                <TouchableOpacity
-                  onPress={() => handleSelect(locationId, name)}
+          {items.map(
+            ({ img, name, rooms, location, cheapest, locationId }, index) => {
+              return (
+                <View
+                  key={index}
+                  style={[
+                    styles.cardWrapper,
+                    index === 0 && { borderTopWidth: 0 },
+                  ]}
                 >
-                  <View style={{}}>
-                    {/* <View style={{ backgroundColor: "grey" }}> */}
-                    <Image
-                      alt=""
-                      resizeMode="cover"
-                      source={{ uri: img }}
-                      style={styles.cardImg}
-                    />
+                  <TouchableOpacity
+                    onPress={
+                      rooms > 0
+                        ? () => handleSelect(locationId, name)
+                        : undefined
+                    }
+                  >
+                    <View style={{}}>
+                      {/* <View style={{ backgroundColor: "grey" }}> */}
+                      <Image
+                        alt=""
+                        resizeMode="cover"
+                        source={{ uri: img }}
+                        style={[styles.cardImg, rooms < 1 && { opacity: 0.2 }]}
+                      />
 
-                    {/* </View> */}
+                      {/* </View> */}
 
-                    <View style={styles.cardBody}>
-                      <Text style={styles.cardTitle}>{name}</Text>
+                      <View style={styles.cardBody}>
+                        <Text style={styles.cardTitle}>{name}</Text>
 
-                      <View style={styles.cardRow}>
-                        <View style={styles.cardRowItem}>
-                          <FontAwesome color="#173153" name="bed" size={13} />
+                        <View style={styles.cardRow}>
+                          <View style={styles.cardRowItem}>
+                            <FontAwesome color="#173153" name="bed" size={13} />
 
-                          <Text style={styles.cardRowItemText}>
-                            {rooms} rooms available
-                          </Text>
+                            <Text style={styles.cardRowItemText}>
+                              {rooms} rooms available
+                            </Text>
+                          </View>
+
+                          <View style={styles.cardRowItem}>
+                            <FontAwesome
+                              color="#173153"
+                              name="location-dot"
+                              solid={true}
+                              size={13}
+                            />
+
+                            <Text style={styles.cardRowItemText}>
+                              {location}
+                            </Text>
+                          </View>
                         </View>
 
-                        <View style={styles.cardRowItem}>
-                          <FontAwesome
-                            color="#173153"
-                            name="location-dot"
-                            solid={true}
-                            size={13}
-                          />
-
-                          <Text style={styles.cardRowItemText}>{location}</Text>
-                        </View>
+                        <Text style={styles.cardPrice}>
+                          {/* {from {cheapest.toLocaleString("ro-RO")}RON / night} */}
+                          {rooms > 0
+                            ? `from ${cheapest.toLocaleString(
+                                "ro-RO"
+                              )}RON / night`
+                            : "This location is full on the selected dates!"}
+                        </Text>
                       </View>
-
-                      <Text style={styles.cardPrice}>
-                        from {cheapest.toLocaleString("ro-RO")}RON / night
-                      </Text>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            );
-          }
-        )}
-      </ScrollView>
-    </SafeAreaView>
+                  </TouchableOpacity>
+                </View>
+              );
+            }
+          )}
+        </ScrollView>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+  },
   container: {
     padding: 24,
   },

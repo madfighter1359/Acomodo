@@ -179,15 +179,15 @@ export default function ConfirmBooking() {
                   {/* <Text style={styles.overlayContentPriceBefore}>$72</Text> */}
 
                   <Text style={styles.overlayContentPrice}>
-                    {(+form.totalPrice / +form.numberOfNights).toLocaleString(
-                      "ro-RO"
-                    )}{" "}
-                    RON
+                    {(+form.totalPrice).toLocaleString("ro-RO")} RON
                   </Text>
                 </View>
 
                 <Text style={styles.overlayContentTotal}>
-                  {(+form.totalPrice).toLocaleString("ro-RO")} RON total
+                  {(+form.totalPrice / +form.numberOfNights).toLocaleString(
+                    "ro-RO"
+                  )}{" "}
+                  RON / night
                 </Text>
               </View>
 

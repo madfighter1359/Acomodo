@@ -26,12 +26,13 @@ export default async function SearchForRoom({
       },
     });
     // console.log(response.data);
-    return response.data;
+    return [response.status, response.data];
   } catch (e) {
     if (axios.isAxiosError(e)) {
       console.log(e.response?.data);
-      return e.response?.status;
+      return [e.response?.status, null];
     }
     console.log(e);
+    return [false, null];
   }
 }
