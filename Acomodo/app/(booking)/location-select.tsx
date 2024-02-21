@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import SearchForRoom from "../../components/SearchForRoom";
+import SearchForRoom from "../../components/api/SearchLocations";
 import FontAwesome from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
 import Error from "../../components/Error";
@@ -33,7 +33,7 @@ export default function LocationSelect() {
     }[]
   >([]);
 
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<null | "user" | "other">(null);
 
   const [loading, setLoading] = useState(true);
 
@@ -60,8 +60,11 @@ export default function LocationSelect() {
           });
         }
         setItems(results);
+        setError(null);
+      } else if (res[0] == 400) {
+        setError("user");
       } else {
-        setError(true);
+        setError("other");
       }
       setLoading(false);
     });
@@ -80,14 +83,17 @@ export default function LocationSelect() {
     router.push({ pathname: "/room-select", params: params });
   };
 
-  console.log("rendered location select");
   return (
     <View style={styles.main}>
       {loading ? (
         <Loading />
       ) : error ? (
         <Error
-          desc="There was an issue with the selected dates"
+          desc={
+            error == "user"
+              ? "There was an issue with the selected dates"
+              : "There was an issue connecting to the server"
+          }
           resolution="Try again"
           action={() => router.back()}
         />

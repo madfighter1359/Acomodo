@@ -43,6 +43,7 @@ export default function Payment() {
   if (!session) router.navigate("/profile");
 
   const [loading, setLoading] = React.useState(false);
+  // const [error, setError] = React.useState<null | "user" | "other">(null);
 
   const [value, setValue] = React.useState(0);
   const [paid, setPaid] = React.useState(false);

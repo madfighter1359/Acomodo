@@ -6,7 +6,7 @@ import { useSession } from "../../ctx";
 import Button from "../../components/Button";
 import { router } from "expo-router";
 import { auth } from "../../firebase-config";
-import NewGuest from "../../components/NewGuest";
+import NewGuest from "../../components/api/NewGuest";
 
 export default function Profile() {
   const { session, signOut, signIn } = useSession();

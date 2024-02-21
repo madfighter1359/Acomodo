@@ -80,7 +80,6 @@ export default function book() {
     router.push({ pathname: "/location-select", params: form });
   };
 
-  console.log("rendered index");
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.formItem}>

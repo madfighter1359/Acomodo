@@ -9,10 +9,10 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import SearchLocation from "../../components/SearchLocation";
+import SearchLocation from "../../components/api/SearchSpecificLocation";
 import FontAwesome from "react-native-vector-icons/FontAwesome6";
-import { functionTypeParam } from "@babel/types";
 import Loading from "../../components/Loading";
+import Error from "../../components/Error";
 
 // Need to get available room types
 export default function RoomSelect() {
@@ -20,6 +20,8 @@ export default function RoomSelect() {
   console.log(form);
 
   const [loading, setLoading] = useState(true);
+
+  const [error, setError] = useState<false | "user" | "other">(false);
 
   const [items, setItems] = useState<
     {
@@ -61,22 +63,30 @@ export default function RoomSelect() {
       checkOut: Number(form.checkOutDate),
       people: Number(form.numberOfPeople),
       locId: form.locationId.toString(),
-    }).then((data) => {
-      let results = [];
-      for (const key in data) {
-        results.push({
-          img: data[key].image,
-          type: data[key].typeName,
-          capacity: data[key].capacity,
-          checkIn: +form.checkInDate,
-          checkOut: +form.checkOutDate,
-          price: data[key].price * Number(form.numberOfNights),
-          available: data[key].available,
-          typeId: key,
-        });
+    }).then((res) => {
+      if (res[0] == 200) {
+        let results = [];
+        const data = res[1];
+        for (const key in data) {
+          results.push({
+            img: data[key].image,
+            type: data[key].typeName,
+            capacity: data[key].capacity,
+            checkIn: +form.checkInDate,
+            checkOut: +form.checkOutDate,
+            price: data[key].price * Number(form.numberOfNights),
+            available: data[key].available,
+            typeId: key,
+          });
+        }
+        results.sort((a, b) => a.price - b.price);
+        setItems(results);
+        setError(false);
+      } else if (res[0] == 400) {
+        setError("user");
+      } else {
+        setError("other");
       }
-      results.sort((a, b) => a.price - b.price);
-      setItems(results);
       setLoading(false);
     });
   }, []);
@@ -85,6 +95,14 @@ export default function RoomSelect() {
     <View style={{ flex: 1 }}>
       {loading ? (
         <Loading />
+      ) : error ? (
+        <Error
+          desc={
+            error == "user"
+              ? "There was an issue with the selected dates"
+              : "There was an issue connecting to the server"
+          }
+        />
       ) : (
         <ScrollView contentContainerStyle={styles.container}>
           <Text style={styles.title}>Rooms</Text>

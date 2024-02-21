@@ -8,7 +8,7 @@ import {
   User,
   deleteUser,
 } from "firebase/auth";
-import NewGuest from "./components/NewGuest";
+import NewGuest from "./components/api/NewGuest";
 import { FirebaseError } from "firebase/app";
 
 interface AuthContextProps {

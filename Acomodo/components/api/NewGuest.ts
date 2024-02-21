@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL } from "../constants/URL";
+import { BASE_URL } from "../../constants/URL";
 
 interface Props {
   token: string;

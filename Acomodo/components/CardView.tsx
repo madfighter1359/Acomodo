@@ -9,7 +9,7 @@ import {
   Image,
 } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome6";
-import SearchForRoom from "./SearchForRoom";
+import SearchForRoom from "./api/SearchLocations";
 
 interface Props {
   form: {
