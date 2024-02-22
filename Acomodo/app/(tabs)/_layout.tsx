@@ -34,22 +34,9 @@ export default function Layout() {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome name="user" solid color={color} size={size * 0.7} />
           ),
-          // tabBarIcon: ({ focused, color, size }) => {
-          //   return focused ? (
-          //     <FontAwesome name="user" solid color={color} size={size * 0.7} />
-          //   ) : (
-          //     <FontAwesome name="user" color={color} size={size * 0.7} />
-          //   );
-          // },
         }}
       />
-      {/* <Tabs.Screen
-        name="booking-confirmed"
-        options={{
-          title: "Booking confirmed!",
-          href: null,
-        }}
-      /> */}
+      {/* <Tabs.Screen name="profile/edit-profile" options={{ href: null }} /> */}
     </Tabs>
   );
 }
