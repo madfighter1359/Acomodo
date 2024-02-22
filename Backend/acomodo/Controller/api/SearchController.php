@@ -120,6 +120,7 @@ class SearchController extends BaseController
                 $response->{$row["type_id"]}->price = $row["price"];
                 $response->{$row["type_id"]}->typeName = $row["type_name"];
                 $response->{$row["type_id"]}->capacity = $row["capacity"];
+                $response->{$row["type_id"]}->beds = $row["beds"];
                 $response->{$row["type_id"]}->image = $row["image"];
             }
 

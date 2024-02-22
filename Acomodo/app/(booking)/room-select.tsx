@@ -33,6 +33,7 @@ export default function RoomSelect() {
       price: number;
       available: number;
       typeId: string;
+      beds: number;
     }[]
   >([]);
 
@@ -40,7 +41,8 @@ export default function RoomSelect() {
     id: string,
     name: string,
     image: string,
-    price: number
+    price: number,
+    beds: number
   ) => {
     const params = {
       locationId: form.locationId,
@@ -53,6 +55,7 @@ export default function RoomSelect() {
       typeName: name,
       roomImage: image,
       totalPrice: price,
+      beds: beds,
     };
     router.push({ pathname: "/confirm-booking", params: params });
   };
@@ -77,6 +80,7 @@ export default function RoomSelect() {
             price: data[key].price * Number(form.numberOfNights),
             available: data[key].available,
             typeId: key,
+            beds: data[key].beds,
           });
         }
         results.sort((a, b) => a.price - b.price);
@@ -118,6 +122,7 @@ export default function RoomSelect() {
                 price,
                 available,
                 typeId,
+                beds,
               },
               index
             ) => {
@@ -196,7 +201,7 @@ export default function RoomSelect() {
                       >
                         <TouchableOpacity
                           onPress={() => {
-                            handleBook(typeId, type, img, price);
+                            handleBook(typeId, type, img, price, beds);
                           }}
                         >
                           <View style={styles.btn}>

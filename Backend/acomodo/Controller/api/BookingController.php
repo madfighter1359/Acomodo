@@ -92,6 +92,8 @@ class BookingController extends BaseController
                 $response->reservation->roomType = $roomType;
                 $response->reservation->nights = $nights;
                 $response->reservation->roomNr = $roomNr;
+                $response->reservation->roomTypeName = $bookingModel->getRoomTypeName($roomNr, strtolower($locId));
+                $response->reservation->locationName = $bookingModel->getLocationName(strtolower($locId));
 
                 $guestModel = new GuestModel();
                 $guestDetails = $guestModel->getGuestDetails($guestId);

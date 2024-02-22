@@ -62,6 +62,7 @@ export default async function NewReservation({
     return [false, "An unkown error occured."];
   } catch (e) {
     if (axios.isAxiosError(e)) {
+      console.log(e.response?.data.message);
       if (e.response?.data.message) {
         switch (e.response.data.message) {
           case "No rooms available":

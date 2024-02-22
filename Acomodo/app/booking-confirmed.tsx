@@ -32,10 +32,14 @@ export default function ConfirmScreen() {
               showsVerticalScrollIndicator={false}
             >
               <View style={styles.receiptLogo}>
-                <FeatherIcon color="#fff" name="codepen" size={32} />
+                {/* <FeatherIcon color="#fff" name="codepen" size={32} /> */}
+                <Image
+                  source={require("../assets/images/acomodo-icon.png")}
+                  style={{ width: 70, height: 70 }}
+                />
               </View>
 
-              <Text style={styles.receiptTitle}>{form.locId}</Text>
+              <Text style={styles.receiptTitle}>{form.locationName}</Text>
 
               <Text style={styles.receiptSubtitle}>
                 Reservation #{form.reservationId}
@@ -60,7 +64,7 @@ export default function ConfirmScreen() {
               </View>
 
               <Text style={styles.receiptDescription}>
-                {form.roomType} room ·{" "}
+                {form.roomTypeName} room ·{" "}
                 {new Date(form.checkIn).toLocaleDateString("ro-RO")} -{" "}
                 {new Date(form.checkOut).toLocaleDateString("ro-RO")}
               </Text>
@@ -212,7 +216,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 9999,
     marginBottom: 12,
-    backgroundColor: "#0e0e0e",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
   },

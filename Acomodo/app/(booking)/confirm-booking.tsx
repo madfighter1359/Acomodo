@@ -32,7 +32,7 @@ export default function ConfirmBooking() {
       { label: "Check Out", value: "10:00" },
     ],
     [
-      { label: "Beds", value: form.numberOfPeople },
+      { label: "Beds", value: form.beds },
       { label: "Nights", value: form.numberOfNights },
     ],
   ];
