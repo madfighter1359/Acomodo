@@ -115,7 +115,7 @@ export default function SignUp() {
             default:
               Alert.alert(
                 "Sign up error",
-                "There was an unkown error signing up. Please check your details and or try again later",
+                "There was an unkown error signing up. Please check your details or try again later",
                 [
                   {
                     text: "Try again",

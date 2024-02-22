@@ -12,12 +12,14 @@ interface Props {
   type?: "primary" | "secondary";
   children: string | string[];
   onPress?: () => void;
+  color?: string;
 }
 
 export default function PrimaryButton({
   onPress,
   size,
   type = "primary",
+  color,
   children,
 }: Props) {
   const sizes = {
@@ -78,6 +80,7 @@ export default function PrimaryButton({
               backgroundColor: colors[type].backgroundColor,
               borderColor: colors[type].borderColor,
             },
+            color ? { backgroundColor: color, borderColor: color } : undefined,
           ]}
         >
           <Text

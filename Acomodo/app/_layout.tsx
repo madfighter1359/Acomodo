@@ -3,15 +3,20 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { Stack } from "expo-router";
 import { SessionProvider } from "../ctx";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function Layout() {
   return (
+    // <GestureHandlerRootView>
     <SessionProvider>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="(booking)/location-select"
-          options={{ title: "Select location", headerBackTitleVisible: false }}
+          options={{
+            title: "Select location",
+            headerBackTitleVisible: false,
+          }}
         />
         <Stack.Screen
           name="(booking)/room-select"
@@ -45,5 +50,6 @@ export default function Layout() {
       </Stack>
       <StatusBar style="dark" />
     </SessionProvider>
+    // </GestureHandlerRootView>
   );
 }
