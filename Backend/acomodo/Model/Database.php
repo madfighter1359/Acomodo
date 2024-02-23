@@ -35,7 +35,8 @@ class Database
         try {
             $stmt = $this->executeStatement($query, $params, $param_types);
             if ($stmt->errno) {
-                echo $stmt->error;
+                // echo $stmt->error;
+                // echo 1;
                 return [0, $stmt->errno];
             }
             $rows = $stmt->affected_rows;
@@ -43,7 +44,8 @@ class Database
             $stmt->close();
             return [$rows, $id];
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            // throw new Exception($e->getMessage());
+            customError("", $e->getMessage(), 400);
         }
         return [0, null];
     }
@@ -52,7 +54,7 @@ class Database
         try {
             $stmt = $this->connection->prepare($query);
             if ($stmt === false) {
-                throw new Exception("Unable to do prepared statement: " . $query);
+                customError("", "Unable to do prepared statement: " . $query, 500);
             }
             if ($params) {
                 $stmt->bind_param($param_types, ...$params);
@@ -60,7 +62,7 @@ class Database
             $stmt->execute();
             return $stmt;
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            customError("", $e->getMessage(), 500);
         }
     }
 }

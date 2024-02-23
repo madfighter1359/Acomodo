@@ -33,6 +33,7 @@ export default function Index() {
 
   const getBookings = async () => {
     // console.log("updated");
+    console.log(auth.currentUser?.uid);
     auth.currentUser?.getIdToken(false).then((token) => {
       GetReservations({ token: token }).then((data) => {
         if (data !== false) {

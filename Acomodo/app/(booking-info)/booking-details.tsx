@@ -8,7 +8,7 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Redirect, router, useLocalSearchParams } from "expo-router";
 import { useSession } from "../../ctx";
 import Swiper from "react-native-swiper";
@@ -16,6 +16,9 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import FeatherIcon from "react-native-vector-icons/Feather";
 import Button from "../../components/Button";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { auth } from "../../firebase-config";
+import GetDetails from "../../components/api/GetReservationDetails";
+import GetTransaction from "../../components/api/GetTransaction";
 
 export default function ViewDetails() {
   const form = useLocalSearchParams();
@@ -24,9 +27,11 @@ export default function ViewDetails() {
 
   const DAY = 1000 * 86400;
 
+  const [roomNr, setRoomNr] = useState(0);
+
   const items = [
     [
-      { label: "Room number", value: "form.beds" },
+      { label: "Room number", value: roomNr },
       { label: "Guests", value: form.numberOfPeople },
     ],
     [
@@ -41,20 +46,59 @@ export default function ViewDetails() {
       },
     ],
   ];
-  const IMAGES = [
-    // form.roomImage.toString()
-  ];
 
-  const handlePay = () => {
-    const params = {
-      checkInDate: form.checkInDate,
-      checkOutDate: form.checkOutDate,
-      numberOfPeople: form.numberOfPeople,
-      locationId: form.locationId,
-      roomType: form.roomType,
-      totalPrice: form.totalPrice,
-    };
-    router.push({ pathname: "/payment", params: params });
+  const [images, setImages] = useState<string[] | []>([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const token = await auth.currentUser?.getIdToken(false);
+        if (token) {
+          const data = await GetDetails({
+            token: token,
+            reservationId: +form.reservationId,
+          });
+          if (data != false) {
+            setRoomNr(data.roomNr);
+            setImages([data.image]);
+          }
+        } else {
+          throw new Error();
+        }
+      } catch (e) {}
+    })();
+  }, []);
+
+  const handleViewConfirmation = async () => {
+    try {
+      const token = await auth.currentUser?.getIdToken(false);
+      if (token) {
+        const data = await GetTransaction({
+          token: token,
+          reservationId: +form.reservationId,
+        });
+        if (data != false) {
+          const params = {
+            checkIn: form.checkInDate,
+            checkOut: form.checkOutDate,
+            roomTypeName: form.roomTypeName,
+            price: form.totalPrice,
+            locationName: form.locationName,
+            reservationId: form.reservationId,
+            oldReservation: 1,
+            date: data.date,
+            paymentMethod: data.paymentMethod,
+            transactionId: data.transactionId,
+            fullName: data.name,
+            email: data.email,
+            paid: data.paid,
+          };
+          router.push({ pathname: "/booking-confirmed", params: params });
+        }
+      } else {
+        throw new Error();
+      }
+    } catch (e) {}
   };
 
   // const [details, setDetails] = React.useState<
@@ -79,7 +123,7 @@ export default function ViewDetails() {
                         </View>
                       )}
                     >
-                      {IMAGES.map((src, index) => (
+                      {images.map((src, index) => (
                         <Image
                           alt=""
                           key={index}
@@ -181,17 +225,17 @@ export default function ViewDetails() {
                   </Text>
                 </View>
 
-                <Text style={styles.overlayContentTotal}>
+                {/* <Text style={styles.overlayContentTotal}>
                   {(+form.totalPrice / +form.numberOfNights).toLocaleString(
                     "ro-RO"
                   )}{" "}
                   RON / night
-                </Text>
+                </Text> */}
               </View>
 
-              <TouchableOpacity onPress={handlePay}>
+              <TouchableOpacity onPress={handleViewConfirmation}>
                 <View style={styles.btn}>
-                  <Text style={styles.btnText}>Payment</Text>
+                  <Text style={styles.btnText}>View confirmation</Text>
 
                   <MaterialCommunityIcons
                     color="#fff"
@@ -505,7 +549,7 @@ const styles = StyleSheet.create({
     borderColor: "#007aff",
   },
   btnText: {
-    fontSize: 18,
+    fontSize: 16,
     lineHeight: 26,
     fontWeight: "600",
     color: "#fff",

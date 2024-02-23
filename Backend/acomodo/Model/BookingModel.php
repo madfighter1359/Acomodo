@@ -51,10 +51,26 @@ class BookingModel extends Database
         guest_id = ? AND location.location_id = reservation.location_id;", [$guestId], "i");
     }
 
+    public function getReservationDetails($reservationId)
+    {
+        return $this->select("SELECT room_number, location_id FROM reservation WHERE reservation_id = ?;", [$reservationId], "i")[0];
+    }
+
     public function getRoomTypeName($roomNr, $locationId)
     {
         return $this->select("SELECT type_name FROM room_type, {$locationId}_rooms WHERE
         room_number=? AND room_type.type_id = {$locationId}_rooms.type_id", [$roomNr], "i")[0]["type_name"];
+    }
+
+    public function getRoomTypeImage($roomNr, $locationId)
+    {
+        return $this->select("SELECT image FROM room_type, {$locationId}_rooms WHERE
+        room_number=? AND room_type.type_id = {$locationId}_rooms.type_id", [$roomNr], "i")[0]["image"];
+    }
+
+    public function getReservationOwner($reservationId)
+    {
+        return $this->select("SELECT guest_id FROM reservation WHERE reservation_id = ?;", [$reservationId], "i")[0]["guest_id"];
     }
 
     public function getLocationName($locId)
@@ -73,4 +89,11 @@ class BookingModel extends Database
             customError("?");
         }
     }
+
+    // Currently not supporting more than one transaction per reservation, however DB structure is designed to support this
+    public function getTransactionDetails($reservationId)
+    {
+        return $this->select("SELECT * FROM transaction WHERE reservation_id = ?;", [$reservationId], "i")[0];
+    }
+
 }

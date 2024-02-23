@@ -20,7 +20,8 @@ export default function ConfirmScreen() {
       {form.oldReservation && (
         <Stack.Screen
           options={{
-            title: "Booking info",
+            title: "Booking confirmation",
+            headerBackTitleVisible: false,
           }}
         />
       )}
@@ -65,8 +66,8 @@ export default function ConfirmScreen() {
 
               <Text style={styles.receiptDescription}>
                 {form.roomTypeName} room ·{" "}
-                {new Date(form.checkIn).toLocaleDateString("ro-RO")} -{" "}
-                {new Date(form.checkOut).toLocaleDateString("ro-RO")}
+                {new Date(+form.checkIn).toLocaleDateString("ro-RO")} -{" "}
+                {new Date(+form.checkOut).toLocaleDateString("ro-RO")}
               </Text>
 
               <View style={styles.divider}>
@@ -124,21 +125,23 @@ export default function ConfirmScreen() {
         </SafeAreaView>
 
         <View style={styles.overlay}>
-          <TouchableOpacity
-            onPress={() => {
-              router.replace("/bookings");
-            }}
-          >
-            <View style={styles.btn}>
-              <Text style={styles.btnText}>My bookings</Text>
-              <FontAwesome6
-                name="arrow-right"
-                size={25}
-                color="white"
-                style={{ padding: 10, paddingLeft: 12 }}
-              />
-            </View>
-          </TouchableOpacity>
+          {!form.oldReservation && (
+            <TouchableOpacity
+              onPress={() => {
+                router.replace("/bookings");
+              }}
+            >
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>My bookings</Text>
+                <FontAwesome6
+                  name="arrow-right"
+                  size={25}
+                  color="white"
+                  style={{ padding: 10, paddingLeft: 12 }}
+                />
+              </View>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             onPress={() => {
               // handle onPress

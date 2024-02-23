@@ -156,6 +156,104 @@ class BookingController extends BaseController
         }
 
         echo json_encode($response);
+    }
 
+    public function getBookingDetails($reservationId)
+    {
+        if ($_SERVER["REQUEST_METHOD"] != "GET") {
+            customError("method");
+        }
+
+        if (!isset(explode(" ", $_SERVER['HTTP_AUTHORIZATION'])[1])) {
+            customError("jwt");
+        }
+
+        if (!Validation::isNumberBetween($reservationId, 0, 10000000)) {
+            customError("param");
+        }
+
+        $userId = Validation::authenticateToken(explode(" ", $_SERVER['HTTP_AUTHORIZATION'])[1]);
+
+        if (!$userId) {
+            customError("jwt");
+        }
+
+        $guestModel = new GuestModel();
+        if (!$guestId = $guestModel->getGuestId($userId)) {
+            customError("jwt");
+        }
+
+        $bookingModel = new BookingModel();
+
+        $reservationOwner = $bookingModel->getReservationOwner($reservationId);
+
+        if ($reservationOwner != $guestId) {
+            customError("unauthorized");
+        }
+
+        $results = $bookingModel->getReservationDetails($reservationId);
+
+        $roomImage = $bookingModel->getRoomTypeImage($results["room_number"], $results["location_id"]);
+
+        $response = new stdClass();
+
+        $response->roomNr = $results["room_number"];
+        $response->image = $roomImage;
+
+        echo json_encode($response);
+    }
+
+    public function getTransactionDetails($reservationId)
+    {
+        if ($_SERVER["REQUEST_METHOD"] != "GET") {
+            customError("method");
+        }
+
+        if (!isset(explode(" ", $_SERVER['HTTP_AUTHORIZATION'])[1])) {
+            customError("jwt");
+        }
+
+        if (!Validation::isNumberBetween($reservationId, 0, 10000000)) {
+            customError("param");
+        }
+
+        $userId = Validation::authenticateToken(explode(" ", $_SERVER['HTTP_AUTHORIZATION'])[1]);
+
+        if (!$userId) {
+            customError("jwt");
+        }
+
+        $guestModel = new GuestModel();
+        if (!$guestId = $guestModel->getGuestId($userId)) {
+            customError("jwt");
+        }
+
+        $bookingModel = new BookingModel();
+
+        $reservationOwner = $bookingModel->getReservationOwner($reservationId);
+
+        if ($reservationOwner != $guestId) {
+            customError("unauthorized");
+        }
+
+        $bookingModel = new BookingModel();
+
+        $transaction = $bookingModel->getTransactionDetails($reservationId);
+
+        $guestModel = new GuestModel();
+        $guestInfo = $guestModel->getGuestDetails($guestId);
+
+        $response = new stdClass();
+
+        $response->transactionId = $transaction["transaction_id"];
+        $response->reservationId = $transaction["reservation_id"];
+        $response->date = $transaction["transaction_date"];
+        $response->paymentMethod = $transaction["payment_method"];
+        $response->amount = $transaction["amount"];
+        $response->paid = $transaction["paid"];
+        $response->name = $guestInfo["guest_name"];
+        $response->email = $guestInfo["email"];
+
+        echo json_encode($response);
     }
 }
