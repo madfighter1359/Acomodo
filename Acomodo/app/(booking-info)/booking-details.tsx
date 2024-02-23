@@ -45,7 +45,11 @@ export default function ViewDetails() {
       { label: "Room type", value: form.roomTypeName },
       {
         label: "Nights",
-        value: Math.round((+form.checkOutDate - +form.checkInDate) / DAY),
+        value: Math.round(
+          (new Date(form.checkOutDate.toString()).getTime() -
+            new Date(form.checkInDate.toString()).getTime()) /
+            DAY
+        ),
       },
     ],
   ];
