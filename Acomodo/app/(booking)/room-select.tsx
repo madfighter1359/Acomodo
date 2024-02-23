@@ -13,11 +13,14 @@ import SearchLocation from "../../components/api/SearchSpecificLocation";
 import FontAwesome from "react-native-vector-icons/FontAwesome6";
 import Loading from "../../components/Loading";
 import Error from "../../components/Error";
+import { getLocale } from "../../components/userSettings";
 
 // Need to get available room types
 export default function RoomSelect() {
   const form = useLocalSearchParams();
   console.log(form);
+
+  const locale = getLocale();
 
   const [loading, setLoading] = useState(true);
 
@@ -156,7 +159,7 @@ export default function RoomSelect() {
                           />
 
                           <Text style={styles.cardRowItemText}>
-                            {new Date(checkIn).toLocaleDateString("ro-RO", {
+                            {new Date(checkIn).toLocaleDateString(locale, {
                               day: "numeric",
                               month: "short",
                               year: "numeric",
@@ -172,7 +175,7 @@ export default function RoomSelect() {
                           />
 
                           <Text style={styles.cardRowItemText}>
-                            {new Date(checkOut).toLocaleDateString("ro-RO", {
+                            {new Date(checkOut).toLocaleDateString(locale, {
                               day: "numeric",
                               month: "short",
                               year: "numeric",
@@ -185,7 +188,7 @@ export default function RoomSelect() {
                         <Text>total </Text>
 
                         <Text style={styles.cardPriceValue}>
-                          {price.toLocaleString("ro-RO")}{" "}
+                          {price.toLocaleString(locale)}{" "}
                         </Text>
 
                         <Text style={styles.cardPriceCurrency}>RON</Text>

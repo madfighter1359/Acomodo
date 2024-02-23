@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import { useSession } from "../../../ctx";
@@ -12,6 +12,9 @@ import { router } from "expo-router";
 import { ScrollView, TouchableOpacity, Switch, Image } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useSettingsStore } from "../../../components/userSettings";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { storeData } from "../../../components/store";
 
 export default function Profile() {
   const { session, signOut, signIn } = useSession();
@@ -19,89 +22,29 @@ export default function Profile() {
     emailNotifications: true,
     pushNotifications: false,
   });
+
+  const setLocaleGlobal = useSettingsStore((state) => state.setLocale);
+  const getLocaleGlobal = useSettingsStore((state) => state.locale);
+
+  const [locale, setLocale] = useState(getLocaleGlobal);
+  const updateLocale = () => {
+    setLocale(getLocaleGlobal);
+  };
+  const handleChangeLanguage = () => {
+    // console.log(useSettingsStore((state) => state.locale));
+    if (locale == "ro-RO") {
+      setLocaleGlobal("en-GB");
+      setLocale("en-GB");
+    } else {
+      setLocaleGlobal("ro-RO");
+      setLocale("ro-RO");
+    }
+
+    // updateLocale();
+    // console.log(useSettingsStore((state) => state.locale));
+  };
+
   return (
-    // <SafeAreaView style={styles.container}>
-    //   {session ? (
-    //     <>
-    //       <Button
-    //         onPress={() => {
-    //           alert(session?.uid);
-    //         }}
-    //         size="medium"
-    //         type="secondary"
-    //       >
-    //         User
-    //       </Button>
-    //       <Button
-    //         onPress={() => {
-    //           signOut();
-    //           router.replace("/");
-    //         }}
-    //         size="medium"
-    //         type="secondary"
-    //       >
-    //         Sign Out
-    //       </Button>
-    //       <Button
-    //         onPress={() => {
-    //           auth.currentUser
-    //             ?.getIdToken(true)
-    //             .then((token) => console.log(token));
-    //         }}
-    //         size="medium"
-    //         type="secondary"
-    //       >
-    //         Token
-    //       </Button>
-    //       <Button
-    //         onPress={() => {
-    //           auth.currentUser?.getIdToken(true).then((token) =>
-    //             NewGuest({
-    //               token: token,
-    //               guestName: "Testy Amith",
-    //               guestDoB: 1646179200000,
-    //               guestDocNr: "120923",
-    //               email: "s@s.com",
-    //             })
-    //           );
-    //         }}
-    //         size="medium"
-    //         type="secondary"
-    //       >
-    //         Register
-    //       </Button>
-    //     </>
-    //   ) : (
-    //     <>
-    //       <Button
-    //         onPress={() => router.push("/sign-in")}
-    //         size="medium"
-    //         type="primary"
-    //       >
-    //         Sign In
-    //       </Button>
-    //       <Button
-    //         size="medium"
-    //         type="primary"
-    //         onPress={() => router.push("/sign-up")}
-    //       >
-    //         Sign Up
-    //       </Button>
-    //       <Button
-    //         size="medium"
-    //         type="secondary"
-    //         onPress={() => {
-    //           signIn("a@m.com", "aqwsderf");
-    //           router.replace("/");
-    //         }}
-    //       >
-    //         Sign In (Dev)
-    //       </Button>
-    //     </>
-    //   )}
-    // </SafeAreaView>
-    // <Example />
-    // <Settings />
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={[styles.section, { paddingTop: 4 }]}>
@@ -111,7 +54,6 @@ export default function Profile() {
             {session ? (
               <TouchableOpacity
                 onPress={() => {
-                  // handle onPress
                   router.push("/(tabs)/profile/edit-profile");
                 }}
                 style={styles.profile}
@@ -195,16 +137,25 @@ export default function Profile() {
 
             <View style={styles.rowWrapper}>
               <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
+                onPress={handleChangeLanguage}
                 style={styles.row}
               >
-                <Text style={styles.rowLabel}>Location</Text>
+                <Text style={styles.rowLabel}>Region</Text>
 
                 <View style={styles.rowSpacer} />
 
-                <Text style={styles.rowValue}>Los Angeles, CA</Text>
+                <Text style={styles.rowValue}>
+                  {(() => {
+                    switch (locale) {
+                      case "en-GB":
+                        return "United Kingdom";
+                      case "ro-RO":
+                        return "Romania";
+                      default:
+                        return "Unkown";
+                    }
+                  })()}
+                </Text>
 
                 <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
               </TouchableOpacity>

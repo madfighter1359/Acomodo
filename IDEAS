@@ -17,3 +17,9 @@ slow load time sometiems for getting bookings
 Maybe Date.now() ????
 
 Deal with buttons on booking confirmation screens
+
+Need to handle currency when switching locale (have locale: {name: string, currencyName: string})
+
+Make date selection so it closes on select
+
+Handle sign up rejection better asynchronously, add loading states, success message for account deletion

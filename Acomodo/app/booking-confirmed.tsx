@@ -11,10 +11,13 @@ import {
 } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { getLocale } from "../components/userSettings";
 
 export default function ConfirmScreen() {
   const form = useLocalSearchParams<any>();
   console.log(form);
+  const locale = getLocale();
+  // const locale = "en-GB";
   return (
     <>
       {form.oldReservation && (
@@ -48,7 +51,7 @@ export default function ConfirmScreen() {
 
               <View style={styles.receiptPrice}>
                 <Text style={styles.receiptPriceText}>
-                  {(+form.price).toLocaleString("ro-RO", {
+                  {(+form.price).toLocaleString(locale, {
                     currency: "RON",
                     style: "currency",
                   })}
@@ -66,8 +69,8 @@ export default function ConfirmScreen() {
 
               <Text style={styles.receiptDescription}>
                 {form.roomTypeName} room ·{" "}
-                {new Date(+form.checkIn).toLocaleDateString("ro-RO")} -{" "}
-                {new Date(+form.checkOut).toLocaleDateString("ro-RO")}
+                {new Date(form.checkIn).toLocaleDateString(locale)} -{" "}
+                {new Date(form.checkOut).toLocaleDateString(locale)}
               </Text>
 
               <View style={styles.divider}>
@@ -81,7 +84,7 @@ export default function ConfirmScreen() {
                   <Text style={styles.detailsField}>Date</Text>
 
                   <Text style={styles.detailsValue}>
-                    {new Date(form.date.toString()).toLocaleDateString("ro-RO")}
+                    {new Date(form.date.toString()).toLocaleDateString(locale)}
                   </Text>
                 </View>
 

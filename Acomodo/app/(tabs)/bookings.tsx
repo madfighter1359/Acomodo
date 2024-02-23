@@ -20,9 +20,12 @@ import { auth } from "../../firebase-config";
 import GetReservations from "../../components/api/GetReservations";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import Loading from "../../components/Loading";
+import { getLocale } from "../../components/userSettings";
 
 export default function Index() {
   const { session, signOut } = useSession();
+
+  const locale = getLocale();
 
   const [bookings, setBookings] = useState([]);
 
@@ -73,8 +76,8 @@ export default function Index() {
     const form = {
       reservationId: id,
       numberOfPeople: nrGuests,
-      checkInDate: new Date(checkIn).getTime(),
-      checkOutDate: new Date(checkOut).getTime(),
+      checkInDate: checkIn,
+      checkOutDate: checkOut,
       locationName: locationName,
       roomTypeName: roomType,
       totalPrice: price,
@@ -150,7 +153,7 @@ export default function Index() {
                           />
 
                           <Text style={styles.cardRowItemText}>
-                            {new Date(checkIn).toLocaleDateString("ro-RO", {
+                            {new Date(checkIn).toLocaleDateString(locale, {
                               day: "numeric",
                               month: "short",
                               year: "numeric",
@@ -166,7 +169,7 @@ export default function Index() {
                           />
 
                           <Text style={styles.cardRowItemText}>
-                            {new Date(checkOut).toLocaleDateString("ro-RO", {
+                            {new Date(checkOut).toLocaleDateString(locale, {
                               day: "numeric",
                               month: "short",
                               year: "numeric",
@@ -179,7 +182,7 @@ export default function Index() {
                         <Text>total </Text>
 
                         <Text style={styles.cardPriceValue}>
-                          {(+price).toLocaleString("ro-RO", {
+                          {(+price).toLocaleString(locale, {
                             currency: "RON",
                             // style: "currency",
                           })}{" "}

@@ -15,12 +15,15 @@ import Swiper from "react-native-swiper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import Button from "../../components/Button";
+import { getLocale } from "../../components/userSettings";
 
 export default function ConfirmBooking() {
   const form = useLocalSearchParams();
   const { session } = useSession();
   console.log(form);
   console.log(Dimensions.get("window"), Dimensions.get("screen"));
+
+  const locale = getLocale();
 
   const items = [
     [
@@ -96,7 +99,7 @@ export default function ConfirmBooking() {
                         style={[styles.pickerDatesText, { marginBottom: 2 }]}
                       >
                         {new Date(+form.checkInDate).toLocaleDateString(
-                          "ro-RO",
+                          locale,
                           {
                             day: "numeric",
                             month: "long",
@@ -107,7 +110,7 @@ export default function ConfirmBooking() {
 
                       <Text style={styles.pickerDatesText}>
                         {new Date(+form.checkOutDate).toLocaleDateString(
-                          "ro-RO",
+                          locale,
                           {
                             day: "numeric",
                             month: "long",
@@ -179,13 +182,13 @@ export default function ConfirmBooking() {
                   {/* <Text style={styles.overlayContentPriceBefore}>$72</Text> */}
 
                   <Text style={styles.overlayContentPrice}>
-                    {(+form.totalPrice).toLocaleString("ro-RO")} RON
+                    {(+form.totalPrice).toLocaleString(locale)} RON
                   </Text>
                 </View>
 
                 <Text style={styles.overlayContentTotal}>
                   {(+form.totalPrice / +form.numberOfNights).toLocaleString(
-                    "ro-RO"
+                    locale
                   )}{" "}
                   RON / night
                 </Text>

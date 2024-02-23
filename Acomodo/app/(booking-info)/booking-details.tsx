@@ -19,11 +19,14 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { auth } from "../../firebase-config";
 import GetDetails from "../../components/api/GetReservationDetails";
 import GetTransaction from "../../components/api/GetTransaction";
+import { getLocale } from "../../components/userSettings";
 
 export default function ViewDetails() {
   const form = useLocalSearchParams();
   const { session } = useSession();
   console.log(form);
+
+  const locale = getLocale();
 
   const DAY = 1000 * 86400;
 
@@ -141,14 +144,13 @@ export default function ViewDetails() {
                       <Text
                         style={[styles.pickerDatesText, { marginBottom: 2 }]}
                       >
-                        {new Date(+form.checkInDate).toLocaleDateString(
-                          "ro-RO",
-                          {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          }
-                        )}
+                        {new Date(
+                          form.checkInDate.toString()
+                        ).toLocaleDateString(locale, {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
                       </Text>
 
                       <FontAwesome6
@@ -158,14 +160,13 @@ export default function ViewDetails() {
                       />
 
                       <Text style={styles.pickerDatesText}>
-                        {new Date(+form.checkOutDate).toLocaleDateString(
-                          "ro-RO",
-                          {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          }
-                        )}
+                        {new Date(
+                          form.checkOutDate.toString()
+                        ).toLocaleDateString(locale, {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
                       </Text>
                     </View>
                   </View>
@@ -221,13 +222,13 @@ export default function ViewDetails() {
                   {/* <Text style={styles.overlayContentPriceBefore}>$72</Text> */}
 
                   <Text style={styles.overlayContentPrice}>
-                    {(+form.totalPrice).toLocaleString("ro-RO")} RON
+                    {(+form.totalPrice).toLocaleString(locale)} RON
                   </Text>
                 </View>
 
                 {/* <Text style={styles.overlayContentTotal}>
                   {(+form.totalPrice / +form.numberOfNights).toLocaleString(
-                    "ro-RO"
+                    locale
                   )}{" "}
                   RON / night
                 </Text> */}

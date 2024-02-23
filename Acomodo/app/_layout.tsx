@@ -4,8 +4,13 @@ import React from "react";
 import { Stack } from "expo-router";
 import { SessionProvider } from "../ctx";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { create } from "zustand";
+import { useSettingsStore } from "../components/userSettings";
+import { getData } from "../components/store";
 
 export default function Layout() {
+  console.log(useSettingsStore((state) => state.locale));
+  // console.log(getData("locale"));
   return (
     // <GestureHandlerRootView>
     <SessionProvider>
@@ -35,7 +40,10 @@ export default function Layout() {
         />
         <Stack.Screen
           name="(booking-info)/booking-details"
-          options={{ title: "Booking details", headerBackTitleVisible: false }}
+          options={{
+            title: "Booking details",
+            headerBackTitleVisible: false,
+          }}
         />
         <Stack.Screen
           name="booking-confirmed"

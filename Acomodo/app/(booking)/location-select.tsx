@@ -15,11 +15,14 @@ import FontAwesome from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
 import Error from "../../components/Error";
 import Loading from "../../components/Loading";
+import { getLocale } from "../../components/userSettings";
 
 export default function LocationSelect() {
   // Get search terms passed to screen
   const form = useLocalSearchParams();
   console.log(form);
+
+  const locale = getLocale();
 
   // Empty state to store each result
   const [items, setItems] = useState<
@@ -156,10 +159,10 @@ export default function LocationSelect() {
                         </View>
 
                         <Text style={styles.cardPrice}>
-                          {/* {from {cheapest.toLocaleString("ro-RO")}RON / night} */}
+                          {/* {from {cheapest.toLocaleString(locale)}RON / night} */}
                           {rooms > 0
                             ? `from ${cheapest.toLocaleString(
-                                "ro-RO"
+                                locale
                               )}RON / night`
                             : "This location is full on the selected dates!"}
                         </Text>
