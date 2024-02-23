@@ -59,6 +59,28 @@ export default function Index() {
     getBookings();
   }, []);
 
+  const handleViewDetails = (
+    id: number,
+    roomType: string,
+    roomNr: number,
+    checkIn: string,
+    checkOut: string,
+    nrGuests: number,
+    price: number,
+    locationName: string
+  ) => {
+    const form = {
+      reservationId: id,
+      numberOfPeople: nrGuests,
+      checkInDate: new Date(checkIn).getTime(),
+      checkOutDate: new Date(checkOut).getTime(),
+      locationName: locationName,
+      roomTypeName: roomType,
+      totalPrice: price,
+    };
+    router.push({ pathname: "/(booking-info)/booking-details", params: form });
+  };
+
   return session ? (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -91,9 +113,18 @@ export default function Index() {
               return (
                 <TouchableOpacity
                   key={index}
-                  onPress={() => {
-                    // handle onPress
-                  }}
+                  onPress={() =>
+                    handleViewDetails(
+                      reservationId,
+                      roomType,
+                      roomNr,
+                      checkIn,
+                      checkOut,
+                      nrGuests,
+                      price,
+                      locationName
+                    )
+                  }
                 >
                   <View style={styles.card}>
                     <Image

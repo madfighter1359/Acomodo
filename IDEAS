@@ -13,3 +13,5 @@ fix ugly display of dates on android + look at date logic again
 warning when redirecting after sign in, slightly weird redirecting
 
 slow load time sometiems for getting bookings
+
+Maybe Date.now() ????
