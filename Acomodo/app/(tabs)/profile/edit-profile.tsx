@@ -20,6 +20,7 @@ import {
 import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet/";
 import bottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet";
 import { useSession } from "../../../ctx";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function EditProfile() {
   const handleDelete = async (pass?: string) => {
@@ -67,7 +68,7 @@ export default function EditProfile() {
   const [password, setPassword] = useState("");
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <PrimaryButton size="large" onPress={() => handleDelete()}>
         Delete account
       </PrimaryButton>
@@ -121,7 +122,7 @@ export default function EditProfile() {
           </PrimaryButton>
         </View>
       </BottomSheet>
-    </View>
+    </GestureHandlerRootView>
   );
 }
 

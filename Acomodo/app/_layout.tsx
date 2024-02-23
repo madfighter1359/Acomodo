@@ -7,12 +7,14 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { create } from "zustand";
 import { useSettingsStore } from "../components/userSettings";
 import { getData } from "../components/store";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 export default function Layout() {
   console.log(useSettingsStore((state) => state.locale));
   // console.log(getData("locale"));
   return (
     // <GestureHandlerRootView>
+    // <BottomSheetModalProvider>
     <SessionProvider>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -36,7 +38,10 @@ export default function Layout() {
         />
         <Stack.Screen
           name="(booking)/confirm-booking"
-          options={{ title: "Review details", headerBackTitleVisible: false }}
+          options={{
+            title: "Review details",
+            headerBackTitleVisible: false,
+          }}
         />
         <Stack.Screen
           name="(booking-info)/booking-details"
@@ -62,6 +67,7 @@ export default function Layout() {
       </Stack>
       <StatusBar style="dark" />
     </SessionProvider>
+    //   </BottomSheetModalProvider>
     // </GestureHandlerRootView>
   );
 }
