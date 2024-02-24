@@ -68,7 +68,7 @@ function resolveUrl($uriArr)
                 if (isset($uriArr[4])) {
                     switch ($uriArr[4]) {
                         case "details":
-                            require PROJECT_ROOT_PATH . "/Controller/Api/SearchController.php";
+                            require PROJECT_ROOT_PATH . "/Controller/api/SearchController.php";
                             $objFeedController = new SearchController();
                             $objFeedController->specificSearch();
                             return true;
@@ -76,19 +76,19 @@ function resolveUrl($uriArr)
                     }
                     return false;
                 } else {
-                    require PROJECT_ROOT_PATH . "/Controller/Api/SearchController.php";
+                    require PROJECT_ROOT_PATH . "/Controller/api/SearchController.php";
                     $objFeedController = new SearchController();
                     $objFeedController->searchAction();
                     return true;
                 }
 
             case "book":
-                require PROJECT_ROOT_PATH . "/Controller/Api/BookingController.php";
+                require PROJECT_ROOT_PATH . "/Controller/api/BookingController.php";
                 $objFeedController = new BookingController();
                 $objFeedController->bookAction();
                 return true;
             case "signup":
-                require PROJECT_ROOT_PATH . "/Controller/Api/GuestController.php";
+                require PROJECT_ROOT_PATH . "/Controller/api/GuestController.php";
                 $objFeedController = new GuestController();
                 $objFeedController->newGuest();
                 return true;
@@ -100,19 +100,19 @@ function resolveUrl($uriArr)
                                 if (isset($uriArr[6])) {
                                     switch ($uriArr[6]) {
                                         case "transaction":
-                                            require PROJECT_ROOT_PATH . "/Controller/Api/BookingController.php";
+                                            require PROJECT_ROOT_PATH . "/Controller/api/BookingController.php";
                                             $objFeedController = new BookingController();
                                             $objFeedController->getTransactionDetails($uriArr[5]);
                                             return true;
                                     }
                                     return false;
                                 }
-                                require PROJECT_ROOT_PATH . "/Controller/Api/BookingController.php";
+                                require PROJECT_ROOT_PATH . "/Controller/api/BookingController.php";
                                 $objFeedController = new BookingController();
                                 $objFeedController->getBookingDetails($uriArr[5]);
                                 return true;
                             }
-                            require PROJECT_ROOT_PATH . "/Controller/Api/BookingController.php";
+                            require PROJECT_ROOT_PATH . "/Controller/api/BookingController.php";
                             $objFeedController = new BookingController();
                             $objFeedController->getBookings();
                             return true;
@@ -126,93 +126,35 @@ function resolveUrl($uriArr)
     }
 }
 
-// if (isset($uriArr[1], $uriArr[2], $uriArr[3]) && $uriArr[1] == "backend" && $uriArr[2] == "acomodo") {
-//     switch ($uriArr[3]) {
-//         case "search":
-//             if (isset($uriArr[4])) {
-//                 switch ($uriArr[4]) {
-//                     case "details":
-//                         require PROJECT_ROOT_PATH . "/Controller/Api/SearchController.php";
-//                         $objFeedController = new SearchController();
-//                         $objFeedController->specificSearch();
-//                         break;
-//                     default:
-//                         http_response_code(404);
-//                         exit();
-//                 }
-//             } else {
-//                 require PROJECT_ROOT_PATH . "/Controller/Api/SearchController.php";
-//                 $objFeedController = new SearchController();
-//                 $objFeedController->searchAction();
-//                 break;
-//             }
-
-//         case "book":
-//             require PROJECT_ROOT_PATH . "/Controller/Api/BookingController.php";
-//             $objFeedController = new BookingController();
-//             $objFeedController->bookAction();
-//             break;
-//         case "signup":
-//             require PROJECT_ROOT_PATH . "/Controller/Api/GuestController.php";
-//             $objFeedController = new GuestController();
-//             $objFeedController->newGuest();
-//             break;
-//         case "guest":
-//             if (isset($uriArr[4])) {
-//                 switch ($uriArr[4]) {
-//                     case "bookings":
-//                         require PROJECT_ROOT_PATH . "/Controller/Api/BookingController.php";
-//                         $objFeedController = new BookingController();
-//                         $objFeedController->getBookings();
-//                         break;
-//                     default:
-//                         http_response_code(404);
-//                         exit();
-//                 }
-//             } else {
-//                 http_response_code(404);
-//                 exit();
-//             }
-//         default:
-//             http_response_code(404);
-//             exit();
-//     }
-// }
-
 if (!resolveUrl($uriArr)) {
     http_response_code(404);
     exit();
 }
 
-// if ((isset($uri[3]) && $uri[3] != 'search') || !isset($uri[4])) {
-//     http_response_code(404);
-//     exit();
-// }
-
 // switch ($uri) {
 //     case '/backend/acomodo/search':
-//         require PROJECT_ROOT_PATH . "/Controller/Api/SearchController.php";
+//         require PROJECT_ROOT_PATH . "/Controller/api/SearchController.php";
 //         $objFeedController = new SearchController();
 //         $objFeedController->searchAction();
 //         break;
 //     //Could do /search/dri (loc id) instead of using param to make sleeker
 //     case '/backend/acomodo/search/details':
-//         require PROJECT_ROOT_PATH . "/Controller/Api/SearchController.php";
+//         require PROJECT_ROOT_PATH . "/Controller/api/SearchController.php";
 //         $objFeedController = new SearchController();
 //         $objFeedController->specificSearch();
 //         break;
 //     case '/backend/acomodo/book':
-//         require PROJECT_ROOT_PATH . "/Controller/Api/BookingController.php";
+//         require PROJECT_ROOT_PATH . "/Controller/api/BookingController.php";
 //         $objFeedController = new BookingController();
 //         $objFeedController->bookAction();
 //         break;
 //     case '/backend/acomodo/signup':
-//         require PROJECT_ROOT_PATH . "/Controller/Api/GuestController.php";
+//         require PROJECT_ROOT_PATH . "/Controller/api/GuestController.php";
 //         $objFeedController = new GuestController();
 //         $objFeedController->newGuest();
 //         break;
 //     case '/backend/acomodo/guest/bookings':
-//         require PROJECT_ROOT_PATH . "/Controller/Api/BookingController.php";
+//         require PROJECT_ROOT_PATH . "/Controller/api/BookingController.php";
 //         $objFeedController = new BookingController();
 //         $objFeedController->getBookings();
 //         break;
@@ -222,7 +164,7 @@ if (!resolveUrl($uriArr)) {
 
 // }
 
-// require PROJECT_ROOT_PATH . "/Controller/Api/SearchController.php";
+// require PROJECT_ROOT_PATH . "/Controller/api/SearchController.php";
 // $objFeedController = new SearchController();
 // $strMethodName = $uri[4] . 'Action';
 // $objFeedController->{$strMethodName}();

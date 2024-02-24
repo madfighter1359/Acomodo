@@ -70,7 +70,7 @@ class BookingController extends BaseController
         $nights = Validation::daysBetween($checkIn, $checkOut);
 
         $bookingModel = new BookingModel();
-        [$reservation, $roomNr] = $bookingModel->makeReservation($checkIn, $checkOut, $guestId, $nrGuests, $price, $locId, $roomType, $nights);
+        [$reservation, $roomNr] = $bookingModel->makeReservation($checkIn, $checkOut, $guestId, $nrGuests, $price, strtolower($locId), $roomType, $nights);
 
         if ($reservation !== false) {
 
@@ -193,7 +193,7 @@ class BookingController extends BaseController
 
         $results = $bookingModel->getReservationDetails($reservationId);
 
-        $roomImage = $bookingModel->getRoomTypeImage($results["room_number"], $results["location_id"]);
+        $roomImage = $bookingModel->getRoomTypeImage($results["room_number"], strtolower($results["location_id"]));
 
         $response = new stdClass();
 
