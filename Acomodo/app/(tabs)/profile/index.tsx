@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
@@ -163,7 +163,7 @@ export default function Profile() {
 
             <View style={styles.rowWrapper}>
               <View style={styles.row}>
-                <Text style={styles.rowLabel}>Email Notifications</Text>
+                <Text style={styles.rowLabel}>Dark mode</Text>
 
                 <View style={styles.rowSpacer} />
 
@@ -202,7 +202,7 @@ export default function Profile() {
             <View style={[styles.rowWrapper, styles.rowFirst]}>
               <TouchableOpacity
                 onPress={() => {
-                  // handle onPress
+                  Linking.openURL("mailto:support@acomodo.com");
                 }}
                 style={styles.row}
               >
@@ -221,22 +221,7 @@ export default function Profile() {
                 }}
                 style={styles.row}
               >
-                <Text style={styles.rowLabel}>Report Bug</Text>
-
-                <View style={styles.rowSpacer} />
-
-                <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.rowWrapper}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
-                style={styles.row}
-              >
-                <Text style={styles.rowLabel}>Rate in App Store</Text>
+                <Text style={styles.rowLabel}>Rate the Hotels</Text>
 
                 <View style={styles.rowSpacer} />
 
@@ -287,7 +272,7 @@ export default function Profile() {
           </View>
         )}
 
-        <Text style={styles.contentFooter}>App Version 2.24 #50491</Text>
+        <Text style={styles.contentFooter}>App Version 1.0.0</Text>
       </ScrollView>
     </View>
   );
