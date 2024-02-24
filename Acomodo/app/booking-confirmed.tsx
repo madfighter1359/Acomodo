@@ -12,12 +12,199 @@ import {
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { getLocale } from "../components/userSettings";
+import * as Print from "expo-print";
+import { shareAsync } from "expo-sharing";
 
 export default function ConfirmScreen() {
   const form = useLocalSearchParams<any>();
   console.log(form);
   const locale = getLocale();
-  // const locale = "en-GB";
+
+  const createPDF = async () => {
+    const html = `
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Receipt</title>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        padding: 0 16px;
+        flex-grow: 1;
+        /* width: 500px; */
+        margin: auto;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+
+      .safeAreaView {
+        background-color: #fff;
+        flex: 1;
+      }
+
+      .receipt {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 16px;
+        padding-bottom: 140px;
+      }
+
+      .receiptLogo {
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .receiptTitle,
+      .receiptSubtitle,
+      .receiptDescription,
+      .detailsTitle,
+      .detailsField,
+      .detailsValue {
+        text-align: center;
+      }
+
+      .receiptSubtitle {
+        font-size: 13;
+        color: #616161;
+      }
+
+      .receiptDescription {
+        font-size: 13;
+        color: #616161;
+      }
+
+      .receiptPrice {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: center;
+        margin-bottom: 6px;
+        margin-top: 10px;
+      }
+
+      .receiptPriceText {
+        font-size: 50px;
+        font-weight: bold;
+        color: #8338ec;
+      }
+
+      .divider {
+        width: 100%;
+        margin: 24px 0;
+      }
+
+      .dividerInset {
+        width: 100%;
+        border-top: 2px dashed #e5e5e5;
+      }
+
+      .details {
+        width: 100%;
+      }
+
+      .detailsRow {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+
+      .detailsField {
+        color: #616161;
+      }
+
+      .detailsValue {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="receipt">
+      <div class="receiptLogo">
+        <!-- <img
+              src="Acomodo/Acomodo/assets/images/acomodo-icon.png"
+              alt="Logo"
+              style="width: 70px; height: 70px"
+            /> -->
+        <img
+          src="https://i.imgur.com/wVrTjlc.png"
+          alt="Logo"
+          style="width: 70px; height: 70px"
+        />
+      </div>
+      <h1 class="receiptTitle">${form.locationName}</h1>
+      <p class="receiptSubtitle">Resevation #${form.reservationId}</p>
+      <div class="receiptPrice">
+        <span class="receiptPriceText">${(+form.price).toLocaleString(locale, {
+          currency: "RON",
+          style: "currency",
+        })}</span>
+      </div>
+      <p class="receiptDescription">${
+        form.roomTypeName
+      } room <b>·</b> ${new Date(form.checkIn).toLocaleDateString(
+      locale
+    )} - ${new Date(form.checkOut).toLocaleDateString(locale)}</p>
+      <div class="divider">
+        <div class="dividerInset"></div>
+      </div>
+      <div class="details">
+        <h3 class="detailsTitle">Transaction details</h3>
+        <!-- Repeat for each detail row -->
+        <div class="detailsRow">
+          <span class="detailsField">Date</span>
+          <span class="detailsValue">${new Date(
+            form.date.toString()
+          ).toLocaleDateString(locale)}</span>
+        </div>
+        <div class="detailsRow">
+          <span class="detailsField">Payment method</span>
+          <span class="detailsValue">${
+            form.paymentMethod.charAt(0).toUpperCase() +
+            form.paymentMethod.slice(1)
+          }</span>
+        </div>
+        <div class="detailsRow">
+          <span class="detailsField">Transaction ID</span>
+          <span class="detailsValue">${form.transactionId}</span>
+        </div>
+        <div class="detailsRow">
+          <span class="detailsField">Billing Name</span>
+          <span class="detailsValue">${form.fullName}</span>
+        </div>
+        <div class="detailsRow">
+          <span class="detailsField">Billing email</span>
+          <span class="detailsValue">${form.email}</span>
+        </div>
+        <div class="detailsRow">
+          <span class="detailsField">Status</span>
+          <span class="detailsValue">${
+            form.paid == 1 ? "Paid" : "To be paid"
+          }</span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+`;
+    // On iOS/android prints the given html. On web prints the HTML from the current page.
+    const { uri } = await Print.printToFileAsync({ html, width: 500 });
+    console.log("File has been saved to:", uri);
+    await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
+  };
+
   return (
     <>
       {form.oldReservation && (
@@ -145,11 +332,7 @@ export default function ConfirmScreen() {
               </View>
             </TouchableOpacity>
           )}
-          <TouchableOpacity
-            onPress={() => {
-              // handle onPress
-            }}
-          >
+          <TouchableOpacity onPress={createPDF}>
             <View style={styles.btnSecondary}>
               <Text style={styles.btnSecondaryText}>Save as PDF</Text>
               <FontAwesome6
