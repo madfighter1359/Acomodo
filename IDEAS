@@ -23,3 +23,5 @@ Need to handle currency when switching locale (have locale: {name: string, curre
 Make date selection so it closes on select
 
 Handle sign up rejection better asynchronously, add loading states, success message for account deletion
+
+give names to screens in (tabs) (in ios holding down back button shows prev screen names)
