@@ -24,9 +24,7 @@ export default function Profile() {
   const getLocaleGlobal = useSettingsStore((state) => state.locale);
 
   const [locale, setLocale] = useState(getLocaleGlobal);
-  const updateLocale = () => {
-    setLocale(getLocaleGlobal);
-  };
+
   const handleChangeLanguage = () => {
     // console.log(useSettingsStore((state) => state.locale));
     if (locale == "ro-RO") {
@@ -36,9 +34,6 @@ export default function Profile() {
       setLocaleGlobal("ro-RO");
       setLocale("ro-RO");
     }
-
-    // updateLocale();
-    // console.log(useSettingsStore((state) => state.locale));
   };
 
   return (

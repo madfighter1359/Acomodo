@@ -22,6 +22,20 @@ import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import Loading from "../../components/Loading";
 import { getLocale } from "../../components/userSettings";
 
+interface Reservation {
+  checkIn: string;
+  checkOut: string;
+  guestId: number;
+  locationId: string;
+  locationImage: string;
+  locationName: string;
+  nrGuests: number;
+  price: number;
+  reservationId: number;
+  roomNr: number;
+  roomType: string;
+}
+
 export default function Index() {
   const { session, signOut } = useSession();
 
@@ -40,7 +54,14 @@ export default function Index() {
     auth.currentUser?.getIdToken(false).then((token) => {
       GetReservations({ token: token }).then((data) => {
         if (data !== false) {
-          setBookings(data.reservations);
+          console.log(data.reservations);
+          setBookings(
+            data.reservations.sort(
+              (a: Reservation, b: Reservation) =>
+                new Date(a.checkIn).valueOf() - new Date(b.checkIn).valueOf()
+            )
+          );
+          // setBookings(data.reservations);
           if (!loaded) setLoaded(true);
         } else {
           setError(true);

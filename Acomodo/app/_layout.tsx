@@ -10,7 +10,7 @@ import { getData } from "../components/store";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 export default function Layout() {
-  console.log(useSettingsStore((state) => state.locale));
+  // console.log(useSettingsStore((state) => state.locale));
   // console.log(getData("locale"));
   return (
     // <GestureHandlerRootView>

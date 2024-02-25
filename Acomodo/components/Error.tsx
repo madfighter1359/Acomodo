@@ -14,6 +14,8 @@ interface Props {
   desc?: string;
   resolution?: string;
   action?: () => void;
+  resolution2?: string;
+  action2?: () => void;
 }
 
 export default function Error({
@@ -22,6 +24,8 @@ export default function Error({
   action = () => {
     router.navigate("/");
   },
+  resolution2 = "",
+  action2 = () => {},
 }: Props) {
   return (
     <View style={styles.container}>
@@ -44,6 +48,21 @@ export default function Error({
             />
           </View>
         </TouchableOpacity>
+
+        {resolution2 && (
+          <TouchableOpacity onPress={action2}>
+            <View style={styles.btn}>
+              <Text style={styles.btnText}>{resolution2}</Text>
+
+              <FontAwesome6
+                color="#fff"
+                name="circle-arrow-right"
+                size={18}
+                style={{ marginLeft: 12 }}
+              />
+            </View>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -95,6 +114,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "#2b64e3",
     borderColor: "#2b64e3",
+    marginBottom: 10,
   },
   btnText: {
     fontSize: 17,

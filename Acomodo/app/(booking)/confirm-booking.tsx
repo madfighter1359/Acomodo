@@ -17,6 +17,7 @@ import FeatherIcon from "react-native-vector-icons/Feather";
 import Button from "../../components/Button";
 import { getLocale } from "../../components/userSettings";
 import { usePathname } from "expo-router";
+import Error from "../../components/Error";
 
 export default function ConfirmBooking() {
   const form = useLocalSearchParams();
@@ -213,34 +214,41 @@ export default function ConfirmBooking() {
           </View>
         </View>
       ) : (
-        <View>
-          <Text style={{ fontSize: 20 }}>
-            Pleas sign in or sign up to continue!
-          </Text>
-          <Button
-            onPress={() => {
-              // router.push({
-              //   pathname: "/sign-in",
-              //   params: {
-              //     prevRoute: pathname,
-              //     prevParams: JSON.stringify(form),
-              //   },
-              // });
-              router.push("/sign-in");
-            }}
-            size="medium"
-            type="secondary"
-          >
-            Sign In
-          </Button>
-          <Button
-            size="medium"
-            type="secondary"
-            onPress={() => router.push("/sign-up")}
-          >
-            Sign Up
-          </Button>
-        </View>
+        // <View>
+        //   <Text style={{ fontSize: 20 }}>
+        //     Pleas sign in or sign up to continue!
+        //   </Text>
+        //   <Button
+        //     onPress={() => {
+        //       // router.push({
+        //       //   pathname: "/sign-in",
+        //       //   params: {
+        //       //     prevRoute: pathname,
+        //       //     prevParams: JSON.stringify(form),
+        //       //   },
+        //       // });
+        //       router.push("/sign-in");
+        //     }}
+        //     size="medium"
+        //     type="secondary"
+        //   >
+        //     Sign In
+        //   </Button>
+        //   <Button
+        //     size="medium"
+        //     type="secondary"
+        //     onPress={() => router.push("/sign-up")}
+        //   >
+        //     Sign Up
+        //   </Button>
+        // </View>
+        <Error
+          desc="Please authenticate to continue"
+          resolution="Sign In"
+          action={() => router.push("/sign-in")}
+          resolution2="Sign Up"
+          action2={() => router.push("/sign-up")}
+        />
       )}
     </View>
   );
