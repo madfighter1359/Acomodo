@@ -25,10 +25,11 @@ import Loading from "../components/Loading";
 
 export default function SignIn() {
   const { signIn, session } = useSession();
+  useEffect(() => {
+    if (session) router.back();
+  });
 
   const [loaded, setLoaded] = useState(true);
-
-  if (session) router.back();
 
   const params = useLocalSearchParams<{
     email: string;
@@ -146,7 +147,7 @@ export default function SignIn() {
             <TextInput
               autoCorrect={false}
               onChangeText={(password) => setForm({ ...form, password })}
-              placeholder="********"
+              placeholder="●●●●●●●●"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               secureTextEntry={true}

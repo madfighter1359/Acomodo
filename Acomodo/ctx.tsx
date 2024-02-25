@@ -52,11 +52,17 @@ export function useSession() {
 export function SessionProvider(props: React.PropsWithChildren) {
   const [session, setSession] = React.useState<User | null>(auth.currentUser);
   const [initializing, setInitializing] = React.useState(true);
+  const [backendWaiting, setBackendWaiting] = React.useState(false);
+  const backendWaitingRef = React.useRef(false);
 
   React.useEffect(() => {
     const subscriber = onAuthStateChanged(auth, (user) => {
-      setSession(user);
-      if (initializing) setInitializing(false);
+      // console.log("subscriber ran");
+      if (!backendWaitingRef.current) {
+        // console.log("subscriber setting session", user);
+        setSession(user);
+        if (initializing) setInitializing(false);
+      }
     });
     return subscriber;
   }, []);
@@ -72,6 +78,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
           dateOfBirth: Date
         ) => {
           try {
+            backendWaitingRef.current = true;
             const userCredential = await createUserWithEmailAndPassword(
               auth,
               email,
@@ -88,11 +95,14 @@ export function SessionProvider(props: React.PropsWithChildren) {
               email: email,
             });
 
+            backendWaitingRef.current = false;
+
             console.log(code);
             if (code != 200) {
-              deleteUser(user);
+              await deleteUser(user);
               return "backendError";
             }
+
             setSession(user);
             return true;
           } catch (e) {

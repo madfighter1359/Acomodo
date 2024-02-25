@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -19,10 +19,13 @@ import DateTimePicker, {
 import Button from "../components/Button";
 import { FontAwesome } from "@expo/vector-icons";
 import Loading from "../components/Loading";
+import { getLocale } from "../components/userSettings";
 
 export default function SignUp() {
   const { signUp, session } = useSession();
-  if (session) router.back();
+  useEffect(() => {
+    if (session) router.back();
+  });
 
   const params = useLocalSearchParams<{
     email: string;
@@ -30,11 +33,18 @@ export default function SignUp() {
     // prevParams?: string;
   }>();
 
+  const OFFSET = new Date().getTimezoneOffset();
+  const locale = getLocale();
+
   const [form, setForm] = useState({
     fullname: "",
     email: params.email ? params.email : "",
     docNr: "",
-    dob: new Date(new Date().setFullYear(new Date().getFullYear() - 18)),
+    dob: new Date(
+      new Date(
+        new Date(new Date().setHours(0, 0, 0, 0)).setMinutes(-OFFSET)
+      ).setFullYear(new Date().getFullYear() - 18)
+    ),
     password: "",
     confirmPassword: "",
   });
@@ -75,6 +85,7 @@ export default function SignUp() {
         );
 
         setLoaded(true);
+        console.log("stopped loading");
 
         console.log(res);
 
@@ -144,15 +155,6 @@ export default function SignUp() {
     }
   };
 
-  const onChange = (
-    event: DateTimePickerEvent,
-    selectedDate: Date | undefined
-  ) => {
-    if (selectedDate) {
-      // set
-    }
-  };
-
   if (!loaded) return <Loading />;
 
   return (
@@ -216,25 +218,32 @@ export default function SignUp() {
                 themeVariant="light"
               />
             ) : (
-              <Button
-                size="medium"
-                onPress={() => {
-                  DateTimePickerAndroid.open({
-                    testID: "dateTimePicker",
-                    value: form.dob,
-                    mode: "date",
-                    onChange: (event, dob) => {
-                      if (dob) setForm({ ...form, dob });
-                    },
-                    timeZoneName: "UTC",
-                    maximumDate: new Date(
-                      new Date().setFullYear(new Date().getFullYear() - 18)
-                    ),
-                  });
+              <View
+                style={{
+                  alignItems: "flex-start",
+                  // backgroundColor: "red",
                 }}
               >
-                {form.dob.toUTCString()}
-              </Button>
+                <Button
+                  size="medium"
+                  onPress={() => {
+                    DateTimePickerAndroid.open({
+                      testID: "dateTimePicker",
+                      value: form.dob,
+                      mode: "date",
+                      onChange: (event, dob) => {
+                        if (dob) setForm({ ...form, dob });
+                      },
+                      timeZoneName: "Europe/London",
+                      maximumDate: new Date(
+                        new Date().setFullYear(new Date().getFullYear() - 18)
+                      ),
+                    });
+                  }}
+                >
+                  {form.dob.toLocaleDateString(locale)}
+                </Button>
+              </View>
             )}
           </View>
 
@@ -259,7 +268,7 @@ export default function SignUp() {
             <TextInput
               autoCorrect={false}
               onChangeText={(password) => setForm({ ...form, password })}
-              placeholder="********"
+              placeholder="●●●●●●●●"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               secureTextEntry={true}
@@ -275,7 +284,7 @@ export default function SignUp() {
               onChangeText={(confirmPassword) =>
                 setForm({ ...form, confirmPassword })
               }
-              placeholder="********"
+              placeholder="●●●●●●●●"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               secureTextEntry={true}
