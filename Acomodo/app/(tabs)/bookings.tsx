@@ -201,15 +201,24 @@ export default function Index() {
 
                       <Text style={styles.cardPrice}>
                         <Text>total </Text>
+                        <Text style={styles.cardPriceCurrency}>
+                          {(0)
+                            .toLocaleString("en-GB", {
+                              style: "currency",
+                              currency: "GBP",
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 0,
+                            })
+                            .replace(/\d/g, "")
+                            .trim()}
+                        </Text>
 
                         <Text style={styles.cardPriceValue}>
                           {(+price).toLocaleString(locale, {
-                            currency: "RON",
-                            // style: "currency",
+                            minimumFractionDigits: 2,
+                            currency: "GBP",
                           })}{" "}
                         </Text>
-
-                        <Text style={styles.cardPriceCurrency}>RON</Text>
                       </Text>
 
                       <View

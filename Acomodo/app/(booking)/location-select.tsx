@@ -1,9 +1,7 @@
 import {
-  Pressable,
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
   Image,
@@ -20,7 +18,6 @@ import { getLocale } from "../../components/userSettings";
 export default function LocationSelect() {
   // Get search terms passed to screen
   const form = useLocalSearchParams();
-  console.log(form);
 
   const locale = getLocale();
 
@@ -36,13 +33,11 @@ export default function LocationSelect() {
     }[]
   >([]);
 
+  // State variables to communicate if loading or error occurred
   const [error, setError] = useState<null | "user" | "other">(null);
-
   const [loading, setLoading] = useState(true);
 
   // Runs on load, makes the search and sets state with results
-
-  // Could maybe sort by available rooms?
   useEffect(() => {
     SearchForRoom({
       checkIn: Number(form.checkInDate),
@@ -161,9 +156,11 @@ export default function LocationSelect() {
                         <Text style={styles.cardPrice}>
                           {/* {from {cheapest.toLocaleString(locale)}RON / night} */}
                           {rooms > 0
-                            ? `from ${cheapest.toLocaleString(
-                                locale
-                              )}RON / night`
+                            ? `from ${cheapest.toLocaleString(locale, {
+                                currency: "GBP",
+                                style: "currency",
+                                maximumFractionDigits: 0,
+                              })} / night`
                             : "This location is full on the selected dates!"}
                         </Text>
                       </View>

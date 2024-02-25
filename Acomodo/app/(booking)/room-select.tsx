@@ -15,17 +15,17 @@ import Loading from "../../components/Loading";
 import Error from "../../components/Error";
 import { getLocale } from "../../components/userSettings";
 
-// Need to get available room types
 export default function RoomSelect() {
   const form = useLocalSearchParams();
-  console.log(form);
 
+  // Get global user locale for formatting dates and prices
   const locale = getLocale();
 
+  // Loading and error state variables
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState<false | "user" | "other">(false);
 
+  // Empty list of type "room"
   const [items, setItems] = useState<
     {
       img: string;
@@ -40,6 +40,7 @@ export default function RoomSelect() {
     }[]
   >([]);
 
+  // Takes in the selected room and passes it to the next screen for detail review
   const handleBook = (
     id: string,
     name: string,
@@ -63,6 +64,8 @@ export default function RoomSelect() {
     router.push({ pathname: "/confirm-booking", params: params });
   };
 
+  // Requests detailed information for the selected location from the server when the component mounts,
+  // using the form data from the previous screen
   useEffect(() => {
     SearchLocation({
       checkIn: Number(form.checkInDate),
@@ -133,7 +136,7 @@ export default function RoomSelect() {
                 <TouchableOpacity
                   key={index}
                   onPress={() => {
-                    // handle onPress
+                    handleBook(typeId, type, img, price, beds);
                   }}
                 >
                   <View style={styles.card}>
@@ -186,12 +189,20 @@ export default function RoomSelect() {
 
                       <Text style={styles.cardPrice}>
                         <Text>total </Text>
-
+                        <Text style={styles.cardPriceCurrency}>
+                          {(0)
+                            .toLocaleString("en-GB", {
+                              style: "currency",
+                              currency: "GBP",
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 0,
+                            })
+                            .replace(/\d/g, "")
+                            .trim()}
+                        </Text>
                         <Text style={styles.cardPriceValue}>
                           {price.toLocaleString(locale)}{" "}
                         </Text>
-
-                        <Text style={styles.cardPriceCurrency}>RON</Text>
                       </Text>
 
                       <View

@@ -1,11 +1,4 @@
-import {
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  Platform,
-} from "react-native";
+import { StyleSheet, Text, View, Platform } from "react-native";
 import React, { useState } from "react";
 import Button from "../../components/Button";
 import Counter from "../../components/Counter";

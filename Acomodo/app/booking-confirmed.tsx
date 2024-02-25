@@ -147,7 +147,7 @@ export default function ConfirmScreen() {
       <p class="receiptSubtitle">Reservation #${form.reservationId}</p>
       <div class="receiptPrice">
         <span class="receiptPriceText">${(+form.price).toLocaleString(locale, {
-          currency: "RON",
+          currency: "GBP",
           style: "currency",
         })}</span>
       </div>
@@ -239,7 +239,7 @@ export default function ConfirmScreen() {
               <View style={styles.receiptPrice}>
                 <Text style={styles.receiptPriceText}>
                   {(+form.price).toLocaleString(locale, {
-                    currency: "RON",
+                    currency: "GBP",
                     style: "currency",
                   })}
                 </Text>

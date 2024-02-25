@@ -27,16 +27,16 @@ INSERT INTO
     location
 VALUES
     (
-        "PIP",
-        "Acomodoro Apartments Next-Door",
-        "Pipera",
-        "https://www.acomodo.ro/wp-content/uploads/2020/01/1-39-2048x1365.jpg.webp"
+        "APA",
+        "Acomodo Premium Apartments",
+        "Edinburgh",
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     ),
     (
-        "DRI",
-        "Acomodoro Residence",
-        "Dristor",
-        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472121158.jpg?k=eace370a0f64e0b4050eb7bfbeee2ba119d23c495b51ebe73328e71b40091dc3&o=&hp=1"
+        "ACM",
+        "Acomodo Modern",
+        "Glasgow",
+        "https://images.unsplash.com/photo-1465804575741-338df8554e02?q=80&w=2946&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     );
 
 CREATE TABLE room_type (
@@ -52,76 +52,76 @@ INSERT INTO
     room_type
 VALUES
     (
-        "RES",
+        "STU",
         "Studio",
         2,
-        300,
+        100,
         1,
-        "https://d3hj7i5wny7p5d.cloudfront.net/upload/rooms/13054-m.jpg"
+        "https://images.unsplash.com/photo-1531835551805-16d864c8d311?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     ),
     (
-        "DPR",
+        "APP",
         "Apartment Plus",
         4,
-        600,
+        200,
         2,
-        "https://d3hj7i5wny7p5d.cloudfront.net/upload/rooms/13055-m.jpg"
+        "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     ),
     (
         "APT",
         "Apartment",
         4,
-        450,
+        150,
         2,
-        "https://d3hj7i5wny7p5d.cloudfront.net/upload/rooms/13056-m.jpg"
+        "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     ),
     (
         "DBL",
         "Double",
         2,
-        180,
+        50,
         1,
-        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472120586.jpg?k=20e9b73c3de67dff69d7f3380baeae130944b60928f1a1a312ac5d2844a514e9&o=&hp=1"
+        "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     ),
     (
         "TWN",
         "Twin",
         2,
-        200,
+        75,
         2,
-        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472111196.jpg?k=7e53ca85446dae77747e837d80e023c51e33fd2ae11fea37e32ebd5046a3fd65&o=&hp=1"
+        "https://images.unsplash.com/photo-1648383228240-6ed939727ad6?q=80&w=2874&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     ),
     (
         "TRP",
         "Triple",
         3,
-        250,
+        100,
         2,
-        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472103342.jpg?k=9bd7dcdcf58ce0695c217a540bd06d7cb4673b8606ad5d893f9482a54c806252&o=&hp=1"
+        "https://images.unsplash.com/photo-1631049552057-403cdb8f0658?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     ),
     (
         "FMR",
         "Family",
         4,
-        300,
+        125,
         2,
-        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472120654.jpg?k=66b1b02d44c53e73c11219ca1f994291968249fb2785d26a4647138a4670e778&o=&hp=1"
+        "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?q=80&w=2874&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     );
 
-CREATE TABLE dri_rooms (
+CREATE TABLE acm_rooms (
     room_number int primary key,
     type_id varchar(3),
     foreign key (type_id) references room_type (type_id) on update cascade on delete cascade
 );
 
-CREATE TABLE pip_rooms (
+CREATE TABLE apa_rooms (
     room_number int primary key,
     type_id varchar(3),
     foreign key (type_id) references room_type (type_id) on update cascade on delete cascade
 );
 
 INSERT INTO
-    dri_rooms
+    acm_rooms
 VALUES
     (11, "DBL"),
     (13, "DBL"),
@@ -157,7 +157,7 @@ VALUES
     (52, "TRP");
 
 INSERT INTO
-    pip_rooms
+    apa_rooms
 VALUES
     (8, "APT"),
     (24, "APT"),
@@ -172,29 +172,29 @@ VALUES
     (52, "APT"),
     (53, "APT"),
     (55, "APT"),
-    (4, "RES"),
-    (5, "RES"),
-    (9, "RES"),
-    (10, "RES"),
-    (11, "RES"),
-    (12, "RES"),
-    (13, "RES"),
-    (16, "RES"),
-    (17, "RES"),
-    (18, "RES"),
-    (19, "RES"),
-    (20, "RES"),
-    (21, "RES"),
-    (23, "RES"),
-    (25, "RES"),
-    (28, "RES"),
-    (38, "RES"),
-    (41, "RES"),
-    (42, "RES"),
-    (46, "RES"),
-    (56, "RES"),
-    (22, "DPR"),
-    (36, "DPR");
+    (4, "STU"),
+    (5, "STU"),
+    (9, "STU"),
+    (10, "STU"),
+    (11, "STU"),
+    (12, "STU"),
+    (13, "STU"),
+    (16, "STU"),
+    (17, "STU"),
+    (18, "STU"),
+    (19, "STU"),
+    (20, "STU"),
+    (21, "STU"),
+    (23, "STU"),
+    (25, "STU"),
+    (28, "STU"),
+    (38, "STU"),
+    (41, "STU"),
+    (42, "STU"),
+    (46, "STU"),
+    (56, "STU"),
+    (22, "APP"),
+    (36, "APP");
 
 CREATE TABLE guest (
     guest_id int primary key auto_increment,
@@ -209,7 +209,7 @@ CREATE TABLE guest (
 INSERT INTO
     guest (guest_name, date_of_birth, document_number)
 VALUES
-    ("Alex Prunea", "2005-09-05", "12345678");
+    ("John Doe", "2000-08-06", "12345678");
 
 CREATE TABLE reservation (
     reservation_id int primary key auto_increment,
@@ -235,7 +235,7 @@ INSERT INTO
         price
     )
 values
-    (13, 1, "DRI", "2024-01-23", "2024-01-28", 2, 600);
+    (13, 1, "ACM", "2024-02-27", "2024-01-29", 2, 100);
 
 INSERT INTO
     reservation (
@@ -248,7 +248,7 @@ INSERT INTO
         price
     )
 values
-    (13, 1, "DRI", "2024-02-01", "2024-02-06", 2, 600);
+    (13, 1, "ACM", "2024-03-01", "2024-03-06", 2, 250);
 
 CREATE TABLE transaction (
     transaction_id int primary key auto_increment,
@@ -269,4 +269,4 @@ INSERT INTO
         paid
     )
 values
-    (1, "2024-01-20", "cash", 600, true);
+    (1, "2024-02-23", "cash", 100, true);

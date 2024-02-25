@@ -51,7 +51,7 @@ class BookingController extends BaseController
             customError("param");
         }
 
-        if (!in_array(strtolower($locId), ["pip", "dri"])) {
+        if (!in_array(strtolower($locId), ["apa", "acm"])) {
             customError("param");
         }
 

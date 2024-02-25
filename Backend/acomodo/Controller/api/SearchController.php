@@ -88,7 +88,7 @@ class SearchController extends BaseController
             $nrGuests = $_GET["numberOfPeople"];
             $locationId = $_GET["locationId"];
 
-            if (!in_array(strtolower($locationId), ["pip", "dri"])) {
+            if (!in_array(strtolower($locationId), ["apa", "acm"])) {
                 customError("param");
             }
 

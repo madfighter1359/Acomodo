@@ -229,7 +229,10 @@ export default function ViewDetails() {
                   {/* <Text style={styles.overlayContentPriceBefore}>$72</Text> */}
 
                   <Text style={styles.overlayContentPrice}>
-                    {(+form.totalPrice).toLocaleString(locale)} RON
+                    {(+form.totalPrice).toLocaleString(locale, {
+                      currency: "GBP",
+                      style: "currency",
+                    })}
                   </Text>
                 </View>
 
