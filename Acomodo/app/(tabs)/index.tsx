@@ -15,6 +15,7 @@ import DateTimePicker, {
 } from "@react-native-community/datetimepicker";
 import { router, useFocusEffect } from "expo-router";
 import { setStatusBarStyle } from "expo-status-bar";
+import { getLocale } from "../../components/userSettings";
 
 export default function book() {
   const DAY = 1000 * 86400;
@@ -27,6 +28,8 @@ export default function book() {
   const [checkOut, setcheckOut] = useState(new Date(checkIn.valueOf() + DAY));
 
   useFocusEffect(() => setStatusBarStyle("dark"));
+
+  const locale = getLocale();
 
   const onChange = (
     event: DateTimePickerEvent,
@@ -81,7 +84,7 @@ export default function book() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.formItem}>
         <Text style={styles.formItemText}>How many people?</Text>
         <Counter
@@ -123,7 +126,9 @@ export default function book() {
               });
             }}
           >
-            {checkIn.toString()}
+            {new Date(checkIn).toLocaleDateString(locale, {
+              dateStyle: "medium",
+            })}
           </Button>
         )}
       </View>
@@ -178,7 +183,9 @@ export default function book() {
               });
             }}
           >
-            {checkOut.toString()}
+            {new Date(checkOut).toLocaleDateString(locale, {
+              dateStyle: "medium",
+            })}
           </Button>
         )}
       </View>
@@ -186,7 +193,7 @@ export default function book() {
       <Button onPress={handleSearch} size="large">
         Next
       </Button>
-    </SafeAreaView>
+    </View>
   );
 }
 

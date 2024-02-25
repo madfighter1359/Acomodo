@@ -18,10 +18,7 @@ import { storeData } from "../../../components/store";
 
 export default function Profile() {
   const { session, signOut, signIn } = useSession();
-  const [form, setForm] = React.useState({
-    emailNotifications: true,
-    pushNotifications: false,
-  });
+  const [darkMode, setDarkMode] = useState(false);
 
   const setLocaleGlobal = useSettingsStore((state) => state.setLocale);
   const getLocaleGlobal = useSettingsStore((state) => state.locale);
@@ -161,34 +158,16 @@ export default function Profile() {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.rowWrapper}>
+            <View style={[styles.rowWrapper, styles.rowLast]}>
               <View style={styles.row}>
                 <Text style={styles.rowLabel}>Dark mode</Text>
 
                 <View style={styles.rowSpacer} />
 
                 <Switch
-                  onValueChange={(emailNotifications) =>
-                    setForm({ ...form, emailNotifications })
-                  }
+                  onValueChange={(darkMode) => setDarkMode(darkMode)}
                   style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
-                  value={form.emailNotifications}
-                />
-              </View>
-            </View>
-
-            <View style={[styles.rowWrapper, styles.rowLast]}>
-              <View style={styles.row}>
-                <Text style={styles.rowLabel}>Push Notifications</Text>
-
-                <View style={styles.rowSpacer} />
-
-                <Switch
-                  onValueChange={(pushNotifications) =>
-                    setForm({ ...form, pushNotifications })
-                  }
-                  style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
-                  value={form.pushNotifications}
+                  value={darkMode}
                 />
               </View>
             </View>

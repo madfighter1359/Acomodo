@@ -25,17 +25,23 @@ import bottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSh
 import { useSession } from "../../../ctx";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import { useHeaderHeight } from "@react-navigation/elements";
+import Loading from "../../../components/Loading";
 
 export default function EditProfile() {
+  const [loaded, setLoaded] = useState(true);
+
   const handleDelete = async (pass?: string) => {
     if (pass == "" || !pass) {
       bottomSheetRef.current?.snapToIndex(0);
     } else {
       if (auth.currentUser?.email) {
+        setLoaded(false);
         try {
           await signInWithEmailAndPassword(auth, auth.currentUser.email, pass);
           await auth.currentUser.delete();
           router.navigate("/profile");
+          Alert.alert("Account deleted successfully!");
         } catch (e) {
           if (e instanceof FirebaseError) {
             console.log(e.code);
@@ -59,6 +65,7 @@ export default function EditProfile() {
               { text: "Close" },
             ]);
         }
+        setLoaded(true);
       }
     }
   };
@@ -71,11 +78,17 @@ export default function EditProfile() {
 
   const [password, setPassword] = useState("");
 
+  const headerHeight = useHeaderHeight();
+
+  if (!loaded) return <Loading />;
+
   return (
-    <GestureHandlerRootView style={styles.container}>
+    <GestureHandlerRootView
+      style={[styles.container, { marginTop: headerHeight }]}
+    >
       <ScrollView contentContainerStyle={styles.content}>
         <View style={[styles.section, { paddingTop: 4 }]}>
-          <Text style={styles.sectionTitle}>Account</Text>
+          <Text style={styles.sectionTitle}>Edit Account</Text>
           <View style={styles.sectionBody}>
             <View
               style={[
@@ -147,7 +160,7 @@ export default function EditProfile() {
             <BottomSheetTextInput
               autoCorrect={false}
               onChangeText={(password) => setPassword(password)}
-              placeholder="********"
+              placeholder="●●●●●●●●"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               secureTextEntry={true}
