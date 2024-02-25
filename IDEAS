@@ -24,4 +24,8 @@ Make date selection so it closes on select
 
 Handle sign up rejection better asynchronously, add loading states, success message for account deletion
 
-give names to screens in (tabs) (in ios holding down back button shows prev screen names)
+give names to screens in (tabs) (in ios holding down back button shows prev screen names) -- temp fix called the (tabs) group "Home", probably worth asking online tbh
+
+prettify the please sign in screen when booking
+
+sort reservations

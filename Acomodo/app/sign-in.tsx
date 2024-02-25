@@ -21,30 +21,47 @@ import {
   useLocalSearchParams,
   useFocusEffect,
 } from "expo-router";
+import Loading from "../components/Loading";
 
 export default function SignIn() {
   const { signIn, session } = useSession();
+
+  const [loaded, setLoaded] = useState(true);
+
   if (session) router.back();
 
+  const params = useLocalSearchParams<{
+    email: string;
+    // prevRoute?: string;
+    // prevParams?: string;
+  }>();
+
   const [form, setForm] = useState({
-    email: "",
+    email: params.email ? params.email : "",
     password: "",
   });
-
-  const params = useLocalSearchParams<{ email: string }>();
-
-  if (params.email && !form.email) {
-    console.log("ran");
-    setForm({ ...form, email: params.email });
-  }
 
   const handleSignIn = async () => {
     if (form.email && form.password) {
       console.log("Signing in");
 
+      setLoaded(false);
+
       const res = await signIn(form.email, form.password);
 
+      setLoaded(true);
+
       if (res === true) {
+        // if (params.prevRoute) {
+        //   if (params.prevParams) {
+        //     router.navigate({
+        //       pathname: params.prevRoute,
+        //       params: JSON.parse(params.prevParams),
+        //     });
+        //   } else router.navigate(params.prevRoute);
+        // } else {
+        //   router.navigate("/");
+        // }
         router.back();
         Alert.alert("Succesfully signed in!");
       } else {
@@ -57,7 +74,14 @@ export default function SignIn() {
                 {
                   text: "Try again",
                 },
-                { text: "Sign up", onPress: () => router.navigate("/sign-up") },
+                {
+                  text: "Sign up",
+                  onPress: () =>
+                    router.navigate({
+                      pathname: "/sign-up",
+                      params: { email: form.email },
+                    }),
+                },
               ]
             );
             break;
@@ -88,6 +112,8 @@ export default function SignIn() {
       alert("Please input an email and password!");
     }
   };
+
+  if (!loaded) return <Loading />;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>

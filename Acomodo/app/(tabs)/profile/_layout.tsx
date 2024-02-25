@@ -9,7 +9,7 @@ export default function Layout() {
         name="edit-profile"
         options={{
           headerShown: true,
-          headerStyle: { backgroundColor: "#f2f2f2" },
+          // headerStyle: { backgroundColor: "#f2f2f2" },
           headerBackTitleVisible: true,
           headerBackTitle: "Profile",
           headerTitle: "",
@@ -22,6 +22,7 @@ export default function Layout() {
           //   </Text>
           // ),
           headerBackVisible: true,
+          headerBlurEffect: "regular",
 
           // animation: "none",
         }}

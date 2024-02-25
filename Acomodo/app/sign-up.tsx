@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Link, router } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { useSession } from "../ctx";
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -18,20 +18,28 @@ import DateTimePicker, {
 } from "@react-native-community/datetimepicker";
 import Button from "../components/Button";
 import { FontAwesome } from "@expo/vector-icons";
+import Loading from "../components/Loading";
 
 export default function SignUp() {
+  const { signUp, session } = useSession();
+  if (session) router.back();
+
+  const params = useLocalSearchParams<{
+    email: string;
+    // prevRoute?: string;
+    // prevParams?: string;
+  }>();
+
   const [form, setForm] = useState({
     fullname: "",
-    email: "",
+    email: params.email ? params.email : "",
     docNr: "",
     dob: new Date(new Date().setFullYear(new Date().getFullYear() - 18)),
     password: "",
     confirmPassword: "",
   });
 
-  const { signUp, session } = useSession();
-
-  if (session) router.back();
+  const [loaded, setLoaded] = useState(true);
 
   const handleSignUp = async () => {
     if (
@@ -56,6 +64,8 @@ export default function SignUp() {
       if (form.password === form.confirmPassword) {
         console.log("Signing up");
 
+        setLoaded(false);
+
         const res = await signUp(
           form.email,
           form.password,
@@ -63,6 +73,8 @@ export default function SignUp() {
           form.docNr,
           form.dob
         );
+
+        setLoaded(true);
 
         console.log(res);
 
@@ -140,6 +152,8 @@ export default function SignUp() {
       // set
     }
   };
+
+  if (!loaded) return <Loading />;
 
   return (
     <View style={styles.container}>

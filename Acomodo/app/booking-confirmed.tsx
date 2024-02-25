@@ -144,7 +144,7 @@ export default function ConfirmScreen() {
         />
       </div>
       <h1 class="receiptTitle">${form.locationName}</h1>
-      <p class="receiptSubtitle">Resevation #${form.reservationId}</p>
+      <p class="receiptSubtitle">Reservation #${form.reservationId}</p>
       <div class="receiptPrice">
         <span class="receiptPriceText">${(+form.price).toLocaleString(locale, {
           currency: "RON",

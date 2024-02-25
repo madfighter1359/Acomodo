@@ -17,7 +17,19 @@ export default function Layout() {
     // <BottomSheetModalProvider>
     <SessionProvider>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="(tabs)"
+          options={{ title: "Home", headerShown: false }}
+        />
+        {/* <Stack.Screen
+          name="(tabs)/bookings"
+          options={{ title: "Bookings", headerShown: false }}
+        />
+        <Stack.Screen
+          name="(tabs)/index"
+          options={{ title: "Book", headerShown: false }}
+        /> */}
+
         <Stack.Screen
           name="(booking)/location-select"
           options={{

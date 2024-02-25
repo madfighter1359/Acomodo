@@ -16,12 +16,13 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import FeatherIcon from "react-native-vector-icons/Feather";
 import Button from "../../components/Button";
 import { getLocale } from "../../components/userSettings";
+import { usePathname } from "expo-router";
 
 export default function ConfirmBooking() {
   const form = useLocalSearchParams();
   const { session } = useSession();
   console.log(form);
-  console.log(Dimensions.get("window"), Dimensions.get("screen"));
+  // console.log(Dimensions.get("window"), Dimensions.get("screen"));
 
   const locale = getLocale();
 
@@ -56,6 +57,8 @@ export default function ConfirmBooking() {
   // const [details, setDetails] = React.useState<
   //   { label: string; value: string }[][]
   // >([]);
+
+  // const pathname = usePathname();
 
   return (
     <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
@@ -215,7 +218,16 @@ export default function ConfirmBooking() {
             Pleas sign in or sign up to continue!
           </Text>
           <Button
-            onPress={() => router.push("/sign-in")}
+            onPress={() => {
+              // router.push({
+              //   pathname: "/sign-in",
+              //   params: {
+              //     prevRoute: pathname,
+              //     prevParams: JSON.stringify(form),
+              //   },
+              // });
+              router.push("/sign-in");
+            }}
             size="medium"
             type="secondary"
           >
@@ -227,9 +239,6 @@ export default function ConfirmBooking() {
             onPress={() => router.push("/sign-up")}
           >
             Sign Up
-          </Button>
-          <Button size="medium" onPress={() => router.push("/payment")}>
-            Lol
           </Button>
         </View>
       )}

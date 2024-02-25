@@ -20,11 +20,14 @@ import { auth } from "../../firebase-config";
 import GetDetails from "../../components/api/GetReservationDetails";
 import GetTransaction from "../../components/api/GetTransaction";
 import { getLocale } from "../../components/userSettings";
+import Loading from "../../components/Loading";
 
 export default function ViewDetails() {
   const form = useLocalSearchParams();
   const { session } = useSession();
   console.log(form);
+
+  const [loaded, setLoaded] = useState(true);
 
   const locale = getLocale();
 
@@ -77,6 +80,7 @@ export default function ViewDetails() {
   }, []);
 
   const handleViewConfirmation = async () => {
+    setLoaded(false);
     try {
       const token = await auth.currentUser?.getIdToken(false);
       if (token) {
@@ -101,6 +105,7 @@ export default function ViewDetails() {
             paid: data.paid,
           };
           router.push({ pathname: "/booking-confirmed", params: params });
+          setLoaded(true);
         }
       } else {
         throw new Error();
@@ -108,9 +113,7 @@ export default function ViewDetails() {
     } catch (e) {}
   };
 
-  // const [details, setDetails] = React.useState<
-  //   { label: string; value: string }[][]
-  // >([]);
+  if (!loaded) return <Loading />;
 
   return (
     <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
