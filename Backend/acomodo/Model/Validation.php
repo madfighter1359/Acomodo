@@ -20,7 +20,7 @@ class Validation
         if ($inFormatted === false || $outFormatted === false) {
             return false;
         }
-        return $inFormatted >= $min && $outFormatted <= $max && $inFormatted < $outFormatted && Validation::daysBetween($in, $out) < 15;
+        return $inFormatted >= $min && $outFormatted <= $max && $inFormatted < $outFormatted && Validation::daysBetween($in, $out) < $nights;
     }
 
     public static function daysBetween($d1, $d2)

@@ -1,4 +1,11 @@
-import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Linking,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
@@ -234,6 +241,7 @@ export default function Profile() {
                 <TouchableOpacity
                   onPress={() => {
                     signOut();
+                    Alert.alert("Successfully logged out!");
                   }}
                   style={styles.row}
                 >

@@ -32,9 +32,11 @@ export default function EditProfile() {
   const [loaded, setLoaded] = useState(true);
 
   const handleDelete = async (pass?: string) => {
-    if (pass == "" || !pass) {
+    if (pass == undefined) {
       bottomSheetRef.current?.snapToIndex(0);
-    } else {
+    } else if (pass == "")
+      Alert.alert("Please re-enter your password to delete your account!");
+    else {
       if (auth.currentUser?.email) {
         setLoaded(false);
         try {

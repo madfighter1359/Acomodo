@@ -31,3 +31,6 @@ prettify the please sign in screen when booking
 sort reservations
 
 Have delete and update queries just to be used with postman
+
+BUG FIXES FOR MAIN!!
+Validation::validDates mistakenly uses 15 as maximum nights rather than nights parameter passed to function

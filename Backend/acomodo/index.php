@@ -1,10 +1,4 @@
 <?php
-header("Access-Control-Allow-Headers: Authorization, *");
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
-// header("Access-Control-Allow-Headers: *");
-require __DIR__ . "/inc/bootstrap.php";
-
 function customError($preset, $msg = "", $code = 500)
 {
     switch ($preset) {
@@ -51,7 +45,29 @@ function defaultError($errno, $errstr)
     customError("", $errstr);
 }
 
+// function fatalHandler() {
+//     $error = error_get_last();
+//     if($error !== NULL) {
+//         echo 2;
+//         $errstr = $error["message"];
+//         customError("", $errstr);
+//     }
+//     else {
+//         echo 1;
+//         customError("?");
+//     }
+// }
+
 set_error_handler("defaultError");
+// register_shutdown_function("fatalHandler");
+
+
+header("Access-Control-Allow-Headers: Authorization, *");
+header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
+// header("Access-Control-Allow-Headers: *");
+require __DIR__ . "/inc/bootstrap.php";
+
 
 mysqli_report(MYSQLI_REPORT_OFF);
 ini_set('display_errors', 1);
