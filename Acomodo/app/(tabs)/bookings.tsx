@@ -116,6 +116,7 @@ export default function Index() {
           tintColor={"#94A3B8"}
         />
       }
+      //TODO:
       indicatorStyle="black"
     >
       {loaded ? (
