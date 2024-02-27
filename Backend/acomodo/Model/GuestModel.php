@@ -30,7 +30,6 @@ class GuestModel extends Database
     public function getGuestDetails($guestId)
     {
         $result = $this->select("SELECT guest_name, email FROM guest WHERE guest_id = ?;", [$guestId], "i");
-        // var_dump($result);
         return $result[0];
     }
 }

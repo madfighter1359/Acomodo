@@ -35,8 +35,7 @@ class Database
         try {
             $stmt = $this->executeStatement($query, $params, $param_types);
             if ($stmt->errno) {
-                // echo $stmt->error;
-                // echo 1;
+
                 return [0, $stmt->errno];
             }
             $rows = $stmt->affected_rows;
@@ -44,7 +43,6 @@ class Database
             $stmt->close();
             return [$rows, $id];
         } catch (Exception $e) {
-            // throw new Exception($e->getMessage());
             customError("", $e->getMessage(), 400);
         }
         return [0, null];

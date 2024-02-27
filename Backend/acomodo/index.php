@@ -45,36 +45,19 @@ function defaultError($errno, $errstr)
     customError("", $errstr);
 }
 
-// function fatalHandler() {
-//     $error = error_get_last();
-//     if($error !== NULL) {
-//         echo 2;
-//         $errstr = $error["message"];
-//         customError("", $errstr);
-//     }
-//     else {
-//         echo 1;
-//         customError("?");
-//     }
-// }
-
 set_error_handler("defaultError");
 // register_shutdown_function("fatalHandler");
-
 
 header("Access-Control-Allow-Headers: Authorization, *");
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
-// header("Access-Control-Allow-Headers: *");
 require __DIR__ . "/inc/bootstrap.php";
-
 
 mysqli_report(MYSQLI_REPORT_OFF);
 ini_set('display_errors', 1);
 date_default_timezone_set("UTC");
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uriArr = explode('/', $uri);
-// var_dump($uriArr);
 
 function resolveUrl($uriArr)
 {
@@ -146,41 +129,3 @@ if (!resolveUrl($uriArr)) {
     http_response_code(404);
     exit();
 }
-
-// switch ($uri) {
-//     case '/backend/acomodo/search':
-//         require PROJECT_ROOT_PATH . "/Controller/api/SearchController.php";
-//         $objFeedController = new SearchController();
-//         $objFeedController->searchAction();
-//         break;
-//     //Could do /search/dri (loc id) instead of using param to make sleeker
-//     case '/backend/acomodo/search/details':
-//         require PROJECT_ROOT_PATH . "/Controller/api/SearchController.php";
-//         $objFeedController = new SearchController();
-//         $objFeedController->specificSearch();
-//         break;
-//     case '/backend/acomodo/book':
-//         require PROJECT_ROOT_PATH . "/Controller/api/BookingController.php";
-//         $objFeedController = new BookingController();
-//         $objFeedController->bookAction();
-//         break;
-//     case '/backend/acomodo/signup':
-//         require PROJECT_ROOT_PATH . "/Controller/api/GuestController.php";
-//         $objFeedController = new GuestController();
-//         $objFeedController->newGuest();
-//         break;
-//     case '/backend/acomodo/guest/bookings':
-//         require PROJECT_ROOT_PATH . "/Controller/api/BookingController.php";
-//         $objFeedController = new BookingController();
-//         $objFeedController->getBookings();
-//         break;
-//     default:
-//         http_response_code(404);
-//         exit();
-
-// }
-
-// require PROJECT_ROOT_PATH . "/Controller/api/SearchController.php";
-// $objFeedController = new SearchController();
-// $strMethodName = $uri[4] . 'Action';
-// $objFeedController->{$strMethodName}();

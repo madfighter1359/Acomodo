@@ -1,9 +1,7 @@
 <?php
 class SearchController extends BaseController
 {
-    /**
-     * "/user/list" Endpoint - Get list of users
-     */
+
     public function searchAction()
     {
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
@@ -19,16 +17,6 @@ class SearchController extends BaseController
 
             $minDate = new DateTime('today');
             $maxDate = (new DateTime('today'))->modify('+1 year');
-
-            // OR
-            // $minDate = new DateTime(gmdate('Y-m-d'));
-            // $maxDate = (new DateTime(gmdate('Y-m-d')))->modify('+1 year');
-
-            // var_dump($minDate);
-            // var_dump($maxDate);
-
-            // echo $checkIn;
-            // echo $checkOut;
 
             if (!Validation::validDates($checkIn, $checkOut, $minDate, $maxDate, 16)) {
                 customError("date");
@@ -48,11 +36,6 @@ class SearchController extends BaseController
 
             // Iterate through each location
             foreach ($locations as $row) {
-                // try {
-
-                // } catch (Exception $e) {
-
-                // }
                 $response->{$row["location_id"]} = new stdClass();
                 $response->{$row["location_id"]}->locationName = $row["location_name"];
                 $response->{$row["location_id"]}->area = $row["area"];
@@ -60,9 +43,7 @@ class SearchController extends BaseController
 
                 // Use the search function with the current location and the passed params
                 $details = $searchModel->searchLocation($checkIn, $checkOut, $nrGuests, strtolower($row["location_id"]));
-                // var_dump($details);
                 $details = $searchModel->getCheapestAndCount($details);
-                // $response->{$row["location_id"]} = $details;
                 // Add results to response object
                 $response->{$row["location_id"]}->available = $details[0];
                 $response->{$row["location_id"]}->cheapest = $details[1];

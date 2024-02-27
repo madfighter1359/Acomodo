@@ -46,8 +46,9 @@ class GuestController extends BaseController
             $response->details->guestDoB = $guestDoB;
             $response->details->guestDocNr = $guestDocNr;
             $response->details->email = $email;
-            $this->sendOutput(json_encode($response));
+            echo json_encode($response);
+        } else {
+            customError("?");
         }
-
     }
 }
