@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import FeatherIcon from "react-native-vector-icons/Feather";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { getLocale } from "../components/userSettings";
 import * as Print from "expo-print";
@@ -199,7 +198,7 @@ export default function ConfirmScreen() {
 </html>
 
 `;
-    // On iOS/android prints the given html. On web prints the HTML from the current page.
+    // On iOS and android prints the given html
     const { uri } = await Print.printToFileAsync({ html, width: 500 });
     console.log("File has been saved to:", uri);
     await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
@@ -223,7 +222,6 @@ export default function ConfirmScreen() {
               showsVerticalScrollIndicator={false}
             >
               <View style={styles.receiptLogo}>
-                {/* <FeatherIcon color="#fff" name="codepen" size={32} /> */}
                 <Image
                   source={require("../assets/images/acomodo-icon.png")}
                   style={{ width: 70, height: 70 }}
@@ -243,15 +241,6 @@ export default function ConfirmScreen() {
                     style: "currency",
                   })}
                 </Text>
-
-                {/* <Text
-                style={[
-                  styles.receiptPriceText,
-                  { fontSize: 20, lineHeight: 32 },
-                ]}
-              >
-                .00
-              </Text> */}
               </View>
 
               <Text style={styles.receiptDescription}>

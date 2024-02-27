@@ -1,10 +1,4 @@
-import React, {
-  LegacyRef,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -15,12 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { useSession } from "../ctx";
-import {
-  router,
-  Link,
-  useLocalSearchParams,
-  useFocusEffect,
-} from "expo-router";
+import { router, Link, useLocalSearchParams } from "expo-router";
 import Loading from "../components/Loading";
 
 export default function SignIn() {
@@ -33,8 +22,6 @@ export default function SignIn() {
 
   const params = useLocalSearchParams<{
     email: string;
-    // prevRoute?: string;
-    // prevParams?: string;
   }>();
 
   const [form, setForm] = useState({
@@ -53,16 +40,6 @@ export default function SignIn() {
       setLoaded(true);
 
       if (res === true) {
-        // if (params.prevRoute) {
-        //   if (params.prevParams) {
-        //     router.navigate({
-        //       pathname: params.prevRoute,
-        //       params: JSON.parse(params.prevParams),
-        //     });
-        //   } else router.navigate(params.prevRoute);
-        // } else {
-        //   router.navigate("/");
-        // }
         router.back();
         Alert.alert("Succesfully signed in!");
       } else {

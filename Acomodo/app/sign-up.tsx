@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
-  SafeAreaView,
   View,
   Text,
   TouchableOpacity,
@@ -13,11 +12,9 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { useSession } from "../ctx";
 import DateTimePicker, {
-  DateTimePickerEvent,
   DateTimePickerAndroid,
 } from "@react-native-community/datetimepicker";
 import Button from "../components/Button";
-import { FontAwesome } from "@expo/vector-icons";
 import Loading from "../components/Loading";
 import { getLocale } from "../components/userSettings";
 
@@ -29,8 +26,6 @@ export default function SignUp() {
 
   const params = useLocalSearchParams<{
     email: string;
-    // prevRoute?: string;
-    // prevParams?: string;
   }>();
 
   const OFFSET = new Date().getTimezoneOffset();
@@ -202,12 +197,9 @@ export default function SignUp() {
                 testID="dateTimePicker"
                 value={form.dob}
                 mode="date"
-                onChange={(event, dob) =>
-                  // onChange(event, selectedDate)
-                  {
-                    if (dob) setForm({ ...form, dob });
-                  }
-                }
+                onChange={(event, dob) => {
+                  if (dob) setForm({ ...form, dob });
+                }}
                 timeZoneName={"UTC"}
                 maximumDate={
                   new Date(
@@ -221,7 +213,6 @@ export default function SignUp() {
               <View
                 style={{
                   alignItems: "flex-start",
-                  // backgroundColor: "red",
                 }}
               >
                 <Button

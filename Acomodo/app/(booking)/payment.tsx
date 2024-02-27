@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { FontAwesome6 } from "@expo/vector-icons";
 import Button from "../../components/Button";
@@ -43,15 +36,12 @@ export default function Payment() {
   if (!session) router.navigate("/profile");
 
   const [loading, setLoading] = React.useState(false);
-  // const [error, setError] = React.useState<null | "user" | "other">(null);
 
   const [value, setValue] = React.useState(0);
   const [paid, setPaid] = React.useState(false);
   const form = useLocalSearchParams();
-  console.log(form);
 
   const handlePay = () => {
-    // new column for paid
     setLoading(true);
     auth.currentUser
       ?.getIdToken(true)
@@ -76,13 +66,11 @@ export default function Payment() {
               },
             ]);
           } else {
-            // console.log(result);
             const params = {
               reservationId: result[1],
               ...result[2],
               transactionId: result[3],
               ...result[4],
-              // oldReservation: Math.random() > 0.5 ? true : null,
             };
             console.log(params);
             router.navigate("/");
@@ -100,7 +88,6 @@ export default function Payment() {
       ) : (
         <View>
           <View style={styles.container}>
-            {/* <Text style={styles.title}>Credit Cards</Text> */}
             {items.map(({ label, icon, available }, index) => {
               const isFirst = index === 0;
               const isLast = index === items.length - 1;
@@ -172,15 +159,6 @@ export default function Payment() {
             <Text style={styles.contactText}>
               Certain payment methods are currently unavailable. We apologise
               for the inconvenience{" "}
-              {/* <TouchableOpacity
-            onPress={() => {
-              // handle onPress
-            }}
-          >
-            <Text style={{ color: "#0069fe", fontWeight: "500" }}>
-              Contact us
-            </Text>
-          </TouchableOpacity> */}
             </Text>
           </View>
           <View style={{ paddingTop: 100 }}>
@@ -231,7 +209,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 12,
   },
   radioUnavailable: {
-    // backgroundColor: "#D3D3D3",
     opacity: 0.3,
   },
   radioInput: {

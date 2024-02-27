@@ -36,7 +36,6 @@ export default function Layout() {
           ),
         }}
       />
-      {/* <Tabs.Screen name="profile/edit-profile" options={{ href: null }} /> */}
     </Tabs>
   );
 }

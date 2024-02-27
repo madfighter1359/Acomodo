@@ -6,10 +6,9 @@ import {
   TouchableOpacity,
   View,
   Image,
-  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Link, Redirect, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useSession } from "../../ctx";
 import Swiper from "react-native-swiper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -25,7 +24,6 @@ import Loading from "../../components/Loading";
 export default function ViewDetails() {
   const form = useLocalSearchParams();
   const { session } = useSession();
-  console.log(form);
 
   const [loaded, setLoaded] = useState(true);
 
@@ -33,11 +31,9 @@ export default function ViewDetails() {
 
   const DAY = 1000 * 86400;
 
-  const [roomNr, setRoomNr] = useState(0);
-
   const items = [
     [
-      { label: "Room number", value: roomNr },
+      { label: "Room number", value: form.roomNr },
       { label: "Guests", value: form.numberOfPeople },
     ],
     [
@@ -69,7 +65,6 @@ export default function ViewDetails() {
             reservationId: +form.reservationId,
           });
           if (data != false) {
-            setRoomNr(data.roomNr);
             setImages([data.image]);
           }
         } else {
@@ -160,11 +155,7 @@ export default function ViewDetails() {
                         })}
                       </Text>
 
-                      <FontAwesome6
-                        name="arrow-right"
-                        size={15}
-                        // style={styles.pickerDatesText}
-                      />
+                      <FontAwesome6 name="arrow-right" size={15} />
 
                       <Text style={styles.pickerDatesText}>
                         {new Date(
@@ -187,12 +178,6 @@ export default function ViewDetails() {
 
                       <Text style={styles.infoRatingText}>(Booking.com)</Text>
                     </View>
-
-                    {/* <Text style={styles.infoDescription}>
-                        Model S Dual Motor All-Wheel Drive unlocks more range than
-                        any other vehicle in our current lineup, with insane power
-                        and maximum control.
-                      </Text> */}
                   </View>
                   <View style={styles.stats}>
                     {items.map((row, rowIndex) => (
@@ -226,8 +211,6 @@ export default function ViewDetails() {
             <View style={styles.overlay}>
               <View style={styles.overlayContent}>
                 <View style={styles.overlayContentTop}>
-                  {/* <Text style={styles.overlayContentPriceBefore}>$72</Text> */}
-
                   <Text style={styles.overlayContentPrice}>
                     {(+form.totalPrice).toLocaleString(locale, {
                       currency: "GBP",
@@ -235,13 +218,6 @@ export default function ViewDetails() {
                     })}
                   </Text>
                 </View>
-
-                {/* <Text style={styles.overlayContentTotal}>
-                  {(+form.totalPrice / +form.numberOfNights).toLocaleString(
-                    locale
-                  )}{" "}
-                  RON / night
-                </Text> */}
               </View>
 
               <TouchableOpacity onPress={handleViewConfirmation}>
@@ -380,7 +356,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     flexDirection: "row",
     alignItems: "center",
-    // justifyContent: "space-between",
     backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: "#fff",
@@ -390,8 +365,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignContent: "space-between",
-    // backgroundColor: "red",
-    // width: "100%",
     paddingLeft: 10,
     paddingRight: 10,
     flex: 1,

@@ -1,35 +1,16 @@
-import { View, Text } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { Stack } from "expo-router";
 import { SessionProvider } from "../ctx";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { create } from "zustand";
-import { useSettingsStore } from "../components/userSettings";
-import { getData } from "../components/store";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 export default function Layout() {
-  // console.log(useSettingsStore((state) => state.locale));
-  // console.log(getData("locale"));
   return (
-    // <GestureHandlerRootView>
-    // <BottomSheetModalProvider>
     <SessionProvider>
       <Stack>
         <Stack.Screen
           name="(tabs)"
           options={{ title: "Home", headerShown: false }}
         />
-        {/* <Stack.Screen
-          name="(tabs)/bookings"
-          options={{ title: "Bookings", headerShown: false }}
-        />
-        <Stack.Screen
-          name="(tabs)/index"
-          options={{ title: "Book", headerShown: false }}
-        /> */}
-
         <Stack.Screen
           name="(booking)/location-select"
           options={{
@@ -79,7 +60,5 @@ export default function Layout() {
       </Stack>
       <StatusBar style="dark" />
     </SessionProvider>
-    //   </BottomSheetModalProvider>
-    // </GestureHandlerRootView>
   );
 }

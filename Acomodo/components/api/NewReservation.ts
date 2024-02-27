@@ -49,7 +49,6 @@ export default async function NewReservation({
         paid: paid ? 1 : 0,
       },
     });
-    // console.log(response.data);
     if (response.data.status == "Success") {
       return [
         true,

@@ -9,9 +9,9 @@ interface SettingsState {
 
 const useSettingsStore = create<SettingsState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       locale: "ro-RO",
-      setLocale: (locale) => set((state) => ({ locale: locale })),
+      setLocale: (locale) => set(() => ({ locale: locale })),
     }),
     {
       name: "settings",

@@ -1,30 +1,14 @@
-import {
-  Alert,
-  Linking,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Alert, Linking, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Link } from "expo-router";
 import { useSession } from "../../../ctx";
-// import Button from "../../components/Button";
 import { router } from "expo-router";
-// import { auth } from "../../firebase-config";
-// import NewGuest from "../../components/api/NewGuest";
-// import Example from "../../components/Settings";
-// import Settings from "../../components/Settings2";
-import { ScrollView, TouchableOpacity, Switch, Image } from "react-native";
+import { ScrollView, TouchableOpacity, Switch } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useSettingsStore } from "../../../components/userSettings";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { storeData } from "../../../components/store";
 
 export default function Profile() {
-  const { session, signOut, signIn } = useSession();
+  const { session, signOut } = useSession();
   const [darkMode, setDarkMode] = useState(false);
 
   const setLocaleGlobal = useSettingsStore((state) => state.setLocale);
@@ -33,7 +17,6 @@ export default function Profile() {
   const [locale, setLocale] = useState(getLocaleGlobal);
 
   const handleChangeLanguage = () => {
-    // console.log(useSettingsStore((state) => state.locale));
     if (locale == "ro-RO") {
       setLocaleGlobal("en-GB");
       setLocale("en-GB");
@@ -57,13 +40,6 @@ export default function Profile() {
                 }}
                 style={styles.profile}
               >
-                {/* <Image
-                  alt=""
-                  source={{
-                    uri: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80",
-                  }}
-                  style={styles.profileAvatar}
-                /> */}
                 <FontAwesome6 name="user" size={32} style={{ padding: 13 }} />
 
                 <View style={styles.profileBody}>
@@ -117,7 +93,7 @@ export default function Profile() {
           <Text style={styles.sectionTitle}>Preferences</Text>
 
           <View style={styles.sectionBody}>
-            <View style={[styles.rowWrapper, styles.rowFirst]}>
+            {/* <View style={[styles.rowWrapper, styles.rowFirst]}>
               <TouchableOpacity
                 onPress={() => {
                   // handle onPress
@@ -132,9 +108,9 @@ export default function Profile() {
 
                 <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
               </TouchableOpacity>
-            </View>
+            </View> */}
 
-            <View style={styles.rowWrapper}>
+            <View style={[styles.rowWrapper, styles.rowFirst, styles.rowLast]}>
               <TouchableOpacity
                 onPress={handleChangeLanguage}
                 style={styles.row}
@@ -160,7 +136,7 @@ export default function Profile() {
               </TouchableOpacity>
             </View>
 
-            <View style={[styles.rowWrapper, styles.rowLast]}>
+            {/* <View style={[styles.rowWrapper, styles.rowLast]}>
               <View style={styles.row}>
                 <Text style={styles.rowLabel}>Dark mode</Text>
 
@@ -172,7 +148,7 @@ export default function Profile() {
                   value={darkMode}
                 />
               </View>
-            </View>
+            </View> */}
           </View>
         </View>
 
@@ -180,7 +156,7 @@ export default function Profile() {
           <Text style={styles.sectionTitle}>Resources</Text>
 
           <View style={styles.sectionBody}>
-            <View style={[styles.rowWrapper, styles.rowFirst]}>
+            <View style={[styles.rowWrapper, styles.rowFirst, styles.rowLast]}>
               <TouchableOpacity
                 onPress={() => {
                   Linking.openURL("mailto:support@acomodo.com");
@@ -195,7 +171,7 @@ export default function Profile() {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.rowWrapper}>
+            {/* <View style={styles.rowWrapper}>
               <TouchableOpacity
                 onPress={() => {
                   // handle onPress
@@ -208,9 +184,9 @@ export default function Profile() {
 
                 <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
               </TouchableOpacity>
-            </View>
+            </View> */}
 
-            <View style={[styles.rowWrapper, styles.rowLast]}>
+            {/* <View style={[styles.rowWrapper, styles.rowLast]}>
               <TouchableOpacity
                 onPress={() => {
                   // handle onPress
@@ -223,7 +199,7 @@ export default function Profile() {
 
                 <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
         </View>
 
@@ -261,11 +237,6 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  // },
   container: {
     padding: 0,
     flexGrow: 1,

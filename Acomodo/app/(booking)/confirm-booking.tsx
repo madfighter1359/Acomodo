@@ -1,29 +1,23 @@
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   Image,
-  Dimensions,
 } from "react-native";
 import React from "react";
-import { Link, Redirect, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useSession } from "../../ctx";
 import Swiper from "react-native-swiper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FeatherIcon from "react-native-vector-icons/Feather";
-import Button from "../../components/Button";
 import { getLocale } from "../../components/userSettings";
-import { usePathname } from "expo-router";
 import Error from "../../components/Error";
 
 export default function ConfirmBooking() {
   const form = useLocalSearchParams();
   const { session } = useSession();
-  console.log(form);
-  // console.log(Dimensions.get("window"), Dimensions.get("screen"));
 
   const locale = getLocale();
 
@@ -55,196 +49,144 @@ export default function ConfirmBooking() {
     router.push({ pathname: "/payment", params: params });
   };
 
-  // const [details, setDetails] = React.useState<
-  //   { label: string; value: string }[][]
-  // >([]);
-
-  // const pathname = usePathname();
-
   return (
     <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
       {session ? (
-        <View>
-          <View style={{ flex: 1 }}>
-            <SafeAreaView style={{ flex: 1 }}>
-              <View style={styles.container}>
-                <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-                  <View style={styles.photos}>
-                    <Swiper
-                      renderPagination={(index, total) => (
-                        <View style={styles.photosPagination}>
-                          <Text style={styles.photosPaginationText}>
-                            {index + 1} of {total}
-                          </Text>
-                        </View>
-                      )}
-                    >
-                      {IMAGES.map((src, index) => (
-                        <Image
-                          alt=""
-                          key={index}
-                          source={{ uri: src }}
-                          style={styles.photosImg}
-                        />
-                      ))}
-                    </Swiper>
-                  </View>
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      // handle onPress
-                    }}
-                    style={styles.picker}
-                  >
-                    <FeatherIcon color="#000" name="calendar" size={18} />
-
-                    <View style={styles.pickerDates}>
-                      <Text
-                        style={[styles.pickerDatesText, { marginBottom: 2 }]}
-                      >
-                        {new Date(+form.checkInDate).toLocaleDateString(
-                          locale,
-                          {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          }
-                        )}
-                      </Text>
-
-                      <Text style={styles.pickerDatesText}>
-                        {new Date(+form.checkOutDate).toLocaleDateString(
-                          locale,
-                          {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          }
-                        )}
+        <View style={{ flex: 1 }}>
+          <View style={styles.container}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+              <View style={styles.photos}>
+                <Swiper
+                  renderPagination={(index, total) => (
+                    <View style={styles.photosPagination}>
+                      <Text style={styles.photosPaginationText}>
+                        {index + 1} of {total}
                       </Text>
                     </View>
-
-                    <View style={styles.pickerAction}>
-                      <Text style={styles.pickerActionText}>Change</Text>
-
-                      <FeatherIcon
-                        color="#4C6CFD"
-                        name="chevron-right"
-                        size={18}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                  <View style={styles.info}>
-                    <Text style={styles.infoTitle}>{form.locationName}</Text>
-
-                    <View style={styles.infoRating}>
-                      <Text style={styles.infoRatingLabel}>9.7</Text>
-
-                      <FeatherIcon color="#4c6cfd" name="star" size={15} />
-
-                      <Text style={styles.infoRatingText}>(Booking.com)</Text>
-                    </View>
-
-                    {/* <Text style={styles.infoDescription}>
-                      Model S Dual Motor All-Wheel Drive unlocks more range than
-                      any other vehicle in our current lineup, with insane power
-                      and maximum control.
-                    </Text> */}
-                  </View>
-                  <View style={styles.stats}>
-                    {items.map((row, rowIndex) => (
-                      <View
-                        key={rowIndex}
-                        style={[
-                          styles.statsRow,
-                          rowIndex === 0 && { borderTopWidth: 0 },
-                        ]}
-                      >
-                        {row.map(({ label, value }, index) => (
-                          <View
-                            key={index}
-                            style={[
-                              styles.statsItem,
-                              index === 0 && { borderLeftWidth: 0 },
-                            ]}
-                          >
-                            <Text style={styles.statsItemText}>{label}</Text>
-
-                            <Text style={styles.statsItemValue}>{value}</Text>
-                          </View>
-                        ))}
-                      </View>
-                    ))}
-                  </View>
-                </ScrollView>
+                  )}
+                >
+                  {IMAGES.map((src, index) => (
+                    <Image
+                      alt=""
+                      key={index}
+                      source={{ uri: src }}
+                      style={styles.photosImg}
+                    />
+                  ))}
+                </Swiper>
               </View>
-            </SafeAreaView>
 
-            <View style={styles.overlay}>
-              <View style={styles.overlayContent}>
-                <View style={styles.overlayContentTop}>
-                  {/* <Text style={styles.overlayContentPriceBefore}>$72</Text> */}
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
+                }}
+                style={styles.picker}
+              >
+                <FeatherIcon color="#000" name="calendar" size={18} />
 
-                  <Text style={styles.overlayContentPrice}>
-                    {(+form.totalPrice).toLocaleString(locale, {
-                      currency: "GBP",
-                      style: "currency",
+                <View style={styles.pickerDates}>
+                  <Text style={[styles.pickerDatesText, { marginBottom: 2 }]}>
+                    {new Date(+form.checkInDate).toLocaleDateString(locale, {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </Text>
+
+                  <Text style={styles.pickerDatesText}>
+                    {new Date(+form.checkOutDate).toLocaleDateString(locale, {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
                     })}
                   </Text>
                 </View>
 
-                <Text style={styles.overlayContentTotal}>
-                  {`${(+form.totalPrice / +form.numberOfNights).toLocaleString(
-                    locale,
-                    { currency: "GBP", style: "currency" }
-                  )} / night`}
+                <View style={styles.pickerAction}>
+                  <Text style={styles.pickerActionText}>Change</Text>
+
+                  <FeatherIcon color="#4C6CFD" name="chevron-right" size={18} />
+                </View>
+              </TouchableOpacity>
+              <View style={styles.info}>
+                <Text style={styles.infoTitle}>{form.locationName}</Text>
+
+                <View style={styles.infoRating}>
+                  <Text style={styles.infoRatingLabel}>9.7</Text>
+
+                  <FeatherIcon color="#4c6cfd" name="star" size={15} />
+
+                  <Text style={styles.infoRatingText}>(Booking.com)</Text>
+                </View>
+
+                {/* <Text style={styles.infoDescription}>
+                      Model S Dual Motor All-Wheel Drive unlocks more range than
+                      any other vehicle in our current lineup, with insane power
+                      and maximum control.
+                    </Text> */}
+              </View>
+              <View style={styles.stats}>
+                {items.map((row, rowIndex) => (
+                  <View
+                    key={rowIndex}
+                    style={[
+                      styles.statsRow,
+                      rowIndex === 0 && { borderTopWidth: 0 },
+                    ]}
+                  >
+                    {row.map(({ label, value }, index) => (
+                      <View
+                        key={index}
+                        style={[
+                          styles.statsItem,
+                          index === 0 && { borderLeftWidth: 0 },
+                        ]}
+                      >
+                        <Text style={styles.statsItemText}>{label}</Text>
+
+                        <Text style={styles.statsItemValue}>{value}</Text>
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+
+          <View style={styles.overlay}>
+            <View style={styles.overlayContent}>
+              <View style={styles.overlayContentTop}>
+                <Text style={styles.overlayContentPrice}>
+                  {(+form.totalPrice).toLocaleString(locale, {
+                    currency: "GBP",
+                    style: "currency",
+                  })}
                 </Text>
               </View>
 
-              <TouchableOpacity onPress={handlePay}>
-                <View style={styles.btn}>
-                  <Text style={styles.btnText}>Payment</Text>
-
-                  <MaterialCommunityIcons
-                    color="#fff"
-                    name="arrow-right-circle"
-                    size={18}
-                    style={{ marginLeft: 12 }}
-                  />
-                </View>
-              </TouchableOpacity>
+              <Text style={styles.overlayContentTotal}>
+                {`${(+form.totalPrice / +form.numberOfNights).toLocaleString(
+                  locale,
+                  { currency: "GBP", style: "currency" }
+                )} / night`}
+              </Text>
             </View>
+
+            <TouchableOpacity onPress={handlePay}>
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>Payment</Text>
+
+                <MaterialCommunityIcons
+                  color="#fff"
+                  name="arrow-right-circle"
+                  size={18}
+                  style={{ marginLeft: 12 }}
+                />
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       ) : (
-        // <View>
-        //   <Text style={{ fontSize: 20 }}>
-        //     Pleas sign in or sign up to continue!
-        //   </Text>
-        //   <Button
-        //     onPress={() => {
-        //       // router.push({
-        //       //   pathname: "/sign-in",
-        //       //   params: {
-        //       //     prevRoute: pathname,
-        //       //     prevParams: JSON.stringify(form),
-        //       //   },
-        //       // });
-        //       router.push("/sign-in");
-        //     }}
-        //     size="medium"
-        //     type="secondary"
-        //   >
-        //     Sign In
-        //   </Button>
-        //   <Button
-        //     size="medium"
-        //     type="secondary"
-        //     onPress={() => router.push("/sign-up")}
-        //   >
-        //     Sign Up
-        //   </Button>
-        // </View>
         <Error
           desc="Please authenticate to continue"
           resolution="Sign In"

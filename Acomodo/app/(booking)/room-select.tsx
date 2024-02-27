@@ -5,7 +5,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
@@ -208,7 +207,6 @@ export default function RoomSelect() {
                       <View
                         style={{
                           flexDirection: "row",
-                          // backgroundColor: "purple",
                           width: "100%",
                           justifyContent: "space-between",
                         }}
@@ -225,7 +223,6 @@ export default function RoomSelect() {
                         <View
                           style={{
                             justifyContent: "flex-end",
-                            // backgroundColor: "red",
                             flexDirection: "row",
                             alignItems: "flex-end",
                             alignSelf: "flex-end",
@@ -294,7 +291,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     paddingVertical: 8,
     paddingHorizontal: 16,
-    // backgroundColor: "green",
   },
   cardTitle: {
     fontSize: 22,
@@ -346,7 +342,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingLeft: 2,
     paddingBottom: 1,
-    // paddingRight: 2,
   },
   /** Button */
   btn: {

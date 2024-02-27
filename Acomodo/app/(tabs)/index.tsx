@@ -20,8 +20,6 @@ export default function book() {
   const [nights, setNights] = useState(1);
   const [checkOut, setcheckOut] = useState(new Date(checkIn.valueOf() + DAY));
 
-  useFocusEffect(() => setStatusBarStyle("dark"));
-
   const locale = getLocale();
 
   const onChange = (
@@ -66,7 +64,6 @@ export default function book() {
   };
 
   const handleSearch = () => {
-    // setLoading(true);
     const form = {
       checkInDate: checkIn.valueOf(),
       checkOutDate: checkOut.valueOf(),
@@ -101,7 +98,7 @@ export default function book() {
               onChange(event, selectedDate, "in")
             }
             timeZoneName={"Europe/London"}
-            // minimumDate={new Date(new Date().setHours(0, 0, 0, 0))}
+            minimumDate={new Date(new Date().setHours(0, 0, 0, 0))}
             themeVariant="light"
           />
         ) : (
@@ -115,7 +112,7 @@ export default function book() {
                 onChange: (event, selectedDate) =>
                   onChange(event, selectedDate, "in"),
                 timeZoneName: "Europe/London",
-                // minimumDate: new Date(new Date().setHours(0, 0, 0, 0)),
+                minimumDate: new Date(new Date().setHours(0, 0, 0, 0)),
               });
             }}
           >
@@ -158,7 +155,7 @@ export default function book() {
               onChange(event, selectedDate, "out")
             }
             timeZoneName={"Europe/London"}
-            // minimumDate={new Date(new Date().setHours(22, 0, 0, 0))}
+            minimumDate={new Date(new Date().setHours(22, 0, 0, 0))}
             themeVariant="light"
           />
         ) : (
@@ -172,7 +169,7 @@ export default function book() {
                 onChange: (event, selectedDate) =>
                   onChange(event, selectedDate, "out"),
                 timeZoneName: "Europe/London",
-                // minimumDate: new Date(new Date().setHours(24, 0, 0, 0)),
+                minimumDate: new Date(new Date().setHours(24, 0, 0, 0)),
               });
             }}
           >
@@ -199,19 +196,16 @@ const styles = StyleSheet.create({
   peopleCounter: {
     flexDirection: "row",
     alignItems: "center",
-    // backgroundColor: "green",
     padding: 20,
   },
   startDatePicker: {
     flexDirection: "row",
     alignItems: "center",
-    // backgroundColor: "green",
     padding: 20,
   },
   formItem: {
     flexDirection: "column",
     alignItems: "center",
-    // backgroundColor: "green",
     padding: 20,
   },
   formItemText: {

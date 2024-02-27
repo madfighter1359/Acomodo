@@ -1,30 +1,21 @@
 import {
   Alert,
-  Dimensions,
   Pressable,
   ScrollView,
   StyleSheet,
-  Switch,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { Stack, Tabs, router } from "expo-router";
+import { router } from "expo-router";
 import PrimaryButton from "../../../components/Button";
 import { auth } from "../../../firebase-config";
 import { FirebaseError } from "firebase/app";
-import {
-  AuthCredential,
-  reauthenticateWithCredential,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet/";
 import bottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet";
-import { useSession } from "../../../ctx";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import FeatherIcon from "react-native-vector-icons/Feather";
 import { useHeaderHeight } from "@react-navigation/elements";
 import Loading from "../../../components/Loading";
 
@@ -109,24 +100,12 @@ export default function EditProfile() {
                 </Text>
               </TouchableOpacity>
             </View>
-            {/* <View
-              style={[
-                styles.rowWrapper,
-                styles.rowLast,
-                { alignItems: "center" },
-              ]}
-            >
-              <TouchableOpacity
-                onPress={() => router.push("/sign-up")}
-                style={styles.row}
-              >
-                <Text style={[styles.rowLabel, styles.rowLabelSign]}>
-                  Sign Up
-                </Text>
-              </TouchableOpacity>
-            </View> */}
           </View>
         </View>
+        <Text style={styles.contentFooter}>
+          To edit account details such as email, name, and identity document
+          number, please contact support from the main Profile page
+        </Text>
       </ScrollView>
       <BottomSheet
         ref={bottomSheetRef}
@@ -183,11 +162,6 @@ export default function EditProfile() {
 }
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  // },
   container: {
     padding: 0,
     flexGrow: 1,
@@ -205,10 +179,7 @@ const styles = StyleSheet.create({
     color: "#222",
     marginBottom: 8,
     paddingVertical: 10,
-    // padding: 10,
     textAlign: "center",
-    // width: Dimensions.get("window").width,
-    // backgroundColor: "green",
   },
   inputControl: {
     height: 44,

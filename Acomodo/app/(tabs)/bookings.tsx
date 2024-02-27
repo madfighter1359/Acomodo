@@ -1,5 +1,4 @@
 import {
-  Pressable,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -7,20 +6,16 @@ import {
   TouchableOpacity,
   View,
   Image,
-  ActivityIndicator,
-  Platform,
 } from "react-native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Link, router } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { router } from "expo-router";
 import { useSession } from "../../ctx";
-import { StatusBar, setStatusBarStyle } from "expo-status-bar";
-import { useFocusEffect } from "expo-router";
 import { auth } from "../../firebase-config";
 import GetReservations from "../../components/api/GetReservations";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import Loading from "../../components/Loading";
 import { getLocale } from "../../components/userSettings";
+import Error from "../../components/Error";
 
 interface Reservation {
   checkIn: string;
@@ -37,7 +32,7 @@ interface Reservation {
 }
 
 export default function Index() {
-  const { session, signOut } = useSession();
+  const { session } = useSession();
 
   const locale = getLocale();
 
@@ -49,7 +44,6 @@ export default function Index() {
   const [error, setError] = React.useState(false);
 
   const getBookings = async () => {
-    // console.log("updated");
     console.log(auth.currentUser?.uid);
     auth.currentUser?.getIdToken(false).then((token) => {
       GetReservations({ token: token }).then((data) => {
@@ -61,10 +55,10 @@ export default function Index() {
                 new Date(a.checkIn).valueOf() - new Date(b.checkIn).valueOf()
             )
           );
-          // setBookings(data.reservations);
           if (!loaded) setLoaded(true);
         } else {
           setError(true);
+          if (!loaded) setLoaded(true);
         }
       });
     });
@@ -102,6 +96,7 @@ export default function Index() {
       locationName: locationName,
       roomTypeName: roomType,
       totalPrice: price,
+      roomNr: roomNr,
     };
     router.push({ pathname: "/(booking-info)/booking-details", params: form });
   };
@@ -116,11 +111,18 @@ export default function Index() {
           tintColor={"#94A3B8"}
         />
       }
-      //TODO:
-      indicatorStyle="black"
     >
       {loaded ? (
-        bookings.length >= 1 ? (
+        error ? (
+          <Error
+            desc="There was a problem retrieving your bookings"
+            resolution="Try again"
+            action={() => {
+              setRefreshing(true);
+              onRefresh();
+            }}
+          />
+        ) : bookings.length >= 1 ? (
           bookings.map(
             (
               {
@@ -225,7 +227,6 @@ export default function Index() {
                       <View
                         style={{
                           flexDirection: "row",
-                          // backgroundColor: "purple",
                           width: "100%",
                           justifyContent: "space-between",
                         }}
@@ -238,7 +239,6 @@ export default function Index() {
                         <View
                           style={{
                             justifyContent: "flex-end",
-                            // backgroundColor: "red",
                             flexDirection: "row",
                             alignItems: "flex-end",
                             alignSelf: "flex-end",
@@ -342,7 +342,6 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     padding: 24,
-    // flex: 1,
     flexGrow: 1,
   },
   title: {
@@ -373,7 +372,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     paddingVertical: 8,
     paddingHorizontal: 16,
-    // backgroundColor: "green",
   },
   cardTitle: {
     fontSize: 20,
@@ -425,7 +423,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingLeft: 2,
     paddingBottom: 1,
-    // paddingRight: 2,
   },
   /** Button */
   btn: {
@@ -450,7 +447,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: "green",
   },
   emptyTitle: {
     fontSize: 21,

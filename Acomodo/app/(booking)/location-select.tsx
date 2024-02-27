@@ -117,16 +117,12 @@ export default function LocationSelect() {
                     }
                   >
                     <View style={{}}>
-                      {/* <View style={{ backgroundColor: "grey" }}> */}
                       <Image
                         alt=""
                         resizeMode="cover"
                         source={{ uri: img }}
                         style={[styles.cardImg, rooms < 1 && { opacity: 0.2 }]}
                       />
-
-                      {/* </View> */}
-
                       <View style={styles.cardBody}>
                         <Text style={styles.cardTitle}>{name}</Text>
 
@@ -154,7 +150,6 @@ export default function LocationSelect() {
                         </View>
 
                         <Text style={styles.cardPrice}>
-                          {/* {from {cheapest.toLocaleString(locale)}RON / night} */}
                           {rooms > 0
                             ? `from ${cheapest.toLocaleString(locale, {
                                 currency: "GBP",
@@ -193,14 +188,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "#e3e3e3",
     marginBottom: 16,
-    // opacity: 0.2,
   },
   cardImg: {
     width: "100%",
     height: 180,
     borderRadius: 12,
     marginRight: 16,
-    // opacity: 0.2,
   },
   cardBody: {
     paddingVertical: 16,

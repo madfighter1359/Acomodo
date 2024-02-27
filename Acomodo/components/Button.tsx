@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  Text,
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 
 interface Props {
   size: "xs" | "small" | "medium" | "large" | "xl";
@@ -105,8 +99,6 @@ const styles = StyleSheet.create({
   buttons: {
     alignItems: "center",
     justifyContent: "space-between",
-    // paddingHorizontal: 30,
-    // paddingTop: 20,
   },
   btn: {
     flexDirection: "row",
