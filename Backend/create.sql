@@ -18,10 +18,10 @@ USE acomodo;
 
 -- Do we really want cascade?
 CREATE TABLE location (
-    location_id varchar(3) primary key,
+    location_id varchar(3) primary key not null,
     location_name varchar(64) not null,
-    area varchar(32),
-    image varchar(256)
+    area varchar(32) not null,
+    image varchar(256) not null
 );
 
 INSERT INTO
@@ -41,12 +41,12 @@ VALUES
     );
 
 CREATE TABLE room_type (
-    type_id varchar(3) primary key,
-    type_name varchar(32),
-    capacity int,
-    price int,
-    beds int,
-    image varchar(256)
+    type_id varchar(3) primary key not null,
+    type_name varchar(32) not null,
+    capacity int not null,
+    price int not null,
+    beds int not null,
+    image varchar(256) not null
 );
 
 INSERT INTO
@@ -199,10 +199,10 @@ VALUES
 
 CREATE TABLE guest (
     guest_id int primary key auto_increment,
-    guest_name varchar(64),
-    date_of_birth date,
-    document_number varchar(32),
-    email varchar(128),
+    guest_name varchar(64) not null,
+    date_of_birth date not null,
+    document_number varchar(32) not null,
+    email varchar(128) not null,
     firebase_uid varchar(128),
     unique (firebase_uid)
 );
@@ -213,14 +213,14 @@ VALUES
     ("John Doe", "2000-08-06", "12345678");
 
 CREATE TABLE reservation (
-    reservation_id int primary key auto_increment,
+    reservation_id int primary key not null auto_increment,
     room_number int not null,
     guest_id int not null,
     location_id varchar(3) not null,
     check_in_date date not null,
     check_out_date date not null,
-    number_guests int,
-    price int,
+    number_guests int not null,
+    price int not null,
     foreign key (guest_id) references guest (guest_id) on update cascade on delete cascade,
     foreign key (location_id) references location (location_id) on update cascade on delete cascade
 );
@@ -252,12 +252,12 @@ values
     (13, 1, "ACM", "2024-03-01", "2024-03-06", 2, 250);
 
 CREATE TABLE transaction (
-    transaction_id int primary key auto_increment,
+    transaction_id int primary key not null auto_increment,
     reservation_id int not null,
-    transaction_date date,
-    payment_method varchar(8) CHECK (payment_method IN ("cash", "card", "transfer")),
-    amount int,
-    paid boolean,
+    transaction_date date not null,
+    payment_method varchar(8) not null CHECK (payment_method IN ("cash", "card", "transfer")),
+    amount int not null,
+    paid boolean not null,
     foreign key (reservation_id) references reservation (reservation_id) on update cascade on delete cascade
 );
 

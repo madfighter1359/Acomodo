@@ -15,10 +15,10 @@ class Database
             throw new Exception($e->getMessage());
         }
     }
-    public function select($query = "", $params = [], $param_types = "")
+    public function select($query = "", $params = [], $paramTypes = "")
     {
         try {
-            $stmt = $this->executeStatement($query, $params, $param_types);
+            $stmt = $this->executeStatement($query, $params, $paramTypes);
             $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             $stmt->close();
             return $result;
@@ -29,10 +29,10 @@ class Database
     }
 
     // Returns an array with format [$insertedRows, $insertedId / $errorNr depending on outcome]
-    public function insert($query = "", $params = [], $param_types = "")
+    public function insert($query = "", $params = [], $paramTypes = "")
     {
         try {
-            $stmt = $this->executeStatement($query, $params, $param_types);
+            $stmt = $this->executeStatement($query, $params, $paramTypes);
             if ($stmt->errno) {
 
                 return [0, $stmt->errno];
@@ -46,7 +46,7 @@ class Database
         }
         return [0, null];
     }
-    private function executeStatement($query = "", $params = [], $param_types = "")
+    private function executeStatement($query = "", $params = [], $paramTypes = "")
     {
         try {
             $stmt = $this->connection->prepare($query);
@@ -54,7 +54,7 @@ class Database
                 customError("", "Unable to do prepared statement: " . $query, 500);
             }
             if ($params) {
-                $stmt->bind_param($param_types, ...$params);
+                $stmt->bind_param($paramTypes, ...$params);
             }
             $stmt->execute();
             return $stmt;

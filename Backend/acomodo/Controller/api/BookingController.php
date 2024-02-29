@@ -1,7 +1,7 @@
 <?php
-class BookingController extends BaseController
+class BookingController
 {
-    public function bookAction()
+    public function book()
     {
         if ($_SERVER["REQUEST_METHOD"] !== "POST") {
             customError("method");

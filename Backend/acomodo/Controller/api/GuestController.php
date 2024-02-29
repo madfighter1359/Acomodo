@@ -1,30 +1,26 @@
 <?php
-class GuestController extends BaseController
+class GuestController
 {
     public function newGuest()
     {
         if ($_SERVER["REQUEST_METHOD"] != "POST") {
-            http_response_code(405);
-            die();
+            customError("method");
         }
 
         $validator = new Validation();
         try {
             $userId = $validator->authenticateToken(explode(" ", $_SERVER['HTTP_AUTHORIZATION'])[1]);
         } catch (Throwable $e) {
-            http_response_code(401);
-            die();
+            customError("jwt");
         }
 
         if (!$userId) {
             // arguably should still be 401
-            http_response_code(403);
-            die("Invalid jwt");
+            customError("jwt");
         }
 
         if (!isset($_POST["guestName"], $_POST["guestDoB"], $_POST["guestDocNr"], $_POST["email"])) {
-            http_response_code(400);
-            die();
+            customError("param");
         }
 
         //verify params here
@@ -32,6 +28,21 @@ class GuestController extends BaseController
         $guestDoB = $_POST["guestDoB"];
         $guestDocNr = $_POST["guestDocNr"];
         $email = $_POST["email"];
+
+        $maxDate = (new DateTime('today'))->modify('-18 years');
+        $minDate = (new DateTime('today'))->modify('-125 years');
+
+        if (!$dobFormatted = Validation::toDate($guestDoB)) {
+            customError("date");
+        }
+
+        if ($minDate > $dobFormatted || $maxDate < $dobFormatted) {
+            customError("date");
+        }
+
+        if (!(is_string($guestName) && is_string($guestDocNr) && is_string($email))) {
+            customError("param");
+        }
 
         $guestModel = new GuestModel();
 

@@ -1,0 +1,513 @@
+// Setting up database connection in a class with generic procedures for the different types of statements
+
+DECLARE GLOBAL VARIABLE DB_HOST = "localhost"
+DECLARE GLOBAL VARIABLE DB_USERNAME = "root"
+DECLARE GLOBAL VARIABLE DB_PASSWORD = ""
+DECLARE GLOBAL VARIABLE DB_DATABASENAME = "acomodo"
+
+CLASS Database
+    DELCARE PROTECTED VARIABLE connection = NULL
+    DECLARE FUNCTION constructor()
+        SET SELF.connection TO NEW MYSQLI CONNECTION WITH PARAMETERS (DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASENAME)
+        If an error occurs return a HTTP 500 code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION executeStatement(query: STRING, params?: MIXED[], paramTypes?: STRING)
+        DECLARE VARIABLE statement = PREPARE MYSQLI STATEMENT WITH PARAMETERS (query)
+        If an error occurs return a HTTP 500 code and end the script
+        IF params IS SET THEN
+            BIND TO statement WITH PARAMETERS (paramTypes, params)
+            EXECUTE statement
+            RETURN statement
+        END IF
+        If an error occurs return a HTTP 500 code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION select(query: STRING, params?: MIXED[], paramTypes?: STRING)
+        DECLARE VARIABLE statement = SELF.executeStatement(query, params, paramTypes)
+        DECLARE VARIABLE result = FETCH ALL RESULTS AS ASSOCIATIVE ARRAY FROM statement
+        CLOSE statement
+        RETURN result
+        If an error occurs return a HTTP 500 code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION insert(query: STRING, params?: MIXED[], paramTypes?: STRING)
+        DECLARE VARIABLE statement = SELF.executeStatement(query, params, paramTypes)
+        DECLARE VARIABLE rows = GET AFFECTED ROWS FROM statement
+        DECLARE VARIABLE id = GET INSERTED ID FROM statement
+        CLOSE statement
+        RETURN [rows, id]
+        If an error occurs return a HTTP 500 code and end the script
+    END FUNCTION
+END CLASS
+
+
+
+// Class for executing guest related queries and functions.
+// SQL statement refers to the statement which will be created in implementation based on the query design section
+
+CLASS GuestModel EXTENDS Database
+    DECLARE FUNCTION getGuestId (userId: STRING)
+        DECLARE VARIABLE result = SELF.select(SQL statement, userId, string)
+        IF GET result SIZE = 1 THEN
+            DELCARE VARIABLE id = result[guest id]
+            RETURN id
+        ELSE
+            RETURN FALSE
+        END IF
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION createGuest (userId: STRING, name: STRING, dateOfBirth: STRING, documentNr: STRING, email: STRING)
+        DECLARE VARIABLE created = SELF.insert(SQL statement, userId, name, dateOfBirth, documentNr, email, string, string, string, string, string)
+        IF created IS SUCCESSFULL THEN
+            DELCARE VARIABLE id = created[id]
+            RETURN id
+        ELSE
+            RETURN FALSE
+        END IF
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION getGuestDetails (guestId: STRING)
+        DECLARE VARIABLE result = SELF.select(SQL statement, guestId, string)
+        RETURN result
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+END CLASS
+
+
+
+// Class for executing search related queries and functions.
+// SQL statement refers to the statement which will be created in implementation based on the query design section
+// parameters refers to the parameters passed to the function, and types refers to their types (to avoid over-cluttering the code)
+
+CLASS SearchModel EXTENDS Database
+    DECLARE FUNCTION searchLocation (checkInDate: STRING, checkOutDate: STRING, nrOfGuests: INTEGER)
+        DECLARE VARIABLE result = SELF.select(SQL statement, parameters, types)
+        RETURN result 
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION searchLocationDetailed (checkInDate: STRING, checkOutDate: STRING, nrOfGuests: INTEGER)
+        DECLARE VARIABLE result = SELF.select(SQL statement, parameters, types)
+        RETURN result 
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION getLocationDetails ()
+        DECLARE VARIABLE result = SELF.select(SQL statement)
+        RETURN result
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION getCheapestAndCount (rooms: ROOM[])
+        DECLARE VARIABLE min = MAXIMUM INTEGER VALUE
+        DECLARE VARIABLE counter = 0
+        FOR room IN rooms DO
+            SET min = GET MINIMUM (min, room[price])
+            SET counter = counter + 1
+        NEXT room
+        RETURN [counter, min]
+END CLASS
+
+
+
+
+// Class for executing booking related queries and functions.
+// SQL statement refers to the statement which will be created in implementation based on the query design section
+// parameters refers to the parameters passed to the function, and types refers to their types (to avoid over-cluttering the code)
+
+CLASS BookingModel EXTENDS Database
+    DECLARE FUNCTION verifyReservation (checkInDate: STRING, checkOutDate: STRING, nrOfGuests: INTEGER, price: INTEGER, locationId: STRING, roomType: STRING, nights: INTEGER)
+        DECLARE VARIABLE details = SELF.select(SQL statement, parameters, types)
+        IF GET SIZE details != 1 OR details[nightlyPrice] * nights != price OR an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION makeReservation (checkInDate: STRING, checkOutDate: STRING, nrOfGuests: INTEGER, guestId: STRING, price: INTEGER, locationId: STRING, roomType: STRING, nights: INTEGER)
+        DECLARE roomNr = SELF.verifyReservation(params from function)
+        IF roomNr IS A NUMBER THEN
+            DECLARE VARIABLE booked = SELF.insert(SQL statement, params, types)
+            IF booked IS SUCCESSFULL THEN
+                DELCARE VARIABLE id = booked[id]
+                RETURN [id, roomNr]
+            END IF
+        END IF
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION createTransaction (reservationId: INTEGER, date: STRING, paymentMethod: STRING, amount: INTEGER, paid: BOOLEAN)
+        DECLARE created = SELF.insert(SQL statement, params, types)
+        IF created IS SUCCESSFULL THEN
+            DELCARE VARIABLE id = created[id]
+            RETURN id
+        END IF
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION getReservations (guestId: INTEGER)
+        DECLARE VARIABLE result = SELF.select(SQL statement, parameters, types)
+        RETURN result 
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION getReservationDetails (reservationId: INTEGER)
+        DECLARE VARIABLE result = SELF.select(SQL statement, parameters, types)
+        RETURN result 
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION getRoomTypeName (roomNr: INTEGER, locationId: STRING)
+        DECLARE VARIABLE result = SELF.select(SQL statement, parameters, types)
+        RETURN result 
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION getRoomTypeImage (roomNr: INTEGER, locationId: STRING)
+        DECLARE VARIABLE result = SELF.select(SQL statement, parameters, types)
+        RETURN result 
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION getReservationOwner (reservationId: INTEGER)
+        DECLARE VARIABLE result = SELF.select(SQL statement, parameters, types)
+        RETURN result 
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION getLocationName (locationId: STRING)
+        DECLARE VARIABLE result = SELF.select(SQL statement)
+        RETURN result
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION getTransactionDetails (reservationId: INTEGER)
+        DECLARE VARIABLE result = SELF.select(SQL statement, parameters, types)
+        RETURN result 
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+END CLASS
+
+
+// Class for validating inputs and parameters via type checks, logic checks, and others, as well as
+// functionality for decoding JWT tokens used to identify users
+// {Project identifier} refers to a unique URL which is attributed to the project which generated the JWT token
+
+IMPORT JWT
+
+CLASS Validation
+    DECLARE FUNCTION toDate(value: STRING)
+        RETURN NEW DATE OBJECT (value)
+        If an error occurs RETURN FALSE
+    END FUNCTION
+
+    DECLARE FUNCTION daysBetween(date1: STRING, date2: STRING)
+        RETURN DIFFERNECE BETWEEN (NEW DATE OBJECT(date1), NEW DATE OBJECT(date2))
+        If an error occurs return an appropriate HTTP code and end the script
+    END FUNCTION
+
+    DECLARE FUNCTION validDates(checkIn: STRING, checkOut: STRING, min: DATE, max: DATE, maxNights: INTEGER)
+        DECLARE VARIABLE checkInDate = toDate(checkIn)
+        DECLARE VARIABLE checkOutDate = toDate(checkOut)
+        IF checkInDate IS FALSE OR checkOutDate IS FALSE THEN
+            RETURN FALSE
+        END IF
+        DECLARE VARIABLE isValid = checkInDate >= min AND checkOutDate <= max AND checkInDate < checkOutDate AND SELF.daysBetween(checkIn, checkOut) < maxNights
+        RETURN isValid
+    END FUNCTION
+
+    DECLARE FUNCTION isNumberBetween(value: ANY, min: INTEGER, max: INTEGER)
+        DECLARE VARIABLE isValid = IS AN INTEGER (value) AND min <= value <= max
+        RETURN isValid
+    END FUNCTION
+
+    DECLARE FUNCTION validateDecodedToken(token: TOKEN OBJECT)
+        DECLARE VARIABLE time = GET CURRENT time
+        DECLARE VARIABLE isValid = token.expiry > time AND token.issuedAt < time AND
+            token.issuedBy = {Project identifier} AND token.content IS SET AND token.authTime < time
+        RETURN isValid
+    END FUNCTION
+    
+    DECLARE FUNCTION authenticateToken (jwtToken: STRING)
+        DECLARE VARIABLE publicKeys = GET CONTENTS OF (Firebase JWT public keys webpage)
+        DECLARE VARIABLE decoded = ""
+        
+        FOR key IN publicKeys DO
+            TRY SET decoded = JWT.decode(jwtToken, NEW KEY (key))
+            IF SUCCESSFULL BREAK
+        NEXT key
+
+        IF decoded IS NOT "" AND validateDecodedToken(decoded) IS TRUE THEN
+            RETURN decoded.userId
+        ELSE
+            RETURN FALSE
+        END IF
+    END FUNCTION
+END CLASS
+
+
+
+// Class for processing and responding to requests made for searching for rooms
+IMPORT Validation
+IMPORT SearchModel
+
+CLASS SearchController
+    DECLARE FUNCTION search()
+        IF SERVER REQUEST METHOD != "GET" RETURN INVALID METHOD ERROR
+        IF PARAMETERS (checkInDate, checkOutDate, numberOfPeople) ARE NOT SET RETURN INVALID REQUEST ERROR
+        DECLARE VARIABLE minDate = NEW DATE (TODAY)
+        DECLARE VARIABLE maxDate = NEW DATE (TODAY + 1 YEAR)
+        IF NOT (Validation.validDates(checkInDate, checkOutDate, minDate, maxDate, 16) AND Validation.isNumberBetween(numberOfPeople, 1, 4)) THEN
+            RETURN INVALID REQUEST ERROR
+        END IF
+
+        DECLARE NEW OBJECT response
+        DECLARE ARRAY locations = SearchModel.getLocationDetails()
+        
+        FOR row IN locations DO
+            DECLARE response[row[locationId]] = ATTRIBUTES OF row
+            DECLARE VARIABLE details = SearchModel.searchLocation(checkInDate, checkOutDate, numberOfPeople, row[locationId])
+            SET details TO SearchModel.getCheapestAndCount(details)
+            resonse[row[locationId]] = resonse[row[locationId]] + details
+        NEXT row
+
+        OUTPUT reponse AS JSON
+    END FUNCTION
+
+    DECLARE FUNCTION specificSearch()
+        IF SERVER REQUEST METHOD != "GET" RETURN INVALID METHOD ERROR
+        IF PARAMETERS (checkInDate, checkOutDate, numberOfPeople, locationId) ARE NOT SET RETURN INVALID REQUEST ERROR
+        IF locationId IS NOT IN ["apa", "acm"] RETURN INVALID REQUEST ERROR
+        DECLARE VARIABLE minDate = NEW DATE (TODAY)
+        DECLARE VARIABLE maxDate = NEW DATE (TODAY + 1 YEAR)
+        IF NOT (Validation.validDates(checkInDate, checkOutDate, minDate, maxDate, 16) AND Validation.isNumberBetween(numberOfPeople, 1, 4)) THEN
+            RETURN INVALID REQUEST ERROR
+        END IF
+
+        DECLARE NEW OBJECT response
+        DECLARE ARRAY result = SearchModel.searchLocationDetailed(checkInDate, checkOutDate, numberOfPeople, locationId)
+        
+        FOR row IN result DO
+            DECLARE response[row[typeId]] = ATTRIBUTES OF row
+        NEXT row
+
+        OUTPUT reponse AS JSON
+    END FUNCTION
+END CLASS
+
+
+
+// Class for processing and responding to requests made for guest modification and creation
+IMPORT Validation
+IMPORT GuestModel
+
+CLASS GuestController
+    DECLARE FUNCTION newGuest()
+        IF SERVER REQUEST METHOD != "POST" RETURN INVALID METHOD ERROR
+        IF AUTHENTICATION HEADER IS NOT SET RETURN UNAUTHORIZED ERROR
+        DECLARE VARIABLE userId = Validation.authenticateToken()
+        IF userId IS FALSE RETURN UNAUTHORIZED ERROR
+
+        IF PARAMETERS (guestName, guestDoB, guestDocNr, email) ARE NOT SET RETURN INVALID REQUEST ERROR
+        DECLARE VARIABLE minDate = NEW DATE (TODAY - 125 YEARS)
+        DECLARE VARIABLE maxDate = NEW DATE (TODAY - 18 YEARS)
+        SET guestDoB TO Validation.toDate(guestDoB)
+        IF guestDoB IS FALSE RETURN INVALID REQUEST ERROR
+        IF minDate > guestDoB OR maxDate < guestDoB RETURN INVALID REQUEST ERROR
+        IF ALL OF (guestName, guestDocNr, email) NOT OF TYPE STRING RETURN INVALID REQUEST ERROR
+
+        DECLARE VARIABLE inserted = GuestModel.createGuest(userId, guestName, guestDoB, guestDocNr, email)
+
+        IF inserted IS NOT FALSE THEN
+            DECLARE NEW OBJECT response
+            SET response.status TO "Success"
+            SET response.guestId TO inserted
+            SET response TO response + (userId, guestName, guestDoB, guestDocNr, email)
+            OUTPUT reponse AS JSON
+        ELSE
+            RETURN FAILURE ERROR
+        END IF      
+    END FUNCTION
+END CLASS
+
+
+
+// Class for processing and responding to requests made for reservation creation and retrieval
+IMPORT Validation
+IMPORT BookingModel
+IMPORT GuestModel
+
+CLASS BookingController
+    DECLARE FUNCTION book()
+        IF SERVER REQUEST METHOD != "POST" RETURN INVALID METHOD ERROR
+        IF AUTHENTICATION HEADER IS NOT SET RETURN UNAUTHORIZED ERROR
+        DECLARE VARIABLE userId = Validation.authenticateToken()
+        IF userId IS FALSE RETURN UNAUTHORIZED ERROR
+        DECLARE VARIABLE guestId = BookingModel.getGuestId(userId)
+        IF guestId IS FALSE RETURN UNAUTHORIZED ERROR
+
+        IF PARAMETERS (checkInDate, checkOutDate, numberOfPeople, price, locationId, roomType, paymentMethod, paid) ARE NOT SET RETURN INVALID REQUEST ERROR
+        DECLARE VARIABLE minDate = NEW DATE (TODAY)
+        DECLARE VARIABLE maxDate = NEW DATE (TODAY + 1 YEAR)
+        IF NOT (Validation.validDates(checkInDate, checkOutDate, minDate, maxDate, 16) AND Validation.isNumberBetween(numberOfPeople, 1, 4)) THEN
+            RETURN INVALID REQUEST ERROR
+        END IF
+
+        IF locationId IS NOT IN ["apa", "acm"] OR paid IS NOT IN [0, 1] RETURN INVALID REQUEST ERROR
+
+        IF price IS NOT NUMERIC OR room_type IS NOT STRING WITH LENGTH 3 OR paymentMethod IS NOT STRING WITH MAX LENGTH 32 RETURN INVALID REQUEST ERROR 
+
+        DECLARE VARIABLE nights = Validation.daysBetween(checkInDate, checkOutDate)
+        DECLARE [reservation, roomNr] = DESTRUCTURE ARRAY BookingModel.makeReservation(checkInDate, checkOutDate, guestId, numberOfPeople, price, locationId, roomType, nights) 
+
+        IF reservation IS NOT FALSE THEN
+            DECLARE VARIABLE date = GET TODAY'S DATE
+            DECLARE VARIABLE transaction = BookingModel.createTransaction(reservation, date, paymentMethod, price, paid)
+            IF transaction IS NOT FALSE THEN
+                DECLARE NEW OBJECT response
+                SET response.status TO "Success"
+                SET response.reservationId TO reservation
+                DECLARE OBJECT response.reservation = passed in attributes of reservation
+                SET response.reservation = response.reservation + BookingModel.getRoomTypeName(roomNr, locationId)
+                SET response.reservation = response.reservation + BookingModel.getLocationName(locationId)
+
+                DECLARE guestDetails = GuestModel.getGuestDetails(guestId)
+                SET response.transactionId TO transaction
+                DECLARE OBJECT response.reservation = (date, paymentMethod, guestDetails, paid)
+                OUTPUT reponse AS JSON
+            ELSE
+                RETURN ERROR CREATING
+            END IF
+        ELSE
+            RETURN ERROR CREATING
+        END IF
+    END FUNCTION
+
+    DECLARE FUNCTION getBookings()
+        IF SERVER REQUEST METHOD != "GET" RETURN INVALID METHOD ERROR
+        IF AUTHENTICATION HEADER IS NOT SET RETURN UNAUTHORIZED ERROR
+        DECLARE VARIABLE userId = Validation.authenticateToken()
+        IF userId IS FALSE RETURN UNAUTHORIZED ERROR
+        DECLARE VARIABLE guestId = BookingModel.getGuestId(userId)
+        IF guestId IS FALSE RETURN UNAUTHORIZED ERROR
+
+        DECLARE VARIABLE results = BookingModel.getBookings(guestId)
+        DECLARE NEW OBJECT response
+        DECLARE ARRAY response.reservations
+        
+        FOR row IN result DO
+            DECLARE NEW OBJECT reservation = ATTRIBUTES OF row
+            SET reservation = reservation + BookingModel.getRoomTypeName(row[roomNr], row[locationId])
+            ADD reservation TO END OF response.reservations
+        NEXT row
+        OUTPUT reponse AS JSON
+    END FUNCTION
+
+    DECLARE FUNCTION getBookingDetails(reservationId: INTEGER)
+        IF SERVER REQUEST METHOD != "GET" RETURN INVALID METHOD ERROR
+        IF AUTHENTICATION HEADER IS NOT SET RETURN UNAUTHORIZED ERROR
+        IF NOT Validation.isNumberBetween(reservationId, 0, 10000000) RETURN INVALID REQUEST ERROR
+
+        DECLARE VARIABLE userId = Validation.authenticateToken()
+        IF userId IS FALSE RETURN UNAUTHORIZED ERROR
+        DECLARE VARIABLE guestId = BookingModel.getGuestId(userId)
+        IF guestId IS FALSE RETURN UNAUTHORIZED ERROR
+
+        DECLARE VARIABLE reservationOwner = BookingModel.getReservationOwner(reservationId)
+        IF reservationOwner != guestId RETURN UNAUTHORIZED ERROR
+
+        DECLARE VARIABLE results = BookingModel.getReservationDetails(reservationId)
+        DECLARE VARIABLE roomImage = BookingModel.getRoomTypeImage(results[roomNr], results[locationId])
+
+        DECLARE NEW OBJECT response
+        SET response.roomNr = results[roomNr]
+        SET response.image = roomImage
+        OUTPUT reponse AS JSON
+    END FUNCTION
+
+    DECLARE FUNCTION getTransactionDetails(reservationId: INTEGER)
+        IF SERVER REQUEST METHOD != "GET" RETURN INVALID METHOD ERROR
+        IF AUTHENTICATION HEADER IS NOT SET RETURN UNAUTHORIZED ERROR
+        IF NOT Validation.isNumberBetween(reservationId, 0, 10000000) RETURN INVALID REQUEST ERROR
+
+        DECLARE VARIABLE userId = Validation.authenticateToken()
+        IF userId IS FALSE RETURN UNAUTHORIZED ERROR
+        DECLARE VARIABLE guestId = BookingModel.getGuestId(userId)
+        IF guestId IS FALSE RETURN UNAUTHORIZED ERROR
+
+        DECLARE VARIABLE reservationOwner = BookingModel.getReservationOwner(reservationId)
+        IF reservationOwner != guestId RETURN UNAUTHORIZED ERROR
+
+        DECLARE VARIABLE transaction = BookingModel.getTransactionDetails(reservationId)
+        DECLARE VARIABLE guestInfo = GuestModel.getGuestDetails(guestId)
+
+        DECLARE NEW OBJECT response = ATTRIBUTES OF transaction
+        SET response = response + ATTRIBUTES OF guestInfo
+        OUTPUT reponse AS JSON
+    END FUNCTION
+END CLASS
+
+
+// index file for handling and routing requests
+IMPORT SearchController, BookingController, GuestController
+
+DECLARE FUNCTION resolveUrl(urlArr: STRING[])
+    IF INDEX 1, 2, 3 of urlArr ARE SET AND THE CORRECT ADDDRESS OF THE MAIN SERVER THEN
+        SWITCH urlArr[3]
+            CASE "search"
+                IF urlArr[4] IS SET THEN
+                    SWITCH urlArr[4]
+                        CASE "details"
+                            SearchController.specificSearch()
+                            RETURN TRUE
+                        END CASE
+                    END SWITCH
+                    RETURN FALSE
+                ELSE
+                    SearchController.search()
+                    RETURN TRUE
+                END IF
+            END CASE
+            CASE "book"
+                BookingController.book()
+                RETURN TRUE
+            END CASE
+            CASE "signup"
+                GuestController.newGuest()
+                RETURN TRUE
+            END CASE
+            CASE "guest"
+                IF urlArr[4] IS SET THEN
+                    SWITCH urlArr[4]
+                        CASE "bookings"
+                            IF urlArr[5] IS SET THEN
+                                IF urlArr[6] IS SET THEN
+                                    SWITCH urlArr[6]
+                                        CASE "transaction"
+                                            BookingController.getTransactionDetails($urlArr[5])
+                                            RETURN TRUE
+                                        END CASE
+                                    END SWITCH
+                                    RETURN FALSE
+                                END IF
+                                BookingController.getBookingDetails($urlArr[5])
+                                RETURN TRUE
+                            END IF
+                            BookingController.getBookings()
+                            RETURN TRUE
+                        END CASE
+                    END SWITCH
+                    RETURN FALSE
+                ELSE
+                    RETURN FALSE
+                END IF
+            END CASE
+        END SWITCH
+        RETURN FALSE
+END FUNCTION
+
+DECLARE VARIABLE url = GET URL OF REQUEST
+DECLARE ARRAY urlArray = PARSE url INTO ARRAY OF SEGMENTS
+
+DECLARE VARIABLE resolved = EXECUTE AND GET RETURN VALUE OF resolveUrl(urlArray)
+IF resolved IS FALSE RETURN NOT FOUND ERROR

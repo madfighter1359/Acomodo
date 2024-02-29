@@ -1,8 +1,8 @@
 <?php
-class SearchController extends BaseController
+class SearchController
 {
 
-    public function searchAction()
+    public function search()
     {
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
 

@@ -77,14 +77,14 @@ function resolveUrl($uriArr)
                 } else {
                     require PROJECT_ROOT_PATH . "/Controller/api/SearchController.php";
                     $objFeedController = new SearchController();
-                    $objFeedController->searchAction();
+                    $objFeedController->search();
                     return true;
                 }
 
             case "book":
                 require PROJECT_ROOT_PATH . "/Controller/api/BookingController.php";
                 $objFeedController = new BookingController();
-                $objFeedController->bookAction();
+                $objFeedController->book();
                 return true;
             case "signup":
                 require PROJECT_ROOT_PATH . "/Controller/api/GuestController.php";
