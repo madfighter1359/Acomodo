@@ -99,6 +99,13 @@ export default function book() {
             }
             timeZoneName={"Europe/London"}
             minimumDate={new Date(new Date().setHours(0, 0, 0, 0))}
+            maximumDate={
+              new Date(
+                new Date(new Date().setHours(-24, 0, 0, 0)).setFullYear(
+                  new Date().getFullYear() + 1
+                )
+              )
+            }
             themeVariant="light"
           />
         ) : (
@@ -113,6 +120,11 @@ export default function book() {
                   onChange(event, selectedDate, "in"),
                 timeZoneName: "Europe/London",
                 minimumDate: new Date(new Date().setHours(0, 0, 0, 0)),
+                maximumDate: new Date(
+                  new Date(new Date().setHours(-24, 0, 0, 0)).setFullYear(
+                    new Date().getFullYear() + 1
+                  )
+                ),
               });
             }}
           >
@@ -155,7 +167,14 @@ export default function book() {
               onChange(event, selectedDate, "out")
             }
             timeZoneName={"Europe/London"}
-            minimumDate={new Date(new Date().setHours(22, 0, 0, 0))}
+            minimumDate={new Date(new Date().setHours(24, 0, 0, 0))}
+            maximumDate={
+              new Date(
+                new Date(new Date().setHours(0, 0, 0, 0)).setFullYear(
+                  new Date().getFullYear() + 1
+                )
+              )
+            }
             themeVariant="light"
           />
         ) : (
@@ -170,6 +189,11 @@ export default function book() {
                   onChange(event, selectedDate, "out"),
                 timeZoneName: "Europe/London",
                 minimumDate: new Date(new Date().setHours(24, 0, 0, 0)),
+                maximumDate: new Date(
+                  new Date(new Date().setHours(0, 0, 0, 0)).setFullYear(
+                    new Date().getFullYear() + 1
+                  )
+                ),
               });
             }}
           >

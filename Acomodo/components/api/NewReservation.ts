@@ -67,7 +67,7 @@ export default async function NewReservation({
           case "No rooms available":
             return [
               false,
-              "There was an error booking your room. It seems there are no longer any avaiable rooms which match your request.",
+              "There was an error booking your room. It seems there are no longer any available rooms which match your request.",
             ];
             break;
           case "Price mismatch":

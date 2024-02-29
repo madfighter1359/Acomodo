@@ -16,6 +16,7 @@ CREATE DATABASE acomodo;
 
 USE acomodo;
 
+-- Do we really want cascade?
 CREATE TABLE location (
     location_id varchar(3) primary key,
     location_name varchar(64) not null,
@@ -220,8 +221,8 @@ CREATE TABLE reservation (
     check_out_date date not null,
     number_guests int,
     price int,
-    foreign key (guest_id) references guest (guest_id),
-    foreign key (location_id) references location (location_id)
+    foreign key (guest_id) references guest (guest_id) on update cascade on delete cascade,
+    foreign key (location_id) references location (location_id) on update cascade on delete cascade
 );
 
 INSERT INTO
@@ -257,7 +258,7 @@ CREATE TABLE transaction (
     payment_method varchar(8) CHECK (payment_method IN ("cash", "card", "transfer")),
     amount int,
     paid boolean,
-    foreign key (reservation_id) references reservation (reservation_id)
+    foreign key (reservation_id) references reservation (reservation_id) on update cascade on delete cascade
 );
 
 INSERT INTO

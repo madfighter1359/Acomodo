@@ -212,10 +212,10 @@ export default function ViewDetails() {
               <View style={styles.overlayContent}>
                 <View style={styles.overlayContentTop}>
                   <Text style={styles.overlayContentPrice}>
-                    {(+form.totalPrice).toLocaleString(locale, {
+                    {`${(+form.totalPrice).toLocaleString(locale, {
                       currency: "GBP",
                       style: "currency",
-                    })}
+                    })} total`}
                   </Text>
                 </View>
               </View>

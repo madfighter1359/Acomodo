@@ -135,7 +135,7 @@ export default function SignIn() {
           <View style={styles.formAction}>
             <TouchableOpacity onPress={handleSignIn}>
               <View style={styles.btn}>
-                <Text style={styles.btnText}>Sign in</Text>
+                <Text style={styles.btnText}>Sign In</Text>
               </View>
             </TouchableOpacity>
           </View>

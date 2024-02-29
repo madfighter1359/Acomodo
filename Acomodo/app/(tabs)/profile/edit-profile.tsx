@@ -104,7 +104,7 @@ export default function EditProfile() {
         </View>
         <Text style={styles.contentFooter}>
           To edit account details such as email, name, and identity document
-          number, please contact support from the main Profile page
+          number, please contact support from the general Profile page
         </Text>
       </ScrollView>
       <BottomSheet

@@ -23,7 +23,6 @@ class Database
             $stmt->close();
             return $result;
         } catch (Exception $e) {
-            // trigger_error($e);
             customError($e, $e->getMessage(), 500);
         }
         return false;

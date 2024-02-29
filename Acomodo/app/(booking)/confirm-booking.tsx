@@ -14,6 +14,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { getLocale } from "../../components/userSettings";
 import Error from "../../components/Error";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 export default function ConfirmBooking() {
   const form = useLocalSearchParams();
@@ -76,12 +77,7 @@ export default function ConfirmBooking() {
                 </Swiper>
               </View>
 
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
-                style={styles.picker}
-              >
+              <View style={styles.picker}>
                 <FeatherIcon color="#000" name="calendar" size={18} />
 
                 <View style={styles.pickerDates}>
@@ -93,6 +89,8 @@ export default function ConfirmBooking() {
                     })}
                   </Text>
 
+                  <FontAwesome6 name="arrow-right" size={15} />
+
                   <Text style={styles.pickerDatesText}>
                     {new Date(+form.checkOutDate).toLocaleDateString(locale, {
                       day: "numeric",
@@ -101,13 +99,7 @@ export default function ConfirmBooking() {
                     })}
                   </Text>
                 </View>
-
-                <View style={styles.pickerAction}>
-                  <Text style={styles.pickerActionText}>Change</Text>
-
-                  <FeatherIcon color="#4C6CFD" name="chevron-right" size={18} />
-                </View>
-              </TouchableOpacity>
+              </View>
               <View style={styles.info}>
                 <Text style={styles.infoTitle}>{form.locationName}</Text>
 
@@ -157,10 +149,10 @@ export default function ConfirmBooking() {
             <View style={styles.overlayContent}>
               <View style={styles.overlayContentTop}>
                 <Text style={styles.overlayContentPrice}>
-                  {(+form.totalPrice).toLocaleString(locale, {
+                  {`${(+form.totalPrice).toLocaleString(locale, {
                     currency: "GBP",
                     style: "currency",
-                  })}
+                  })} total`}
                 </Text>
               </View>
 
@@ -292,13 +284,18 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: "#fff",
   },
   pickerDates: {
     marginLeft: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignContent: "space-between",
+    paddingLeft: 10,
+    paddingRight: 10,
+    flex: 1,
   },
   pickerDatesText: {
     fontSize: 13,

@@ -157,7 +157,7 @@ export default function SignUp() {
       <View style={styles.header}>
         <Text style={styles.title}>Getting Started</Text>
 
-        <Text style={styles.subtitle}>Create an account to continue</Text>
+        <Text style={styles.subtitle}>Create your account below</Text>
       </View>
 
       <KeyboardAwareScrollView>
@@ -206,6 +206,11 @@ export default function SignUp() {
                     new Date().setFullYear(new Date().getFullYear() - 18)
                   )
                 }
+                minimumDate={
+                  new Date(
+                    new Date().setFullYear(new Date().getFullYear() - 125)
+                  )
+                }
                 style={styles.datePicker}
                 themeVariant="light"
               />
@@ -228,6 +233,9 @@ export default function SignUp() {
                       timeZoneName: "Europe/London",
                       maximumDate: new Date(
                         new Date().setFullYear(new Date().getFullYear() - 18)
+                      ),
+                      minimumDate: new Date(
+                        new Date().setFullYear(new Date().getFullYear() - 125)
                       ),
                     });
                   }}

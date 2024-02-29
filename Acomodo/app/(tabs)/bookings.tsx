@@ -203,7 +203,6 @@ export default function Index() {
                       </View>
 
                       <Text style={styles.cardPrice}>
-                        <Text>total </Text>
                         <Text style={styles.cardPriceCurrency}>
                           {(0)
                             .toLocaleString("en-GB", {
@@ -231,11 +230,11 @@ export default function Index() {
                           justifyContent: "space-between",
                         }}
                       >
-                        <TouchableOpacity onPress={() => {}}>
+                        {/* <TouchableOpacity onPress={() => {}}>
                           <View style={styles.btn}>
                             <Text style={styles.btnText}>Re-book</Text>
                           </View>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <View
                           style={{
                             justifyContent: "flex-end",
@@ -243,6 +242,7 @@ export default function Index() {
                             alignItems: "flex-end",
                             alignSelf: "flex-end",
                             display: "flex",
+                            // marginLeft: "auto",
                           }}
                         >
                           <Text
@@ -262,6 +262,7 @@ export default function Index() {
                             #{reservationId}
                           </Text>
                         </View>
+                        <FontAwesome6 name="chevron-right" />
                       </View>
                     </View>
                   </View>
