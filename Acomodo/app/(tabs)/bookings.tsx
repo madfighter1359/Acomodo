@@ -44,7 +44,6 @@ export default function Index() {
   const [error, setError] = React.useState(false);
 
   const getBookings = async () => {
-    console.log(auth.currentUser?.uid);
     auth.currentUser?.getIdToken(false).then((token) => {
       GetReservations({ token: token }).then((data) => {
         if (data !== false) {

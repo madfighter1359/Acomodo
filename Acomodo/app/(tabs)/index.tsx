@@ -27,7 +27,6 @@ export default function book() {
     selectedDate: Date | undefined,
     type: "in" | "out"
   ) => {
-    console.log(selectedDate);
     if (selectedDate) {
       if (type === "in") {
         setCheckIn(selectedDate);

@@ -176,7 +176,7 @@ export default function ViewDetails() {
 
                       <FeatherIcon color="#4c6cfd" name="star" size={15} />
 
-                      <Text style={styles.infoRatingText}>(Booking.com)</Text>
+                      {/* <Text style={styles.infoRatingText}>(Rating site)</Text> */}
                     </View>
                   </View>
                   <View style={styles.stats}>

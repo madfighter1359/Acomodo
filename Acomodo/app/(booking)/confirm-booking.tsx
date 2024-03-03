@@ -108,14 +108,8 @@ export default function ConfirmBooking() {
 
                   <FeatherIcon color="#4c6cfd" name="star" size={15} />
 
-                  <Text style={styles.infoRatingText}>(Booking.com)</Text>
+                  {/* <Text style={styles.infoRatingText}>(Rating site)</Text> */}
                 </View>
-
-                {/* <Text style={styles.infoDescription}>
-                      Model S Dual Motor All-Wheel Drive unlocks more range than
-                      any other vehicle in our current lineup, with insane power
-                      and maximum control.
-                    </Text> */}
               </View>
               <View style={styles.stats}>
                 {items.map((row, rowIndex) => (

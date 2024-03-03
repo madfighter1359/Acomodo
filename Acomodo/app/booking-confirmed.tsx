@@ -16,7 +16,6 @@ import { shareAsync } from "expo-sharing";
 
 export default function ConfirmScreen() {
   const form = useLocalSearchParams<any>();
-  console.log(form);
   const locale = getLocale();
 
   const createPDF = async () => {

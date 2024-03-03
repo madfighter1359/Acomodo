@@ -10,7 +10,7 @@ interface SettingsState {
 const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
-      locale: "ro-RO",
+      locale: "en-GB",
       setLocale: (locale) => set(() => ({ locale: locale })),
     }),
     {

@@ -5,18 +5,16 @@ import { router } from "expo-router";
 import { ScrollView, TouchableOpacity, Switch } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { useSettingsStore } from "../../../components/userSettings";
+import { useSettingsStore, getLocale } from "../../../components/userSettings";
 
 export default function Profile() {
   const { session, signOut } = useSession();
-  const [darkMode, setDarkMode] = useState(false);
+  // const [darkMode, setDarkMode] = useState(false);
 
   const setLocaleGlobal = useSettingsStore((state) => state.setLocale);
-  const getLocaleGlobal = useSettingsStore((state) => state.locale);
+  const [locale, setLocale] = useState(getLocale());
 
-  const [locale, setLocale] = useState(getLocaleGlobal);
-
-  const handleChangeLanguage = () => {
+  const handleChangeRegion = () => {
     if (locale == "ro-RO") {
       setLocaleGlobal("en-GB");
       setLocale("en-GB");
@@ -111,10 +109,7 @@ export default function Profile() {
             </View> */}
 
             <View style={[styles.rowWrapper, styles.rowFirst, styles.rowLast]}>
-              <TouchableOpacity
-                onPress={handleChangeLanguage}
-                style={styles.row}
-              >
+              <TouchableOpacity onPress={handleChangeRegion} style={styles.row}>
                 <Text style={styles.rowLabel}>Region</Text>
 
                 <View style={styles.rowSpacer} />

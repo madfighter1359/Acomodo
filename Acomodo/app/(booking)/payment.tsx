@@ -41,7 +41,7 @@ export default function Payment() {
   const [paid, setPaid] = React.useState(false);
   const form = useLocalSearchParams();
 
-  const handlePay = () => {
+  const handleConfirm = () => {
     setLoading(true);
     auth.currentUser
       ?.getIdToken(true)
@@ -162,7 +162,7 @@ export default function Payment() {
             </Text>
           </View>
           <View style={{ paddingTop: 100 }}>
-            <Button onPress={handlePay} size={"xl"}>
+            <Button onPress={handleConfirm} size={"xl"}>
               {value == 0 ? "Book" : "Pay"} now!
             </Button>
           </View>

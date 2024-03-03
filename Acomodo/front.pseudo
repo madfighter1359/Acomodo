@@ -1,0 +1,426 @@
+// Functions for sending requests to "backend" PHP scripts
+
+// Get availability in all locations function
+
+DECLARE FUNCTION SearchForRoom(checkInDate: DATE, checkOutDate: DATE, nrOfPeople: INTEGER)
+    CONVERT checkInDate, checkOutDate TO STRING
+    DECLARE VARIABLE response = SEND HTTP GET REQUEST TO SERVER (corresponding to the the search() function in the PHP scripts) WITH PARAMETERS (checkInDate, checkOutDate,nrOfPeople)
+    IF ERROR IN response THEN
+        RETURN [FALSE, DETAILS OF ERROR]
+    ELSE
+        RETURN [TRUE, response DATA]
+    END IF
+END FUNCTION
+
+
+// Get details of specific location availability
+
+DECLARE FUNCTION SearchLocation(checkInDate: DATE, checkOutDate: DATE, nrOfPeople: INTEGER, locationId: STRING)
+    CONVERT checkInDate, checkOutDate TO STRING
+    DECLARE VARIABLE response = SEND HTTP GET REQUEST TO SERVER (corresponding to the the specificSearch() function in the PHP scripts) WITH PARAMETERS (checkInDate, checkOutDate,nrOfPeople, locationId)
+    IF ERROR IN response THEN
+        RETURN [FALSE, DETAILS OF ERROR]
+    ELSE
+        RETURN [TRUE, response DATA]
+    END IF
+END FUNCTION
+
+
+// Create a new guest
+
+DECLARE FUNCTION NewGuest(authToken: STRING, guestName: STRING, guestDateOfBirth: DATE, guestDocNr: STRING, email: STRING)
+    CONVERT guestDateOfBirth TO STRING
+    DECLARE VARIABLE response = SEND HTTP POST REQUEST TO SERVER (corresponding to the the newGuest() function in the PHP scripts) WITH PARAMETERS (guestName, guestDateOfBirth, guestDocNr, email) AND AUTHORIZATION authToken
+    IF ERROR IN response THEN
+        RETURN DETAILS OF ERROR
+    ELSE
+        RETURN TRUE
+    END IF
+END FUNCTION
+
+
+// Create a new reservation
+
+DECLARE FUNCTION NewReservation(authToken: STRING, checkInDate: DATE, checkOutDate: DATE, nrOfPeople: INTEGER, price: INTEGER, locationId: STRING, roomType: STRING, paymentMethod: STRING, paid: BOOLEAN)
+    CONVERT checkInDate, checkOutDate TO STRING
+    DECLARE VARIABLE response = SEND HTTP POST REQUEST TO SERVER (corresponding to the the book() function in the PHP scripts) WITH PARAMETERS (checkInDate, checkOutDate, numberOfPeople, price, locationId, roomType, paymentMethod, paid) AND AUTHORIZATION authToken
+    IF ERROR IN response THEN
+        RETURN [false, DETAILS OF ERROR]
+    ELSE
+        RETURN [TRUE, DETAILS OF RESPONSE (including reservation and transaction details)]
+    END IF
+END FUNCTION
+
+
+// Get a user's bookings
+
+DECLARE FUNCTION GetReservations(authToken: STRING)
+    CONVERT checkInDate, checkOutDate TO STRING
+    DECLARE VARIABLE response = SEND HTTP GET REQUEST TO SERVER (corresponding to the the getBookings() function in the PHP scripts) WITH AUTHORIZATION authToken
+    IF ERROR IN response THEN
+        RETURN FALSE
+    ELSE
+        RETURN response DATA
+    END IF
+END FUNCTION
+
+
+// Get details of a specific booking
+
+DECLARE FUNCTION GetDetails(authToken: STRING, reservationId: INTEGER)
+    DECLARE VARIABLE response = SEND HTTP GET REQUEST TO SERVER (corresponding to the the getBookingDetails() function in the PHP scripts) WITH PARAMETERS (reservationId) AND WITH AUTHORIZATION authToken
+    IF ERROR IN response THEN
+        RETURN FALSE
+    ELSE
+        RETURN response DATA
+    END IF
+END FUNCTION
+
+
+// Get the transaction associated with a specific booking
+
+DECLARE FUNCTION GetTransaction(authToken: STRING, reservationId: INTEGER)
+    DECLARE VARIABLE response = SEND HTTP GET REQUEST TO SERVER (corresponding to the the getTransactionDetails() function in the PHP scripts) WITH PARAMETERS (reservationId) AND WITH AUTHORIZATION authToken
+    IF ERROR IN response THEN
+        RETURN FALSE
+    ELSE
+        RETURN response DATA
+    END IF
+END FUNCTION
+
+
+
+// Functionality for setting and persisting user settings in the application
+
+DECLARE useSettingsStore = CREATE A PERSISTING STORAGE OBJECT WITH DEFAULT LOCALE VALUE "en-GB" AND A SET FUNCTION AND FUNCTIONALITY TO PERSIST IN LOCAL STORAGE
+DECLARE FUNCTION getLocale()?
+    GET LOCALE FROM useSettingsStore
+END FUNCTION
+EXPORT getLocale, useSettingsStore
+
+
+// Home screen logic (search for available rooms screen)
+IMPORT getLocale
+
+DECLARE VARIABLE people = 1
+DECLARE VARIABLE checkIn = GET CURRENT DATE
+DECLARE VARIABLE nights = 1
+DECLARE VARIABLE checkOut = GET CURRENT DATE + 1 DAY
+DECLARE VARIABLE locale = getLocale()
+
+// Handles date selection in date pickers
+DECLARE FUNCTION onChange(selectedDate: DATE, type: "in" OR "out")
+    IF type = "in" THEN
+        SET checkIn = selectedDate
+        IF checkOut <= selectedDate THEN
+            SET checkOut = selectedDate + 1 DAY
+            SET nights = 1
+        ELSE
+            IF checkOut - selectedDate IN DAYS > 15 THEN
+                SET nights = checkOut - selectedDate IN DAYS
+            ELSE
+                SET checkOut = selectedDate + 15 DAYS
+                SET nights = 15
+            END IF
+    ELSE
+        SET checkOut = selectedDate
+        IF checkIn >= selectedDate THEN
+            SET checkIn = selectedDate - 1 DAY
+            SET nights = 1
+        ELSE
+            IF selectedDate - checkIn IN DAYS > 15 THEN
+                SET nights = selectedDate - checkIn IN DAYS
+            ELSE
+                SET checkIn = selectedDate - 15 DAYS
+                SET nights = 15
+            END IF
+    END IF
+END FUNCTION
+
+DECLARE FUNCTION handleSearch()
+    SEND TO location-select SCREEN WITH PARAMETERS (checkIn, checkOut, people, nights)
+END FUNCTION
+
+RENDER SCREEN AS PER WIREFRAME
+
+
+
+
+// location-select screen logic
+
+IMPORT SearchForRoom
+
+GET VARIABLES checkIn, checkOut, people, nights FROM PREVIOUS SCREEN
+DECLARE ARRAY items = []
+DECLARE VARIABLE error = FALSE
+
+DECLARE VARIABLE result = SearchForRoom(checkIn, checkOut, people)
+IF result[0] IS TRUE THEN
+    FOR item IN result[1] DO
+        SET items = items + item
+    NEXT item
+ELSE
+    SET error = TRUE
+END IF
+
+DECLARE FUNCTION handleSelect(locationId: STRING, locationName: STRING)
+    SEND TO room-select SCREEN WITH PARAMETERS (checkIn, checkOut, people, nights, locationId, locationName)
+END FUNCTION
+
+RENDER SCREEN AS PER WIREFRAME
+
+
+
+// room-select screen logic
+IMPORT SearchLocation
+
+GET VARIABLES checkIn, checkOut, people, nights, locationId, locationName FROM PREVIOUS SCREEN
+DECLARE ARRAY items = []
+DECLARE VARIABLE error = FALSE
+
+DECLARE VARIABLE result = SearchLocation(checkIn, checkOut, people, locationId)
+IF result[0] IS TRUE THEN
+    FOR item IN result[1] DO
+        SET items = items + item
+    NEXT item
+    SORT items IN ORDER OF price ASCENDING
+ELSE
+    SET error = TRUE
+END IF
+
+DECLARE FUNCTION handleBook(roomTypeId: STRING, roomTypeName: STRING, roomImage: STRING, price: INTEGER, beds: INTEGER)
+    SEND TO confirm-booking SCREEN WITH PARAMETERS (checkIn, checkOut, people, nights, locationId, locationName, roomTypeId, roomTypeName, roomImage, price, beds)
+END FUNCTION
+
+RENDER SCREEN AS PER WIREFRAME
+
+
+
+// confirm-booking screen logic
+GET VARIABLES checkIn, checkOut, people, nights, locationId, locationName, roomTypeId, roomTypeName, roomImage, price, beds FROM PREVIOUS SCREEN
+DECLARE ARRAY items = [?]
+
+DECLARE FUNCTION handlePay(roomTypeId: STRING, roomTypeName: STRING, roomImage: STRING, price: INTEGER, beds: INTEGER)
+    SEND TO payment SCREEN WITH PARAMETERS (checkIn, checkOut, people, nights, locationId, locationName, roomTypeId, roomTypeName, roomImage, price, beds)
+END FUNCTION
+
+IF CURRENTLY AUTHENTICATED USER != NULL THEN
+    RENDER SCREEN AS PER WIREFRAME
+ELSE 
+    REDNER AUTHENTICATION ERROR MESSAGE SCREEN AS PER WIREFRAME
+
+// payment screen logic
+GET VARIABLES checkIn, checkOut, people, nights, locationId, locationName, roomTypeId, roomTypeName, roomImage, price, beds FROM PREVIOUS SCREEN
+DECLARE ARRAY items = [details of payment method options]
+
+DECLARE FUNCTION handleConfirm()
+    GET authToken FROM CURRENTLY AUTHENTICATED USER
+    DECLARE VARIABLE result = NewReservation(authToken, checkIn, checkOut, people, price, locationId, roomTypeId, paymentMethod, paid)?
+    IF result[0] IS FALSE THEN
+        ALERT USER OF ERROR result[1]
+        OFFER OPTION TO RESTART BOOKING THAT TAKES BACK TO HOME SCREEN
+    ELSE
+        SEND TO booking-confirmed SCREEN WITH ALL PARAMETERS RETURNED IN result
+    END IF
+END FUNCTION
+
+RENDER SCREEN AS PER WIREFRAME
+
+
+// booking-confirmed screen logic
+// Screen is used both for newly made reservations and for viewing old ones, and renders slightly differently accordingly
+
+GET PARAMETERS FROM PREVIOUS SCREEN AS form
+
+DECLARE FUNCTION createPDF()
+    DECLARE VARIABLE html = HTML REPRESENTATION OF CONFIRMATION SCREEN
+    CREATE PDF FILE FROM HTML
+    OPEN DEVICE SHARE MENU WITH FILE
+END FUNCTION
+
+IF form.oldReservation IS TRUE THEN
+    RENDER SCREEN AS PER WIREFRAME USING PARAMETERS
+ELSE
+    RENDER SCREEN AS PER WIREFRAME USING PARAMETERS?
+END IF
+
+
+
+// authentication functions
+IMPORT NewGuest
+
+DECLARE FUNCTION signUp(email: STRING, password: STRING, displayName: STRING, documentNr: STRING, dateOfBirth: Date)
+    CREATE USER WITH FIREBASE AUTHENTICATION SERVER WITH PARAMETERS (email, password)
+    SET USER displayName TO displayName
+    GET USER TOKEN AS authToken
+    DECLARE VARIABLE result = NewGuest(authToken, displayName, dateOfBirth, documentNr, email)
+    IF result IS FALSE THEN
+        DELETE CURRENT USER ACCOUNT
+        RETURN ERROR STATUS
+    ELSE
+        SET CURRENT USER TO NEW USER
+        RETURN TRUE
+    END IF
+    IF ANY ERROR OCCURS RETURN FALSE
+END FUNCTION
+
+DECLARE FUNCTION signIn(email: STRING, password: STRING)
+    SIGN IN WITH FIREBASE AUTHENTICATION SERVER WITH PARAMETERS (email, password)
+    SET CURRENT USER TO NEWLY SIGNED IN USER
+    RETURN TRUE
+    IF ANY ERROR OCCURS RETURN FALSE
+END FUNCTION
+
+DECLARE FUNCTION signOut()
+    SIGN OUT WITH FIREBASE AUTHENTICATION SERVER
+    SET CURRENT USER TO NULL
+END FUNCTION
+
+
+// sign-up screen logic
+IMPORT signUp
+
+IF THERE IS A CURRENTLY AUTHENTICATED USER REDIRECT TO PREVIOUS SCREEN
+
+IF SET GET email FROM PREVIOUS SCREEN
+DECLARE VARIABLE fullname = ""
+IF NOT SET DECLARE VARIABLE email = ""
+DECLARE VARIABLE docNr = ""
+DECLARE VARIABLE dateOfBirth = GET CURRENT DATE -18 YEARS
+DECLARE VARIABLE password = ""
+DECLARE VARIABLE confirmPassword = ""
+
+DECLARE FUNCTION handleSignUp()
+    IF email, fullname, docNr, date, password, confirmPassword ARE ALL SET THEN
+        IF LENGTH(password) < 6 THEN
+            ALERT USER OF SHORT PASSWORD AND TELL THEM TO RETRY
+            RETURN
+        END IF
+        IF password = confirmPassword THEN
+            DECLARE VARIABLE result = signUp(email, password, fullname, docNr, dateOfBirth)
+            IF result IS TRUE THEN
+                GO BACK AND DISPLAY SUCCESS MESSAGE
+            ELSE
+                DISPLAY APPROPRIATE ERROR MESSAGE AND ALLOW USER TO RETRY
+            END IF
+        ELSE
+            DISPLAY APPROPRIATE ERROR MESSAGE AND ALLOW USER TO RETRY
+        END IF
+    ELSE
+        DISPLAY APPROPRIATE ERROR MESSAGE AND ALLOW USER TO RETRY
+    END IF
+END FUNCTION
+
+RENDER SCREEN AS PER WIREFRAME USING PARAMETERS?
+
+
+// sign-in screen logic
+IMPORT singIn
+
+IF THERE IS A CURRENTLY AUTHENTICATED USER REDIRECT TO PREVIOUS SCREEN
+
+IF SET GET email FROM PREVIOUS SCREEN
+IF NOT SET DECLARE VARIABLE email = ""
+DECLARE VARIABLE password = ""
+
+DECLARE FUNCTION handleSignIn()
+    IF email AND password ARE SET THEN
+        DECLARE VARIABLE result = signIn(email, password)
+        IF result IS TRUE THEN
+            GO BACK AND DISPLAY SUCCESS MESSAGE
+        ELSE
+            DISPLAY APPROPRIATE ERROR MESSAGE AND ALLOW USER TO RETRY
+        END IF
+    ELSE
+        DISPLAY APPROPRIATE ERROR MESSAGE AND ALLOW USER TO RETRY
+    END IF
+END FUNCTION
+
+RENDER SCREEN AS PER WIREFRAME USING PARAMETERS?
+
+
+// bookings screen logic
+IMPORT GetReservations
+
+DECLARE ARRAY bookings = []
+
+DECLARE FUNCTION getBookings()
+    GET TOKEN OF CURRENT USER AS authToken
+    DECLARE VARIABLE result = GetReservations(token)
+    IF result IS NOT FALSE THEN
+        SET bookings = result SORTED BY checkInDate ASCENDNING
+    END IF
+END FUNCTION
+
+getBookings()
+
+DECLARE FUNCTION handleViewDetails(reservationId: INTEGER, roomType: STRING, roomNr: INTEGER checkIn: STRING, checkOut: STRING, nrGuests: INTEGER, price: INTEGER, locationName: STRING)
+    SEND USER TO booking-details SCREEN WITH ALL PARAMETERS
+END FUNCTION
+
+RENDER SCREEN AS PER WIREFRAME USING PARAMETERS?
+
+
+// booking-details screen logic
+IMPORT GetDetails, GetTransaction
+
+GET PARAMETERS FROM PREVIOUS SCREEN AS form
+DECLARE ARRAY items = []?
+
+GET TOKEN OF CURRENT USER AS authToken
+DECLARE VARIABLE data = GetDetails(authToken, form.reservationId)
+IF data IS NOT FALSE THEN
+    DECLARE VARIABLE image = data.image
+END IF
+
+DECLARE FUNCTION handleViewConfirmation()
+    GET TOKEN OF CURRENT USER AS authToken
+    DECLARE VARIABLE data = GetTransaction(authToken, form.reservationId)
+    IF data IS NOT FALSE THEN
+        SEND USER TO booking-confirmed SCREEN WITH ALL PARAMETERS FROM data AND form
+    END IF
+END FUNCTION
+
+RENDER SCREEN AS PER WIREFRAME USING PARAMETERS?
+
+
+
+// profile screen logic
+
+IMPORT getLocale, useSettingsStore
+
+DECLARE FUNCTION setLocale() = USE useSettingsStore TO GET locale SETTING FUNCTION
+DECLARE VARIABLE locale = getLocale()
+
+DECLARE FUNCTION handleChangeRegion()
+    IF locale = "ro-RO" THEN
+        setLocale("en-GB")
+        SET locale = "en-GB"
+    ELSE
+        setLocale("ro-RO")
+        SET locale = "ro-RO"
+    END IF
+END FUNCTION
+
+RENDER SCREEN AS PER WIREFRAME USING PARAMETERS?
+ANNOTATE WIREFRAME WITH FUNCTION NAMES?
+
+
+// edit-profile screen logic
+
+DECLARE VARIABLE password = ""
+
+DECLARE FUNCTION handleDelete(password: STRING)
+    IF password IS NOT SET THEN
+        OPEN MODAL POP UP (to get password confirmation)
+    ELSE IF password = ""
+        ALERT USER TO ENTER A PASSWORD
+    ELSE
+        REAUTHENTICATE USER WITH FIREBASE AUTHENTICATION SERVER
+        REQUEST ACCOUNT DELETION FROM FIREBASE AUTHENTICATION SERVER
+        IF SUCCESSFULL DISPLAY SUCCESS MESSAGE AND NAVIGATE USER BACK TO profile PAGE
+        IF UNSUCCESSFULL DISPLAY APPROPRIATE ERROR MESSAGE AND ALLOW USER TO RETRY
+    END IF
+END FUNCTION
+
+link all functions with buttons and etc through wireframe. what about map function tho?
