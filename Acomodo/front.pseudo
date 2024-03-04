@@ -200,7 +200,7 @@ RENDER SCREEN AS PER WIREFRAME
 GET VARIABLES checkIn, checkOut, people, nights, locationId, locationName, roomTypeId, roomTypeName, roomImage, price, beds FROM PREVIOUS SCREEN
 DECLARE ARRAY items = [?]
 
-DECLARE FUNCTION handlePay(roomTypeId: STRING, roomTypeName: STRING, roomImage: STRING, price: INTEGER, beds: INTEGER)
+DECLARE FUNCTION handlePay()
     SEND TO payment SCREEN WITH PARAMETERS (checkIn, checkOut, people, nights, locationId, locationName, roomTypeId, roomTypeName, roomImage, price, beds)
 END FUNCTION
 
@@ -354,7 +354,7 @@ END FUNCTION
 
 getBookings()
 
-DECLARE FUNCTION handleViewDetails(reservationId: INTEGER, roomType: STRING, roomNr: INTEGER checkIn: STRING, checkOut: STRING, nrGuests: INTEGER, price: INTEGER, locationName: STRING)
+DECLARE FUNCTION handleViewDetails(reservationId: INTEGER, roomType: STRING, roomNr: INTEGER, checkIn: STRING, checkOut: STRING, nrGuests: INTEGER, price: INTEGER, locationName: STRING)
     SEND USER TO booking-details SCREEN WITH ALL PARAMETERS
 END FUNCTION
 
@@ -387,7 +387,7 @@ RENDER SCREEN AS PER WIREFRAME USING PARAMETERS?
 
 // profile screen logic
 
-IMPORT getLocale, useSettingsStore
+IMPORT getLocale, useSettingsStore, signOut
 
 DECLARE FUNCTION setLocale() = USE useSettingsStore TO GET locale SETTING FUNCTION
 DECLARE VARIABLE locale = getLocale()
@@ -410,7 +410,7 @@ ANNOTATE WIREFRAME WITH FUNCTION NAMES?
 
 DECLARE VARIABLE password = ""
 
-DECLARE FUNCTION handleDelete(password: STRING)
+DECLARE FUNCTION handleDelete(password: STRING <optional>)
     IF password IS NOT SET THEN
         OPEN MODAL POP UP (to get password confirmation)
     ELSE IF password = ""

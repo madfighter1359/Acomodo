@@ -190,8 +190,8 @@ END CLASS
 
 
 // Class for validating inputs and parameters via type checks, logic checks, and others, as well as
-// functionality for decoding JWT tokens used to identify users
-// {Project identifier} refers to a unique URL which is attributed to the project which generated the JWT token
+// functionality for decoding JW tokens used to identify users
+// {Project identifier} refers to a unique URL which is attributed to the project which generated the JW token
 
 IMPORT JWT
 
@@ -228,12 +228,12 @@ CLASS Validation
         RETURN isValid
     END FUNCTION
     
-    DECLARE FUNCTION authenticateToken (jwtToken: STRING)
+    DECLARE FUNCTION authenticateToken (jwToken: STRING)
         DECLARE VARIABLE publicKeys = GET CONTENTS OF (Firebase JWT public keys webpage)
         DECLARE VARIABLE decoded = ""
         
         FOR key IN publicKeys DO
-            TRY SET decoded = JWT.decode(jwtToken, NEW KEY (key))
+            TRY SET decoded = JWT.decode(jwToken, NEW KEY (key))
             IF SUCCESSFULL BREAK
         NEXT key
 
