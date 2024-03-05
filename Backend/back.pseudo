@@ -60,7 +60,7 @@ CLASS GuestModel EXTENDS Database
 
     DECLARE FUNCTION createGuest (userId: STRING, name: STRING, dateOfBirth: STRING, documentNr: STRING, email: STRING)
         DECLARE VARIABLE created = SELF.insert(SQL statement, userId, name, dateOfBirth, documentNr, email, string, string, string, string, string)
-        IF created IS SUCCESSFULL THEN
+        IF created IS SUCCESSFUL THEN
             DELCARE VARIABLE id = created[id]
             RETURN id
         ELSE
@@ -128,7 +128,7 @@ CLASS BookingModel EXTENDS Database
         DECLARE roomNr = SELF.verifyReservation(params from function)
         IF roomNr IS A NUMBER THEN
             DECLARE VARIABLE booked = SELF.insert(SQL statement, params, types)
-            IF booked IS SUCCESSFULL THEN
+            IF booked IS SUCCESSFUL THEN
                 DELCARE VARIABLE id = booked[id]
                 RETURN [id, roomNr]
             END IF
@@ -138,7 +138,7 @@ CLASS BookingModel EXTENDS Database
 
     DECLARE FUNCTION createTransaction (reservationId: INTEGER, date: STRING, paymentMethod: STRING, amount: INTEGER, paid: BOOLEAN)
         DECLARE created = SELF.insert(SQL statement, params, types)
-        IF created IS SUCCESSFULL THEN
+        IF created IS SUCCESSFUL THEN
             DELCARE VARIABLE id = created[id]
             RETURN id
         END IF
@@ -234,7 +234,7 @@ CLASS Validation
         
         FOR key IN publicKeys DO
             TRY SET decoded = JWT.decode(jwToken, NEW KEY (key))
-            IF SUCCESSFULL BREAK
+            IF SUCCESSFUL BREAK
         NEXT key
 
         IF decoded IS NOT "" AND validateDecodedToken(decoded) IS TRUE THEN
