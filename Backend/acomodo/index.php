@@ -1,4 +1,5 @@
 <?php
+// Custom error functions to override built-in error handling, for easier and more reusable throwing of specific errors
 function customError($preset, $msg = "", $code = 500)
 {
     switch ($preset) {
@@ -46,19 +47,25 @@ function defaultError($errno, $errstr)
 }
 
 set_error_handler("defaultError");
-// register_shutdown_function("fatalHandler");
 
+// Setting the response headers to allow other devices on the local network to access the API
 header("Access-Control-Allow-Headers: Authorization, *");
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
+
+// Load set up file
 require __DIR__ . "/inc/bootstrap.php";
 
+// Set error reporting and defaul time zone
 mysqli_report(MYSQLI_REPORT_OFF);
 ini_set('display_errors', 1);
 date_default_timezone_set("UTC");
+
+// Get full request path
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uriArr = explode('/', $uri);
 
+// Function for parsing the request URL and calling the appropriate action
 function resolveUrl($uriArr)
 {
     if (isset($uriArr[1], $uriArr[2], $uriArr[3]) && $uriArr[1] == "backend" && $uriArr[2] == "acomodo") {
@@ -125,6 +132,7 @@ function resolveUrl($uriArr)
     }
 }
 
+// Call the resolving function and if there are no matches return error
 if (!resolveUrl($uriArr)) {
     http_response_code(404);
     exit();

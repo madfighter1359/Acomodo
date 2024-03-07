@@ -2,6 +2,7 @@
 class Database
 {
     protected $connection = null;
+    // Constructor function which initializes the database connection when a new object is instantiated
     public function __construct()
     {
         try {
@@ -15,6 +16,7 @@ class Database
             throw new Exception($e->getMessage());
         }
     }
+    // Generic function for executing select queries
     public function select($query = "", $params = [], $paramTypes = "")
     {
         try {
@@ -28,6 +30,7 @@ class Database
         return false;
     }
 
+    // Generic function for executing insert queries
     // Returns an array with format [$insertedRows, $insertedId / $errorNr depending on outcome]
     public function insert($query = "", $params = [], $paramTypes = "")
     {
@@ -46,6 +49,7 @@ class Database
         }
         return [0, null];
     }
+    // Generic function for executing any MySQL query
     private function executeStatement($query = "", $params = [], $paramTypes = "")
     {
         try {

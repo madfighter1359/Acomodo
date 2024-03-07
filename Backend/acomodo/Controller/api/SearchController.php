@@ -4,9 +4,10 @@ class SearchController
 
     public function search()
     {
+        // Checking request method
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
-            //Retrieve search params
+            // Check that correct search parameters are set and retrieve them
             if (!isset($_GET["checkInDate"], $_GET["checkOutDate"], $_GET["numberOfPeople"])) {
                 customError("param");
             }
@@ -15,6 +16,7 @@ class SearchController
             $checkOut = $_GET["checkOutDate"];
             $nrGuests = $_GET["numberOfPeople"];
 
+            // Setting acceptable date range and checking that the dates fall within this and are valid
             $minDate = new DateTime('today');
             $maxDate = (new DateTime('today'))->modify('+1 year');
 
@@ -22,6 +24,7 @@ class SearchController
                 customError("date");
             }
 
+            // Checking that the guest count is valid
             if (!Validation::isNumberBetween($nrGuests, 1, 4)) {
                 customError("guest");
             }
@@ -36,6 +39,7 @@ class SearchController
 
             // Iterate through each location
             foreach ($locations as $row) {
+                // Add results to response object
                 $response->{$row["location_id"]} = new stdClass();
                 $response->{$row["location_id"]}->locationName = $row["location_name"];
                 $response->{$row["location_id"]}->area = $row["area"];
@@ -44,11 +48,13 @@ class SearchController
                 // Use the search function with the current location and the passed params
                 $details = $searchModel->searchLocation($checkIn, $checkOut, $nrGuests, strtolower($row["location_id"]));
                 $details = $searchModel->getCheapestAndCount($details);
+
                 // Add results to response object
                 $response->{$row["location_id"]}->available = $details[0];
                 $response->{$row["location_id"]}->cheapest = $details[1];
             }
 
+            // Return response, formatted as JSON
             echo json_encode($response);
 
         }
@@ -57,22 +63,24 @@ class SearchController
 
     public function specificSearch()
     {
+        // Checking request method
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
+            // Check that correct search parameters are set and retrieve them
             if (!isset($_GET["checkInDate"], $_GET["checkOutDate"], $_GET["numberOfPeople"], $_GET["locationId"])) {
                 customError("param");
             }
-
-            //Retrieve search params
             $checkIn = $_GET["checkInDate"];
             $checkOut = $_GET["checkOutDate"];
             $nrGuests = $_GET["numberOfPeople"];
             $locationId = $_GET["locationId"];
 
+            // Validate location id
             if (!in_array(strtolower($locationId), ["apa", "acm"])) {
                 customError("param");
             }
 
+            // Setting acceptable date range and checking that the dates fall within this and are valid
             $minDate = new DateTime('today');
             $maxDate = (new DateTime('today'))->modify('+1 year');
 
@@ -80,6 +88,7 @@ class SearchController
                 customError("date");
             }
 
+            // Checking that the guest count is valid
             if (!Validation::isNumberBetween($nrGuests, 1, 4)) {
                 customError("guest");
             }
