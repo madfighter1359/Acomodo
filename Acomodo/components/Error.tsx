@@ -1,15 +1,9 @@
-import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import {
-  StyleSheet,
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-} from "react-native";
-import FeatherIcon from "react-native-vector-icons/Feather";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 
+// Parameters for Error component
 interface Props {
   desc?: string;
   resolution?: string;
@@ -18,6 +12,8 @@ interface Props {
   action2?: () => void;
 }
 
+// Displays an error message based on the given parameters, if not given uses default values
+// Component template from https://withfra.me, purely for stylstic purposes (all functionality added by me)
 export default function Error({
   desc = "An unkown error occured",
   resolution = "Go home",
@@ -49,20 +45,23 @@ export default function Error({
           </View>
         </TouchableOpacity>
 
-        {resolution2 && (
-          <TouchableOpacity onPress={action2}>
-            <View style={styles.btn}>
-              <Text style={styles.btnText}>{resolution2}</Text>
+        {
+          // Conditionally display a second option for handling the error (if one is set)
+          resolution2 && (
+            <TouchableOpacity onPress={action2}>
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>{resolution2}</Text>
 
-              <FontAwesome6
-                color="#fff"
-                name="circle-arrow-right"
-                size={18}
-                style={{ marginLeft: 12 }}
-              />
-            </View>
-          </TouchableOpacity>
-        )}
+                <FontAwesome6
+                  color="#fff"
+                  name="circle-arrow-right"
+                  size={18}
+                  style={{ marginLeft: 12 }}
+                />
+              </View>
+            </TouchableOpacity>
+          )
+        }
       </View>
     </View>
   );

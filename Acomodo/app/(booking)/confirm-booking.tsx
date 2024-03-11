@@ -22,6 +22,7 @@ export default function ConfirmBooking() {
 
   const locale = getLocale();
 
+  // Format that booking details will be displayed in
   const items = [
     [
       { label: "Room type", value: form.typeName },
@@ -38,6 +39,7 @@ export default function ConfirmBooking() {
   ];
   const IMAGES = [form.roomImage.toString()];
 
+  // Takes in the selected room and passes it to the next screen for detail review
   const handlePay = () => {
     const params = {
       checkInDate: form.checkInDate,
@@ -50,6 +52,7 @@ export default function ConfirmBooking() {
     router.push({ pathname: "/payment", params: params });
   };
 
+  // Component template from https://withfra.me, purely for stylstic purposes (all functionality added by me)
   return (
     <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
       {session ? (
@@ -77,11 +80,11 @@ export default function ConfirmBooking() {
                 </Swiper>
               </View>
 
-              <View style={styles.picker}>
+              <View style={styles.datesContainer}>
                 <FeatherIcon color="#000" name="calendar" size={18} />
 
-                <View style={styles.pickerDates}>
-                  <Text style={[styles.pickerDatesText, { marginBottom: 2 }]}>
+                <View style={styles.dates}>
+                  <Text style={[styles.datesText, { marginBottom: 2 }]}>
                     {new Date(+form.checkInDate).toLocaleDateString(locale, {
                       day: "numeric",
                       month: "long",
@@ -91,7 +94,7 @@ export default function ConfirmBooking() {
 
                   <FontAwesome6 name="arrow-right" size={15} />
 
-                  <Text style={styles.pickerDatesText}>
+                  <Text style={styles.datesText}>
                     {new Date(+form.checkOutDate).toLocaleDateString(locale, {
                       day: "numeric",
                       month: "long",
@@ -107,34 +110,38 @@ export default function ConfirmBooking() {
                   <Text style={styles.infoRatingLabel}>9.7</Text>
 
                   <FeatherIcon color="#4c6cfd" name="star" size={15} />
-
-                  {/* <Text style={styles.infoRatingText}>(Rating site)</Text> */}
                 </View>
               </View>
-              <View style={styles.stats}>
-                {items.map((row, rowIndex) => (
-                  <View
-                    key={rowIndex}
-                    style={[
-                      styles.statsRow,
-                      rowIndex === 0 && { borderTopWidth: 0 },
-                    ]}
-                  >
-                    {row.map(({ label, value }, index) => (
-                      <View
-                        key={index}
-                        style={[
-                          styles.statsItem,
-                          index === 0 && { borderLeftWidth: 0 },
-                        ]}
-                      >
-                        <Text style={styles.statsItemText}>{label}</Text>
+              <View style={styles.details}>
+                {
+                  // Formatting the details rows
+                  items.map((row, rowIndex) => (
+                    <View
+                      key={rowIndex}
+                      style={[
+                        styles.detailsRow,
+                        rowIndex === 0 && { borderTopWidth: 0 },
+                      ]}
+                    >
+                      {
+                        // Formatting each entry within a row
+                        row.map(({ label, value }, index) => (
+                          <View
+                            key={index}
+                            style={[
+                              styles.detailsItem,
+                              index === 0 && { borderLeftWidth: 0 },
+                            ]}
+                          >
+                            <Text style={styles.detailsItemText}>{label}</Text>
 
-                        <Text style={styles.statsItemValue}>{value}</Text>
-                      </View>
-                    ))}
-                  </View>
-                ))}
+                            <Text style={styles.detailsItemValue}>{value}</Text>
+                          </View>
+                        ))
+                      }
+                    </View>
+                  ))
+                }
               </View>
             </ScrollView>
           </View>
@@ -142,7 +149,7 @@ export default function ConfirmBooking() {
           <View style={styles.overlay}>
             <View style={styles.overlayContent}>
               <View style={styles.overlayContentTop}>
-                <Text style={styles.overlayContentPrice}>
+                <Text style={styles.overlayContentTotal}>
                   {`${(+form.totalPrice).toLocaleString(locale, {
                     currency: "GBP",
                     style: "currency",
@@ -150,7 +157,7 @@ export default function ConfirmBooking() {
                 </Text>
               </View>
 
-              <Text style={styles.overlayContentTotal}>
+              <Text style={styles.overlayContentPrice}>
                 {`${(+form.totalPrice / +form.numberOfNights).toLocaleString(
                   locale,
                   { currency: "GBP", style: "currency" }
@@ -193,23 +200,6 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     flexBasis: 0,
   },
-  /** Header */
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  headerAction: {
-    width: 40,
-    height: 40,
-    alignItems: "flex-start",
-    justifyContent: "center",
-  },
-  headerTitle: {
-    fontSize: 19,
-    fontWeight: "600",
-    color: "#000",
-  },
   /** Photos */
   photos: {
     marginTop: 12,
@@ -217,34 +207,6 @@ const styles = StyleSheet.create({
     height: 240,
     overflow: "hidden",
     borderRadius: 12,
-  },
-  photosTop: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 2,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-  photosTopItem: {
-    width: 40,
-    height: 40,
-    borderRadius: 9999,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    elevation: 3,
   },
   photosPagination: {
     position: "absolute",
@@ -270,8 +232,8 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 240,
   },
-  /** Picker */
-  picker: {
+  /** Dates */
+  datesContainer: {
     marginTop: 12,
     paddingVertical: 14,
     paddingHorizontal: 20,
@@ -282,7 +244,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#fff",
   },
-  pickerDates: {
+  dates: {
     marginLeft: 12,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -291,21 +253,9 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     flex: 1,
   },
-  pickerDatesText: {
+  datesText: {
     fontSize: 13,
     fontWeight: "500",
-  },
-  pickerAction: {
-    marginLeft: "auto",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  pickerActionText: {
-    fontSize: 16,
-    lineHeight: 21,
-    fontWeight: "600",
-    color: "#4c6cfd",
   },
   /** Info */
   info: {
@@ -334,33 +284,20 @@ const styles = StyleSheet.create({
     color: "#000",
     marginRight: 2,
   },
-  infoRatingText: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: "#8e8e93",
-    marginLeft: 2,
-  },
-  infoDescription: {
-    fontWeight: "400",
-    fontSize: 13,
-    lineHeight: 18,
-    letterSpacing: -0.078,
-    color: "#8e8e93",
-  },
-  /** Stats */
-  stats: {
+  /** Details */
+  details: {
     marginTop: 12,
     backgroundColor: "#fff",
     borderRadius: 20,
     overflow: "hidden",
   },
-  statsRow: {
+  detailsRow: {
     flexDirection: "row",
     backgroundColor: "#fff",
     borderTopWidth: 1,
     borderColor: "#f5f5f5",
   },
-  statsItem: {
+  detailsItem: {
     flexGrow: 2,
     flexShrink: 1,
     flexBasis: 0,
@@ -371,14 +308,14 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderColor: "#f5f5f5",
   },
-  statsItemText: {
+  detailsItemText: {
     fontSize: 13,
     fontWeight: "400",
     lineHeight: 18,
     color: "#8e8e93",
     marginBottom: 4,
   },
-  statsItemValue: {
+  detailsItemValue: {
     fontSize: 16,
     fontWeight: "600",
     lineHeight: 20,
@@ -416,23 +353,13 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     marginBottom: 2,
   },
-  overlayContentPriceBefore: {
-    fontSize: 16,
-    lineHeight: 21,
-    fontWeight: "600",
-    color: "#8e8e93",
-    marginRight: 4,
-    textDecorationLine: "line-through",
-    textDecorationColor: "#8e8e93",
-    textDecorationStyle: "solid",
-  },
-  overlayContentPrice: {
+  overlayContentTotal: {
     fontSize: 21,
     lineHeight: 26,
     fontWeight: "700",
     color: "#000",
   },
-  overlayContentTotal: {
+  overlayContentPrice: {
     fontSize: 13,
     lineHeight: 18,
     fontWeight: "600",

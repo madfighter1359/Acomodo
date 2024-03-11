@@ -1,18 +1,15 @@
 import React from "react";
-import {
-  StyleSheet,
-  SafeAreaView,
-  View,
-  TouchableOpacity,
-  Text,
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 
+// Parameters for counter component (a function for when the plus button is pressed and one for the minus button)
 interface Props {
   inc: () => void;
   dec: () => void;
   value: number;
 }
 
+// Simple counter component, functionality is given when it is actually used
+// Component template from https://withfra.me, purely for stylstic purposes (all functionality added by me)
 export default function Counter({ inc, dec, value }: Props) {
   return (
     <View style={styles.counter}>

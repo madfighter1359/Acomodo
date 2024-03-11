@@ -100,6 +100,7 @@ export default function RoomSelect() {
     });
   }, []);
 
+  // Component template from https://withfra.me, purely for stylstic purposes (all functionality added by me)
   return (
     <View style={{ flex: 1 }}>
       {loading ? (
@@ -117,6 +118,7 @@ export default function RoomSelect() {
           <Text style={styles.title}>Rooms</Text>
 
           {items.map(
+            // Formatting the output, taking each result and displaying it as a pressable tile
             (
               {
                 img,
@@ -149,7 +151,7 @@ export default function RoomSelect() {
                       <Text>
                         <Text style={styles.cardTitle}>{type}</Text>
                         {"\n"}
-                        <Text style={styles.cardAirport}>{capacity} PERS</Text>
+                        <Text style={styles.cardPers}>{capacity} PERS</Text>
                       </Text>
 
                       <View style={styles.cardRow}>
@@ -298,7 +300,7 @@ const styles = StyleSheet.create({
     color: "#173153",
     marginRight: 8,
   },
-  cardAirport: {
+  cardPers: {
     fontSize: 13,
     fontWeight: "600",
     color: "#5f697d",

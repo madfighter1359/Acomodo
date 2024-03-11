@@ -1,19 +1,13 @@
-import {
-  ActivityIndicator,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Platform, Text, View } from "react-native";
 import React from "react";
 
+// Displays a simple loading icon
 export default function Loading() {
   return (
     <View
       style={{
         justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: "purple",
         flex: 1,
       }}
     >
@@ -26,5 +20,3 @@ export default function Loading() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({});

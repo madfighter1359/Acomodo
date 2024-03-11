@@ -1,6 +1,7 @@
 import axios from "axios";
 import { BASE_URL } from "../../constants/URL";
 
+// Parameters of function
 interface Props {
   checkIn: number;
   checkOut: number;
@@ -28,9 +29,9 @@ export default async function SearchLocation({
         locationId: locId,
       },
     });
-    // console.log(response.data);
     return [response.status, response.data];
   } catch (e) {
+    // Handle errors
     if (axios.isAxiosError(e)) {
       console.log(e);
       return [e.response?.status, null];

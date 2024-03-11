@@ -7,7 +7,7 @@ interface Props {
 
 export default async function GetReservations({ token }: Props) {
   console.log(token);
-  // Attempt to add reservation to DB by POSTing to API
+  // Attempt to retrieve results for query from database by calling API
   try {
     const response = await axios({
       method: "GET",
@@ -19,16 +19,10 @@ export default async function GetReservations({ token }: Props) {
     });
     return response.data;
   } catch (e) {
+    // Handle errors
     if (axios.isAxiosError(e)) {
-      if (e.response?.data.message) {
-        switch (e.response.data.message) {
-          default:
-            return false;
-        }
-      } else {
-        console.log(e.response?.status);
-        return false;
-      }
+      console.log(e.response?.data, e.response?.status);
+      return false;
     }
     console.log(e);
     return false;

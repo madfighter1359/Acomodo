@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 
+// Button component parameters, allow for styling and functionality
 interface Props {
   size: "xs" | "small" | "medium" | "large" | "xl";
   type?: "primary" | "secondary";
@@ -9,6 +10,8 @@ interface Props {
   color?: string;
 }
 
+// Button component with default type value
+// Component template from https://withfra.me, purely for stylstic purposes (all functionality added by me)
 export default function PrimaryButton({
   onPress,
   size,
@@ -16,6 +19,7 @@ export default function PrimaryButton({
   color,
   children,
 }: Props) {
+  // Styles for different button sizes
   const sizes = {
     xs: {
       paddingVertical: 6,
@@ -49,6 +53,7 @@ export default function PrimaryButton({
     },
   };
 
+  // Colours for the two button types
   const colors = {
     primary: {
       backgroundColor: "#0569FF",
@@ -62,6 +67,7 @@ export default function PrimaryButton({
     },
   };
 
+  // Conditionally style the button and render it
   return (
     <View style={styles.buttons}>
       <TouchableOpacity onPress={onPress}>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { BASE_URL } from "../../constants/URL";
 
+// Parameters for function
 interface Props {
   token: string;
   checkInDate: number;
@@ -49,6 +50,7 @@ export default async function NewReservation({
         paid: paid ? 1 : 0,
       },
     });
+    // If successful, return details
     if (response.data.status == "Success") {
       return [
         true,
@@ -60,6 +62,7 @@ export default async function NewReservation({
     }
     return [false, "An unkown error occured."];
   } catch (e) {
+    // Handle errors, returning a an appropriate error message to be displayed
     if (axios.isAxiosError(e)) {
       console.log(e.response?.data.message);
       if (e.response?.data.message) {

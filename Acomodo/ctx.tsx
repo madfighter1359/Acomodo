@@ -11,6 +11,7 @@ import {
 import NewGuest from "./components/api/NewGuest";
 import { FirebaseError } from "firebase/app";
 
+// Type for authentication context
 interface AuthContextProps {
   signUp: (
     email: string,
@@ -24,7 +25,7 @@ interface AuthContextProps {
   session?: User | null;
 }
 
-// ???
+// Initial state for authentication context
 const AuthContext = React.createContext<AuthContextProps>({
   signUp: async (
     email: string,
@@ -38,6 +39,7 @@ const AuthContext = React.createContext<AuthContextProps>({
   session: null,
 });
 
+// Function for accessing the authentication context
 export function useSession() {
   const value = React.useContext(AuthContext);
   if (process.env.NODE_ENV !== "production") {
@@ -49,17 +51,15 @@ export function useSession() {
   return value;
 }
 
+// Component that will wrap entire app, allowing access to authentication
 export function SessionProvider(props: React.PropsWithChildren) {
   const [session, setSession] = React.useState<User | null>(auth.currentUser);
   const [initializing, setInitializing] = React.useState(true);
-  const [backendWaiting, setBackendWaiting] = React.useState(false);
   const backendWaitingRef = React.useRef(false);
 
   React.useEffect(() => {
     const subscriber = onAuthStateChanged(auth, (user) => {
-      // console.log("subscriber ran");
       if (!backendWaitingRef.current) {
-        // console.log("subscriber setting session", user);
         setSession(user);
         if (initializing) setInitializing(false);
       }
@@ -70,6 +70,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
   return (
     <AuthContext.Provider
       value={{
+        // Sign up function
         signUp: async (
           email: string,
           password: string,
@@ -78,6 +79,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
           dateOfBirth: Date
         ) => {
           try {
+            // Create the new user and get their id token
             backendWaitingRef.current = true;
             const userCredential = await createUserWithEmailAndPassword(
               auth,
@@ -87,6 +89,8 @@ export function SessionProvider(props: React.PropsWithChildren) {
             const user = userCredential.user;
             await updateProfile(user, { displayName: displayName });
             const token = await user?.getIdToken(true);
+
+            // Send the token and details to the PHP script
             const code = await NewGuest({
               token: token,
               guestName: displayName,
@@ -98,6 +102,8 @@ export function SessionProvider(props: React.PropsWithChildren) {
             backendWaitingRef.current = false;
 
             console.log(code);
+
+            // If an error occurs, abort
             if (code != 200) {
               await deleteUser(user);
               return "backendError";
@@ -107,6 +113,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
             return true;
           } catch (e) {
             if (e instanceof FirebaseError) {
+              // Handle errors
               const errorCode = e.code;
               const errorMessage = e.message;
               console.log(errorCode, errorMessage);
@@ -116,17 +123,21 @@ export function SessionProvider(props: React.PropsWithChildren) {
             return false;
           }
         },
+        // Sign in function
         signIn: async (email: string, password: string) => {
           try {
+            // Attempt to authenticate the user
             const userCredential = await signInWithEmailAndPassword(
               auth,
               email,
               password
             );
             const user = userCredential.user;
+            // If successful, set current user to the user that signed in
             setSession(user);
             return true;
           } catch (e) {
+            // Handle errors
             if (e instanceof FirebaseError) {
               const errorCode = e.code;
               const errorMessage = e.message;
@@ -136,6 +147,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
             return false;
           }
         },
+        // Sign out function
         signOut: () => {
           auth.signOut();
           setSession(null);

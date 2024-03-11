@@ -9,6 +9,7 @@ import NewReservation from "../../components/api/NewReservation";
 import { auth } from "../../firebase-config";
 import Loading from "../../components/Loading";
 
+// Array of payment methods, including availablity
 const items = [
   {
     label: "Cash at reception",
@@ -41,6 +42,7 @@ export default function Payment() {
   const [paid, setPaid] = React.useState(false);
   const form = useLocalSearchParams();
 
+  // Attempts to create new booking
   const handleConfirm = () => {
     setLoading(true);
     auth.currentUser

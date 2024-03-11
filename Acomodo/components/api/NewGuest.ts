@@ -9,6 +9,7 @@ interface Props {
   email: string;
 }
 
+// Parameters for function
 export default async function NewGuest({
   token,
   guestName,
@@ -19,7 +20,7 @@ export default async function NewGuest({
   // Change dates to MySQL format
   const formattedDoB = new Date(guestDoB).toISOString().split("T")[0];
 
-  // Attempt to retrieve results for query from database by calling API
+  // Attempt to add new guest to database by POSTing to API
   try {
     const response = await axios({
       method: "POST",
@@ -39,6 +40,7 @@ export default async function NewGuest({
     console.log(response.data);
     return response.status;
   } catch (e) {
+    // Handle errors
     if (axios.isAxiosError(e)) {
       console.log(e.response?.data);
       return e.response?.status;
