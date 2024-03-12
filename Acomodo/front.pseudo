@@ -215,7 +215,7 @@ DECLARE ARRAY items = [details of payment method options]
 
 DECLARE FUNCTION handleConfirm()
     GET authToken FROM CURRENTLY AUTHENTICATED USER
-    DECLARE VARIABLE result = NewReservation(authToken, checkIn, checkOut, people, price, locationId, roomTypeId, paymentMethod, paid)?
+    DECLARE VARIABLE result = NewReservation(authToken, checkIn, checkOut, people, price, locationId, roomTypeId, SELECTED PAYMENT METHOD, HAS BEEN PAID)
     IF result[0] IS FALSE THEN
         ALERT USER OF ERROR result[1]
         OFFER OPTION TO RESTART BOOKING THAT TAKES BACK TO HOME SCREEN
@@ -311,7 +311,7 @@ DECLARE FUNCTION handleSignUp()
     END IF
 END FUNCTION
 
-RENDER SCREEN AS PER WIREFRAME USING PARAMETERS?
+RENDER SCREEN AS PER WIREFRAME USING PARAMETERS
 
 
 // sign-in screen logic
@@ -336,7 +336,7 @@ DECLARE FUNCTION handleSignIn()
     END IF
 END FUNCTION
 
-RENDER SCREEN AS PER WIREFRAME USING PARAMETERS?
+RENDER SCREEN AS PER WIREFRAME USING PARAMETERS
 
 
 // bookings screen logic
@@ -358,7 +358,7 @@ DECLARE FUNCTION handleViewDetails(reservationId: INTEGER, roomType: STRING, roo
     SEND USER TO booking-details SCREEN WITH ALL PARAMETERS
 END FUNCTION
 
-RENDER SCREEN AS PER WIREFRAME USING PARAMETERS?
+RENDER SCREEN AS PER WIREFRAME USING PARAMETERS
 
 
 // booking-details screen logic
@@ -381,7 +381,7 @@ DECLARE FUNCTION handleViewConfirmation()
     END IF
 END FUNCTION
 
-RENDER SCREEN AS PER WIREFRAME USING PARAMETERS?
+RENDER SCREEN AS PER WIREFRAME USING PARAMETERS
 
 
 
@@ -402,8 +402,7 @@ DECLARE FUNCTION handleChangeRegion()
     END IF
 END FUNCTION
 
-RENDER SCREEN AS PER WIREFRAME USING PARAMETERS?
-ANNOTATE WIREFRAME WITH FUNCTION NAMES?
+RENDER SCREEN AS PER WIREFRAME USING PARAMETERS
 
 
 // edit-profile screen logic
@@ -423,4 +422,4 @@ DECLARE FUNCTION handleDelete(password: STRING <optional>)
     END IF
 END FUNCTION
 
-link all functions with buttons and etc through wireframe. what about map function tho?
+what about map function tho?
