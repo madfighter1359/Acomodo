@@ -18,6 +18,7 @@ export default function ConfirmScreen() {
   const form = useLocalSearchParams<any>();
   const locale = getLocale();
 
+  // Generates and presents the PDF, using a HTML version of the confirmation screen
   const createPDF = async () => {
     const html = `
 <!DOCTYPE html>
@@ -203,16 +204,20 @@ export default function ConfirmScreen() {
     await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
   };
 
+  // Component template from https://withfra.me, purely for stylstic purposes (all functionality added by me)
   return (
     <>
-      {form.oldReservation && (
-        <Stack.Screen
-          options={{
-            title: "Booking confirmation",
-            headerBackTitleVisible: false,
-          }}
-        />
-      )}
+      {
+        // Change the screen title if the booking is not new, and add a back button
+        form.oldReservation && (
+          <Stack.Screen
+            options={{
+              title: "Booking confirmation",
+              headerBackTitleVisible: false,
+            }}
+          />
+        )
+      }
       <View style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
           <View style={styles.container}>
@@ -303,23 +308,26 @@ export default function ConfirmScreen() {
         </SafeAreaView>
 
         <View style={styles.overlay}>
-          {!form.oldReservation && (
-            <TouchableOpacity
-              onPress={() => {
-                router.replace("/bookings");
-              }}
-            >
-              <View style={styles.btn}>
-                <Text style={styles.btnText}>My bookings</Text>
-                <FontAwesome6
-                  name="arrow-right"
-                  size={25}
-                  color="white"
-                  style={{ padding: 10, paddingLeft: 12 }}
-                />
-              </View>
-            </TouchableOpacity>
-          )}
+          {
+            // Only show the My bookings button if new reservation
+            !form.oldReservation && (
+              <TouchableOpacity
+                onPress={() => {
+                  router.replace("/bookings");
+                }}
+              >
+                <View style={styles.btn}>
+                  <Text style={styles.btnText}>My bookings</Text>
+                  <FontAwesome6
+                    name="arrow-right"
+                    size={25}
+                    color="white"
+                    style={{ padding: 10, paddingLeft: 12 }}
+                  />
+                </View>
+              </TouchableOpacity>
+            )
+          }
           <TouchableOpacity onPress={createPDF}>
             <View style={styles.btnSecondary}>
               <Text style={styles.btnSecondaryText}>Save as PDF</Text>
@@ -428,20 +436,6 @@ const styles = StyleSheet.create({
     color: "#818181",
     textAlign: "center",
     marginBottom: 12,
-  },
-  /** Avatar */
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 9999,
-    borderWidth: 3,
-    borderColor: "#fff",
-  },
-  avatarWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginLeft: 10,
   },
   /** Divider */
   divider: {

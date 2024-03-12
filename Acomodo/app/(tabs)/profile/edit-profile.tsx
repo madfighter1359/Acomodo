@@ -22,12 +22,15 @@ import Loading from "../../../components/Loading";
 export default function EditProfile() {
   const [loaded, setLoaded] = useState(true);
 
+  // Handles deletion
   const handleDelete = async (pass?: string) => {
     if (pass == undefined) {
+      // Opens the modal if no password is passed
       bottomSheetRef.current?.snapToIndex(0);
     } else if (pass == "")
       Alert.alert("Please re-enter your password to delete your account!");
     else {
+      // Attempts to reauthenticate the user and delete their account with Firebase
       if (auth.currentUser?.email) {
         setLoaded(false);
         try {
@@ -36,6 +39,7 @@ export default function EditProfile() {
           router.navigate("/profile");
           Alert.alert("Account deleted successfully!");
         } catch (e) {
+          // Handle errors
           if (e instanceof FirebaseError) {
             console.log(e.code);
             if (e.code == "auth/invalid-credential") {
@@ -63,6 +67,7 @@ export default function EditProfile() {
     }
   };
 
+  // Creating the confirmation modal
   const bottomSheetRef = useRef<bottomSheet>(null);
   const snapPoints = useMemo(() => ["40%"], []);
   const handleSheetChanges = useCallback((index: number) => {
@@ -75,6 +80,8 @@ export default function EditProfile() {
 
   if (!loaded) return <Loading />;
 
+  // Component template from https://withfra.me, purely for stylstic purposes (all functionality added by me)
+  // Modal created by me
   return (
     <GestureHandlerRootView
       style={[styles.container, { marginTop: headerHeight }]}
@@ -92,6 +99,7 @@ export default function EditProfile() {
               ]}
             >
               <TouchableOpacity
+                // Calls delete without passing a password
                 onPress={() => handleDelete()}
                 style={styles.row}
               >
@@ -242,35 +250,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
     elevation: 2,
-  },
-  /** Profile */
-  profile: {
-    padding: 12,
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  profileAvatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 9999,
-    marginRight: 12,
-  },
-  profileBody: {
-    marginRight: "auto",
-  },
-  profileName: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#292929",
-  },
-  profileHandle: {
-    marginTop: 2,
-    fontSize: 16,
-    fontWeight: "400",
-    color: "#858585",
   },
   /** Row */
   row: {

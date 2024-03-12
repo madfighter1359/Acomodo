@@ -14,6 +14,7 @@ import Loading from "../components/Loading";
 
 export default function SignIn() {
   const { signIn, session } = useSession();
+  // Redirect if already signed in
   useEffect(() => {
     if (session) router.back();
   });
@@ -24,25 +25,31 @@ export default function SignIn() {
     email: string;
   }>();
 
+  // Initialize form, with email from previous screen if one is passed
   const [form, setForm] = useState({
     email: params.email ? params.email : "",
     password: "",
   });
 
+  // Sign in action
   const handleSignIn = async () => {
+    // Checks that email and password are set
     if (form.email && form.password) {
       console.log("Signing in");
 
       setLoaded(false);
 
+      // Attempt to sign in use using provided credentials
       const res = await signIn(form.email, form.password);
 
       setLoaded(true);
 
       if (res === true) {
+        // If successful redirect and alert
         router.back();
         Alert.alert("Succesfully signed in!");
       } else {
+        // Handle errors
         switch (res) {
           case "auth/invalid-credential":
             Alert.alert(
@@ -93,6 +100,7 @@ export default function SignIn() {
 
   if (!loaded) return <Loading />;
 
+  // Component template from https://withfra.me, purely for stylstic purposes (all functionality added by me)
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={styles.container}>

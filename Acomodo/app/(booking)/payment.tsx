@@ -59,7 +59,7 @@ export default function Payment() {
           paymentMethod: items[value].name,
           paid: paid,
         }).then((result) => {
-          console.log(result);
+          // If reservation is unsuccessful, alert the user
           if (!result[0]) {
             Alert.alert("Booking failed", result[1], [
               {
@@ -68,21 +68,31 @@ export default function Payment() {
               },
             ]);
           } else {
+            // If successful, send user and results to confirmation screen
             const params = {
               reservationId: result[1],
               ...result[2],
               transactionId: result[3],
               ...result[4],
             };
-            console.log(params);
             router.navigate("/");
             router.replace({ pathname: "/booking-confirmed", params: params });
           }
         });
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        // Handle errors
+        console.log(e);
+        Alert.alert("Booking failed", "You couldn't be authenticated", [
+          {
+            text: "Restart booking",
+            onPress: () => router.navigate("/"),
+          },
+        ]);
+      });
   };
 
+  // Component template from https://withfra.me, purely for stylstic purposes (all functionality added by me)
   return (
     <View style={{ flex: 1 }}>
       {loading ? (

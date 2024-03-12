@@ -2,6 +2,7 @@ import React from "react";
 import { Tabs } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome6";
 
+// Creates tab navigation system for main tabs
 export default function Layout() {
   return (
     <Tabs

@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
 
+// Creates nested navigation for Profile page
 export default function Layout() {
   return (
     <Stack>

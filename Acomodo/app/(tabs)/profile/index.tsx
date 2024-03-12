@@ -9,11 +9,10 @@ import { useSettingsStore, getLocale } from "../../../components/userSettings";
 
 export default function Profile() {
   const { session, signOut } = useSession();
-  // const [darkMode, setDarkMode] = useState(false);
-
   const setLocaleGlobal = useSettingsStore((state) => state.setLocale);
   const [locale, setLocale] = useState(getLocale());
 
+  // Functionality for switching region
   const handleChangeRegion = () => {
     if (locale == "ro-RO") {
       setLocaleGlobal("en-GB");
@@ -24,6 +23,7 @@ export default function Profile() {
     }
   };
 
+  // Component template from https://withfra.me, purely for stylstic purposes (all functionality added by me)
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -49,6 +49,7 @@ export default function Profile() {
                 <FeatherIcon color="#bcbcbc" name="chevron-right" size={22} />
               </TouchableOpacity>
             ) : (
+              // Display authentication buttons if not signed in
               <>
                 <View
                   style={[
@@ -91,23 +92,6 @@ export default function Profile() {
           <Text style={styles.sectionTitle}>Preferences</Text>
 
           <View style={styles.sectionBody}>
-            {/* <View style={[styles.rowWrapper, styles.rowFirst]}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
-                style={styles.row}
-              >
-                <Text style={styles.rowLabel}>Language</Text>
-
-                <View style={styles.rowSpacer} />
-
-                <Text style={styles.rowValue}>English</Text>
-
-                <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-              </TouchableOpacity>
-            </View> */}
-
             <View style={[styles.rowWrapper, styles.rowFirst, styles.rowLast]}>
               <TouchableOpacity onPress={handleChangeRegion} style={styles.row}>
                 <Text style={styles.rowLabel}>Region</Text>
@@ -115,35 +99,24 @@ export default function Profile() {
                 <View style={styles.rowSpacer} />
 
                 <Text style={styles.rowValue}>
-                  {(() => {
-                    switch (locale) {
-                      case "en-GB":
-                        return "United Kingdom";
-                      case "ro-RO":
-                        return "Romania";
-                      default:
-                        return "Unkown";
-                    }
-                  })()}
+                  {
+                    // Formats locale
+                    (() => {
+                      switch (locale) {
+                        case "en-GB":
+                          return "United Kingdom";
+                        case "ro-RO":
+                          return "Romania";
+                        default:
+                          return "Unkown";
+                      }
+                    })()
+                  }
                 </Text>
 
                 <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
               </TouchableOpacity>
             </View>
-
-            {/* <View style={[styles.rowWrapper, styles.rowLast]}>
-              <View style={styles.row}>
-                <Text style={styles.rowLabel}>Dark mode</Text>
-
-                <View style={styles.rowSpacer} />
-
-                <Switch
-                  onValueChange={(darkMode) => setDarkMode(darkMode)}
-                  style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
-                  value={darkMode}
-                />
-              </View>
-            </View> */}
           </View>
         </View>
 
@@ -154,6 +127,7 @@ export default function Profile() {
             <View style={[styles.rowWrapper, styles.rowFirst, styles.rowLast]}>
               <TouchableOpacity
                 onPress={() => {
+                  // Opens support email template
                   Linking.openURL("mailto:support@acomodo.com");
                 }}
                 style={styles.row}
@@ -165,36 +139,6 @@ export default function Profile() {
                 <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
               </TouchableOpacity>
             </View>
-
-            {/* <View style={styles.rowWrapper}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
-                style={styles.row}
-              >
-                <Text style={styles.rowLabel}>Rate the Hotels</Text>
-
-                <View style={styles.rowSpacer} />
-
-                <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-              </TouchableOpacity>
-            </View> */}
-
-            {/* <View style={[styles.rowWrapper, styles.rowLast]}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
-                style={styles.row}
-              >
-                <Text style={styles.rowLabel}>Terms and Privacy</Text>
-
-                <View style={styles.rowSpacer} />
-
-                <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-              </TouchableOpacity>
-            </View> */}
           </View>
         </View>
 
@@ -211,6 +155,7 @@ export default function Profile() {
               >
                 <TouchableOpacity
                   onPress={() => {
+                    // Handles log out
                     signOut();
                     Alert.alert("Successfully logged out!");
                   }}
@@ -237,25 +182,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
-  },
-  /** Header */
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    paddingHorizontal: 16,
-  },
-  headerAction: {
-    width: 40,
-    height: 40,
-    alignItems: "flex-start",
-    justifyContent: "center",
-  },
-  headerTitle: {
-    fontSize: 19,
-    fontWeight: "600",
-    color: "#000",
   },
   /** Content */
   content: {

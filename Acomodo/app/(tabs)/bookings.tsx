@@ -17,6 +17,7 @@ import Loading from "../../components/Loading";
 import { getLocale } from "../../components/userSettings";
 import Error from "../../components/Error";
 
+// Reservation type
 interface Reservation {
   checkIn: string;
   checkOut: string;
@@ -31,7 +32,7 @@ interface Reservation {
   roomType: string;
 }
 
-export default function Index() {
+export default function bookings() {
   const { session } = useSession();
 
   const locale = getLocale();
@@ -43,11 +44,13 @@ export default function Index() {
   const [loaded, setLoaded] = React.useState(false);
   const [error, setError] = React.useState(false);
 
+  // Attempt to get user's bookings
   const getBookings = async () => {
+    // Check if a user is signed in
     auth.currentUser?.getIdToken(false).then((token) => {
       GetReservations({ token: token }).then((data) => {
         if (data !== false) {
-          console.log(data.reservations);
+          // Sort bookings and then update the bookings array, re-rendering the screen
           setBookings(
             data.reservations.sort(
               (a: Reservation, b: Reservation) =>
@@ -56,6 +59,7 @@ export default function Index() {
           );
           if (!loaded) setLoaded(true);
         } else {
+          // Handle errors
           setError(true);
           if (!loaded) setLoaded(true);
         }
@@ -63,10 +67,12 @@ export default function Index() {
     });
   };
 
+  // Get bookings on load
   useEffect(() => {
     getBookings();
   }, []);
 
+  // Refresh functionality
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setError(false);
@@ -77,6 +83,7 @@ export default function Index() {
     getBookings();
   }, []);
 
+  // Handles pressing on a reservation, takes user to next screen with reservation details
   const handleViewDetails = (
     id: number,
     roomType: string,
@@ -100,6 +107,7 @@ export default function Index() {
     router.push({ pathname: "/(booking-info)/booking-details", params: form });
   };
 
+  // Component template from https://withfra.me, purely for stylstic purposes (all functionality added by me)
   return session ? (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -122,6 +130,7 @@ export default function Index() {
             }}
           />
         ) : bookings.length >= 1 ? (
+          // Format and display bookings if there are any
           bookings.map(
             (
               {
@@ -164,7 +173,7 @@ export default function Index() {
                       <Text>
                         <Text style={styles.cardTitle}>{locationName}</Text>
                         {"\n"}
-                        <Text style={styles.cardAirport}>{nrGuests} PERS</Text>
+                        <Text style={styles.cardPeople}>{nrGuests} PERS</Text>
                       </Text>
 
                       <View style={styles.cardRow}>
@@ -229,11 +238,6 @@ export default function Index() {
                           justifyContent: "space-between",
                         }}
                       >
-                        {/* <TouchableOpacity onPress={() => {}}>
-                          <View style={styles.btn}>
-                            <Text style={styles.btnText}>Re-book</Text>
-                          </View>
-                        </TouchableOpacity> */}
                         <View
                           style={{
                             justifyContent: "flex-end",
@@ -241,7 +245,6 @@ export default function Index() {
                             alignItems: "flex-end",
                             alignSelf: "flex-end",
                             display: "flex",
-                            // marginLeft: "auto",
                           }}
                         >
                           <Text
@@ -379,7 +382,7 @@ const styles = StyleSheet.create({
     color: "#173153",
     marginRight: 8,
   },
-  cardAirport: {
+  cardPeople: {
     fontSize: 13,
     fontWeight: "600",
     color: "#5f697d",

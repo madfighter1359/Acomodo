@@ -20,6 +20,7 @@ import { getLocale } from "../components/userSettings";
 
 export default function SignUp() {
   const { signUp, session } = useSession();
+  // Redirect if already signed in
   useEffect(() => {
     if (session) router.back();
   });
@@ -31,6 +32,7 @@ export default function SignUp() {
   const OFFSET = new Date().getTimezoneOffset();
   const locale = getLocale();
 
+  // Initialize form, with email from previous screen if one is passed
   const [form, setForm] = useState({
     fullname: "",
     email: params.email ? params.email : "",
@@ -46,7 +48,10 @@ export default function SignUp() {
 
   const [loaded, setLoaded] = useState(true);
 
+  // Sign up action
   const handleSignUp = async () => {
+    // Validates sign up attempt, checking all parameters are set and that passwords match and are strong enough
+    // Displays an appropriate error message if there is a problem
     if (
       form.email &&
       form.password &&
@@ -71,6 +76,7 @@ export default function SignUp() {
 
         setLoaded(false);
 
+        // Attempt to sign up new guest if everything is valid
         const res = await signUp(
           form.email,
           form.password,
@@ -85,9 +91,11 @@ export default function SignUp() {
         console.log(res);
 
         if (res === true) {
+          // If successful redirect and alert
           router.back();
           Alert.alert("Account created succesfully!");
         } else {
+          // Handle errors
           switch (res) {
             case "auth/weak-password":
               Alert.alert(
@@ -152,6 +160,7 @@ export default function SignUp() {
 
   if (!loaded) return <Loading />;
 
+  // Component template from https://withfra.me, purely for stylstic purposes (all functionality added by me)
   return (
     <View style={styles.container}>
       <View style={styles.header}>

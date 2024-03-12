@@ -3,6 +3,7 @@ import React from "react";
 import { Stack } from "expo-router";
 import { SessionProvider } from "../ctx";
 
+// Stack navigation structure for main app
 export default function Layout() {
   return (
     <SessionProvider>
