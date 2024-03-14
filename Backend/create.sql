@@ -1,12 +1,7 @@
+--Clear old data and create new database
 SET
     FOREIGN_KEY_CHECKS = 0;
 
--- DROP TABLE IF EXISTS location,
--- room_type,
--- dri_rooms,
--- pip_rooms,
--- guest,
--- reservation;
 DROP DATABASE IF EXISTS acomodo;
 
 SET
@@ -16,7 +11,6 @@ CREATE DATABASE acomodo;
 
 USE acomodo;
 
--- Do we really want cascade?
 CREATE TABLE location (
     location_id varchar(3) primary key not null,
     location_name varchar(64) not null,
@@ -31,13 +25,13 @@ VALUES
         "APA",
         "Acomodo Premium Apartments",
         "Edinburgh",
-        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00"
     ),
     (
         "ACM",
         "Acomodo Modern",
         "Glasgow",
-        "https://images.unsplash.com/photo-1465804575741-338df8554e02?q=80&w=2946&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "https://images.unsplash.com/photo-1465804575741-338df8554e02"
     );
 
 CREATE TABLE room_type (
@@ -58,7 +52,7 @@ VALUES
         2,
         100,
         1,
-        "https://images.unsplash.com/photo-1531835551805-16d864c8d311?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "https://images.unsplash.com/photo-1531835551805-16d864c8d311"
     ),
     (
         "APP",
@@ -66,7 +60,7 @@ VALUES
         4,
         200,
         2,
-        "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
     ),
     (
         "APT",
@@ -74,7 +68,7 @@ VALUES
         4,
         150,
         2,
-        "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8"
     ),
     (
         "DBL",
@@ -82,7 +76,7 @@ VALUES
         2,
         50,
         1,
-        "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "https://images.unsplash.com/photo-1631049307264-da0ec9d70304"
     ),
     (
         "TWN",
@@ -90,7 +84,7 @@ VALUES
         2,
         75,
         2,
-        "https://images.unsplash.com/photo-1648383228240-6ed939727ad6?q=80&w=2874&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "https://images.unsplash.com/photo-1648383228240-6ed939727ad6"
     ),
     (
         "TRP",
@@ -98,7 +92,7 @@ VALUES
         3,
         100,
         2,
-        "https://images.unsplash.com/photo-1631049552057-403cdb8f0658?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "https://images.unsplash.com/photo-1631049552057-403cdb8f0658"
     ),
     (
         "FMR",
@@ -106,19 +100,19 @@ VALUES
         4,
         125,
         2,
-        "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?q=80&w=2874&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "https://images.unsplash.com/photo-1595576508898-0ad5c879a061"
     );
 
 CREATE TABLE acm_rooms (
     room_number int primary key,
     type_id varchar(3),
-    foreign key (type_id) references room_type (type_id) on update cascade on delete cascade
+    foreign key (type_id) references room_type (type_id)
 );
 
 CREATE TABLE apa_rooms (
     room_number int primary key,
     type_id varchar(3),
-    foreign key (type_id) references room_type (type_id) on update cascade on delete cascade
+    foreign key (type_id) references room_type (type_id)
 );
 
 INSERT INTO
@@ -221,8 +215,8 @@ CREATE TABLE reservation (
     check_out_date date not null,
     number_guests int not null,
     price int not null,
-    foreign key (guest_id) references guest (guest_id) on update cascade on delete cascade,
-    foreign key (location_id) references location (location_id) on update cascade on delete cascade
+    foreign key (guest_id) references guest (guest_id),
+    foreign key (location_id) references location (location_id)
 );
 
 INSERT INTO
@@ -258,7 +252,7 @@ CREATE TABLE transaction (
     payment_method varchar(8) not null CHECK (payment_method IN ("cash", "card", "transfer")),
     amount int not null,
     paid boolean not null,
-    foreign key (reservation_id) references reservation (reservation_id) on update cascade on delete cascade
+    foreign key (reservation_id) references reservation (reservation_id)
 );
 
 INSERT INTO
