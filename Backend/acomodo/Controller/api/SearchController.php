@@ -76,7 +76,7 @@ class SearchController
             $locationId = $_GET["locationId"];
 
             // Validate location id
-            if (!in_array(strtolower($locationId), ["apa", "acm"])) {
+            if (!in_array(strtolower($locationId), ["dri", "pip"])) {
                 customError("param");
             }
 

@@ -61,7 +61,7 @@ class BookingController
         }
 
         // Validate location id
-        if (!in_array(strtolower($locId), ["apa", "acm"])) {
+        if (!in_array(strtolower($locId), ["dri", "pip"])) {
             customError("param");
         }
 
@@ -151,7 +151,6 @@ class BookingController
             customError("jwt");
         }
 
-
         $guestModel = new GuestModel();
         // Check if there is a guest associated with the id of the requesting user
         if (!$guestId = $guestModel->getGuestId($userId)) {
@@ -209,7 +208,7 @@ class BookingController
         } catch (Throwable $e) {
             customError("jwt");
         }
-        
+
         if (!$userId) {
             customError("jwt");
         }

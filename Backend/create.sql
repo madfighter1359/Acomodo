@@ -22,16 +22,16 @@ INSERT INTO
     location
 VALUES
     (
-        "APA",
-        "Acomodo Premium Apartments",
-        "Edinburgh",
-        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00"
+        "PIP",
+        "Acomodoro Apartments Next-Door",
+        "Pipera",
+        "https://www.acomodo.ro/wp-content/uploads/2020/01/1-39-2048x1365.jpg.webp"
     ),
     (
-        "ACM",
-        "Acomodo Modern",
-        "Glasgow",
-        "https://images.unsplash.com/photo-1465804575741-338df8554e02"
+        "DRI",
+        "Acomodoro Residence",
+        "Dristor",
+        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472121158.jpg?k=eace370a0f64e0b4050eb7bfbeee2ba119d23c495b51ebe73328e71b40091dc3&o=&hp=1"
     );
 
 CREATE TABLE room_type (
@@ -47,76 +47,76 @@ INSERT INTO
     room_type
 VALUES
     (
-        "STU",
+        "RES",
         "Studio",
         2,
-        100,
+        300,
         1,
-        "https://images.unsplash.com/photo-1531835551805-16d864c8d311"
+        "https://d3hj7i5wny7p5d.cloudfront.net/upload/rooms/13054-m.jpg"
     ),
     (
-        "APP",
+        "DPR",
         "Apartment Plus",
         4,
-        200,
+        600,
         2,
-        "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+        "https://d3hj7i5wny7p5d.cloudfront.net/upload/rooms/13055-m.jpg"
     ),
     (
         "APT",
         "Apartment",
         4,
-        150,
+        450,
         2,
-        "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8"
+        "https://d3hj7i5wny7p5d.cloudfront.net/upload/rooms/13056-m.jpg"
     ),
     (
         "DBL",
         "Double",
         2,
-        50,
+        180,
         1,
-        "https://images.unsplash.com/photo-1631049307264-da0ec9d70304"
+        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472120586.jpg?k=20e9b73c3de67dff69d7f3380baeae130944b60928f1a1a312ac5d2844a514e9&o=&hp=1"
     ),
     (
         "TWN",
         "Twin",
         2,
-        75,
+        200,
         2,
-        "https://images.unsplash.com/photo-1648383228240-6ed939727ad6"
+        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472111196.jpg?k=7e53ca85446dae77747e837d80e023c51e33fd2ae11fea37e32ebd5046a3fd65&o=&hp=1"
     ),
     (
         "TRP",
         "Triple",
         3,
-        100,
+        250,
         2,
-        "https://images.unsplash.com/photo-1631049552057-403cdb8f0658"
+        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472103342.jpg?k=9bd7dcdcf58ce0695c217a540bd06d7cb4673b8606ad5d893f9482a54c806252&o=&hp=1"
     ),
     (
         "FMR",
         "Family",
         4,
-        125,
+        300,
         2,
-        "https://images.unsplash.com/photo-1595576508898-0ad5c879a061"
+        "https://cf.bstatic.com/xdata/images/hotel/max1280x900/472120654.jpg?k=66b1b02d44c53e73c11219ca1f994291968249fb2785d26a4647138a4670e778&o=&hp=1"
     );
 
-CREATE TABLE acm_rooms (
+CREATE TABLE dri_rooms (
     room_number int primary key,
     type_id varchar(3),
     foreign key (type_id) references room_type (type_id)
 );
 
-CREATE TABLE apa_rooms (
+CREATE TABLE pip_rooms (
     room_number int primary key,
     type_id varchar(3),
     foreign key (type_id) references room_type (type_id)
 );
 
 INSERT INTO
-    acm_rooms
+    dri_rooms
 VALUES
     (11, "DBL"),
     (13, "DBL"),
@@ -152,7 +152,7 @@ VALUES
     (52, "TRP");
 
 INSERT INTO
-    apa_rooms
+    pip_rooms
 VALUES
     (8, "APT"),
     (24, "APT"),
@@ -167,29 +167,30 @@ VALUES
     (52, "APT"),
     (53, "APT"),
     (55, "APT"),
-    (4, "STU"),
-    (5, "STU"),
-    (9, "STU"),
-    (10, "STU"),
-    (11, "STU"),
-    (12, "STU"),
-    (13, "STU"),
-    (16, "STU"),
-    (17, "STU"),
-    (18, "STU"),
-    (19, "STU"),
-    (20, "STU"),
-    (21, "STU"),
-    (23, "STU"),
-    (25, "STU"),
-    (28, "STU"),
-    (38, "STU"),
-    (41, "STU"),
-    (42, "STU"),
-    (46, "STU"),
-    (56, "STU"),
-    (22, "APP"),
-    (36, "APP");
+    (4, "RES"),
+    (5, "RES"),
+    (9, "RES"),
+    (10, "RES"),
+    (11, "RES"),
+    (12, "RES"),
+    (13, "RES"),
+    (16, "RES"),
+    (17, "RES"),
+    (18, "RES"),
+    (19, "RES"),
+    (20, "RES"),
+    (21, "RES"),
+    (23, "RES"),
+    (25, "RES"),
+    (28, "RES"),
+    (38, "RES"),
+    (41, "RES"),
+    (42, "RES"),
+    (46, "RES"),
+    (56, "RES"),
+    (22, "DPR"),
+    (36, "DPR");
+
 
 CREATE TABLE guest (
     guest_id int primary key auto_increment,
@@ -219,31 +220,6 @@ CREATE TABLE reservation (
     foreign key (location_id) references location (location_id)
 );
 
-INSERT INTO
-    reservation (
-        room_number,
-        guest_id,
-        location_id,
-        check_in_date,
-        check_out_date,
-        number_guests,
-        price
-    )
-values
-    (13, 1, "ACM", "2024-02-27", "2024-01-29", 2, 100);
-
-INSERT INTO
-    reservation (
-        room_number,
-        guest_id,
-        location_id,
-        check_in_date,
-        check_out_date,
-        number_guests,
-        price
-    )
-values
-    (13, 1, "ACM", "2024-03-01", "2024-03-06", 2, 250);
 
 CREATE TABLE transaction (
     transaction_id int primary key not null auto_increment,
@@ -255,13 +231,3 @@ CREATE TABLE transaction (
     foreign key (reservation_id) references reservation (reservation_id)
 );
 
-INSERT INTO
-    transaction (
-        reservation_id,
-        transaction_date,
-        payment_method,
-        amount,
-        paid
-    )
-values
-    (1, "2024-02-23", "cash", 100, true);
