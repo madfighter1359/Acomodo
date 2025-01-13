@@ -213,7 +213,7 @@ export default function ConfirmScreen() {
           <Stack.Screen
             options={{
               title: "Booking confirmation",
-              headerBackTitleVisible: false,
+              headerBackButtonDisplayMode: "minimal",
             }}
           />
         )

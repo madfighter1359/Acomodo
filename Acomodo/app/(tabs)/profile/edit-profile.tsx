@@ -16,7 +16,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet/";
 import bottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useHeaderHeight } from "@react-navigation/elements";
+// import { useHeaderHeight } from "@react-navigation/elements";
 import Loading from "../../../components/Loading";
 
 export default function EditProfile() {
@@ -76,7 +76,8 @@ export default function EditProfile() {
 
   const [password, setPassword] = useState("");
 
-  const headerHeight = useHeaderHeight();
+  // const headerHeight = useHeaderHeight();
+  const headerHeight = 10;
 
   if (!loaded) return <Loading />;
 

@@ -16,32 +16,32 @@ export default function Layout() {
           name="(booking)/location-select"
           options={{
             title: "Select location",
-            headerBackTitleVisible: false,
+            headerBackButtonDisplayMode: "minimal",
           }}
         />
         <Stack.Screen
           name="(booking)/room-select"
-          options={{ title: "Select room", headerBackTitleVisible: false }}
+          options={{ title: "Select room", headerBackButtonDisplayMode: "minimal" }}
         />
         <Stack.Screen
           name="(booking)/payment"
           options={{
             title: "Select payment method",
-            headerBackTitleVisible: false,
+            headerBackButtonDisplayMode: "minimal",
           }}
         />
         <Stack.Screen
           name="(booking)/confirm-booking"
           options={{
             title: "Review details",
-            headerBackTitleVisible: false,
+            headerBackButtonDisplayMode: "minimal",
           }}
         />
         <Stack.Screen
           name="(booking-info)/booking-details"
           options={{
             title: "Booking details",
-            headerBackTitleVisible: false,
+            headerBackButtonDisplayMode: "minimal",
           }}
         />
         <Stack.Screen
@@ -52,11 +52,11 @@ export default function Layout() {
         />
         <Stack.Screen
           name="sign-up"
-          options={{ title: "Sign Up", headerBackTitleVisible: false }}
+          options={{ title: "Sign Up", headerBackButtonDisplayMode: "minimal" }}
         />
         <Stack.Screen
           name="sign-in"
-          options={{ title: "Sign In", headerBackTitleVisible: false }}
+          options={{ title: "Sign In", headerBackButtonDisplayMode: "minimal" }}
         />
       </Stack>
       <StatusBar style="dark" />
